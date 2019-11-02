@@ -36,6 +36,12 @@ export default class Routes extends Component {
           <Switch>
             <Route key='home' path='/' exact component={HomePage} />
             <Route
+              key='search-flight'
+              path='/search-flight'
+              exact
+              component={SearchFlight}
+            />
+            <Route
               key='dashboard'
               path='/dashboard'
               exact

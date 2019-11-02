@@ -30,7 +30,6 @@ export default class Home extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     const children = [
       <Nav0 id='Nav0_0' key='Nav0_0' />,
       <Banner id='Banner0_1' key='Banner0_1' history={this.props.history} />,

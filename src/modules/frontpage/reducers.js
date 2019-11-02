@@ -8,7 +8,7 @@ const initialState = {
 const handlers = {
   [actions.setSearchFlightParams]: (state, action) => ({
     ...state,
-    searchFlightParams: action.payload,
+    searchFlightParams: { ...state.searchFlightParams, ...action.payload },
   }),
 }
 

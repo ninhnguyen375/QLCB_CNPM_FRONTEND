@@ -1,36 +1,76 @@
 import React, { Component } from 'react'
-import { Card, Select } from 'antd'
+import { Card, Select, notification } from 'antd'
 import FlightItem from './FlightItem'
 
 export class SearchFlightResult extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      selectedFlightFrom: '',
+      selectedFlightTo: '',
+    }
     this.showFlyFrom = this.showFlyFrom.bind(this)
   }
+
+  completeSelect = values => {
+    this.props.setSearchFlightParams({ selectedFlight: values })
+    this.props.next()
+  }
+
+  handleSelectFlightFrom = id => {
+    const { type } = this.props.searchFlightParams
+    this.setState({ selectedFlightFrom: id })
+    if (type !== 2) return
+    this.completeSelect([id])
+  }
+
+  handleSelectFlightTo = id => {
+    const { selectedFlightFrom } = this.state
+    if (!selectedFlightFrom) {
+      notification.error({
+        message: `Please select selectedFlightFrom`,
+      })
+      return
+    }
+    this.completeSelect([this.state.selectedFlightFrom, id])
+  }
+
   componentDidMount() {
     // fetch api flight here and show
-    console.log(this.props.searchFlightParams)
   }
+
   showFlyFrom() {
     let arr = []
-    for (let i = 0; i < 10; i++)
+    for (let i = 0; i < 10; i++) {
+      const id = `item-fly-from-${i}`
       arr.push(
         <FlightItem
-          id={`item-fly-from-${i}`}
-          key={`item-fly-${i}`}
+          id={id}
+          key={id}
+          isSelected={id === this.state.selectedFlightFrom}
+          onSelectFlight={this.handleSelectFlightFrom}
         ></FlightItem>,
       )
+    }
     return arr
   }
+
   showFlyTo() {
     let arr = []
-    for (let i = 0; i < 5; i++)
+    for (let i = 0; i < 5; i++) {
+      const id = `item-fly-to${i}`
       arr.push(
-        <FlightItem id={`item-fly-to${i}`} key={`item-fly-${i}`}></FlightItem>,
+        <FlightItem
+          id={id}
+          key={id}
+          isSelected={id === this.state.selectedFlightFrom}
+          onSelectFlight={this.handleSelectFlightTo}
+        ></FlightItem>,
       )
+    }
     return arr
   }
+
   render() {
     const { type } = this.props.searchFlightParams
     return (
@@ -150,7 +190,7 @@ export class SearchFlightResult extends Component {
                   </div>
                 </div>
               </div>
-              <div>{this.showFlyFrom()}</div>
+              <div>{this.showFlyTo()}</div>
             </div>
           </div>
         ) : null}

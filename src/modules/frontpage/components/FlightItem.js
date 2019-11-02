@@ -13,7 +13,7 @@ export class FlightItem extends Component {
   }
 
   render() {
-    const { id } = this.props
+    const { id, onSelectFlight, isSelected } = this.props
     return (
       <div style={{ width: '100%', marginBottom: 10 }}>
         <Card style={{ borderRadius: 5 }}>
@@ -38,12 +38,12 @@ export class FlightItem extends Component {
               <p>Hà Nội</p>
             </div>
             <div>
-              <p className='text-center'>1h</p>
+              <p className='tac'>1h</p>
               <img alt='flight' src={point} />
             </div>
             <div>
-              <p className='text-center fwb'>22:15</p>
-              <p className='text-center'>Hồ Chí Minh</p>
+              <p className='tac fwb'>22:15</p>
+              <p className='tac'>Hồ Chí Minh</p>
             </div>
             <div>
               <p
@@ -59,7 +59,18 @@ export class FlightItem extends Component {
               </p>
             </div>
             <div>
-              <Button type='primary'>CHỌN</Button>
+              {isSelected ? (
+                <Button
+                  disabled
+                  style={{ backgroundColor: '#21c321', color: '#fff' }}
+                >
+                  CHỌN
+                </Button>
+              ) : (
+                <Button onClick={() => onSelectFlight(id)} type='primary'>
+                  CHỌN
+                </Button>
+              )}
             </div>
           </div>
         </Card>
