@@ -8,15 +8,26 @@ class InformationCustomer extends Component {
     let arr = []
     for (let i = 0; i < count; i++) {
       arr.push(
-        <Form.Item key={i} className='text-left' label={`Khách hàng ${i + 1}`}>
-          {getFieldDecorator(`customers[${i}]`)(
-            <Input
-              prefix={<Icon type='user' />}
-              style={{ width: '100%' }}
-              placeholder='Họ và tên khách hàng'
-            ></Input>,
-          )}
-        </Form.Item>,
+        <div key={i}>
+          <Form.Item className='text-left' label={`Khách hàng ${i + 1}`}>
+            {getFieldDecorator(`customers[${i}].fullname`)(
+              <Input
+                prefix={<Icon type='user' />}
+                style={{ width: '100%' }}
+                placeholder='Họ và tên khách hàng'
+              ></Input>,
+            )}
+          </Form.Item>
+          <Form.Item className='text-left' label='Hanh ly'>
+            {getFieldDecorator(`customers[${i}].luggage`)(
+              <Input
+                prefix={<Icon type='user' />}
+                style={{ width: '100%' }}
+                placeholder='Chon hanh ly mang theo'
+              ></Input>,
+            )}
+          </Form.Item>
+        </div>,
       )
     }
     return arr

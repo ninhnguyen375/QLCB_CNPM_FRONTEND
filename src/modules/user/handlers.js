@@ -1,25 +1,21 @@
 import { loading, fetch, fetchAuthLoading } from '../../common/effects'
 import { ENDPOINTS } from './models'
-import {
-  setJobSeekerList,
-  setUserInformation,
-  setUserToken
-} from './actions'
+import { setJobSeekerList, setUserInformation, setUserToken } from './actions'
 import { setRoles } from '../../common/actions/common'
 
-export function getRoles () {
+export function getRoles() {
   return fetchAuthLoading({
     url: ENDPOINTS.getRoles,
-    method: 'GET'
+    method: 'GET',
   }).then(response => {
     return response.data
   })
 }
 
-export function getMyInformation () {
+export function getMyInformation() {
   return fetchAuthLoading({
     url: ENDPOINTS.getUser,
-    method: 'GET'
+    method: 'GET',
   }).then(response => {
     return response.data
   })
@@ -36,8 +32,8 @@ export default (dispatch, props) => ({
       dispatch(
         setUserInformation({
           ...result.data,
-          [parsedData.type]: parsedData.detail
-        })
+          [parsedData.type]: parsedData.detail,
+        }),
       )
       return result.data
     }
@@ -51,18 +47,16 @@ export default (dispatch, props) => ({
           method: 'POST',
           data: {
             email,
-            password
-          }
+            password,
+          },
         })
         console.log('DEBUGER: result', result)
         if (result.data && result.data.success && result.data.user) {
-          console.log('result.data', result.data)
-
           dispatch(setUserToken(result.data.token))
           dispatch(
             setUserInformation({
-              ...result.data.user
-            })
+              ...result.data.user,
+            }),
           )
         }
         return result.data
@@ -70,11 +64,7 @@ export default (dispatch, props) => ({
       return result
     } catch (error) {
       console.log('DEBUGER: error', error)
-      if (
-        error &&
-        error.response &&
-        error.response.data
-      ) {
+      if (error && error.response && error.response.data) {
         const { message } = error.response.data
         return { success: false, msg: message }
       }
@@ -96,7 +86,7 @@ export default (dispatch, props) => ({
       return false
     }
   },
-  handlerSetSearchNull () {
+  handlerSetSearchNull() {
     dispatch(setJobSeekerList([]))
-  }
+  },
 })

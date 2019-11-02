@@ -1,64 +1,65 @@
 import React, { Component } from 'react'
-import { Row, Col, Card } from 'antd'
+import { Row, Col, Card, Divider } from 'antd'
 import Lottie from '../../../libraries/Lottie'
 
 export class FinishStepRegister extends Component {
-  componentDidMount() {
-    console.log(this.props.searchFlightParams)
-  }
   render() {
     const { searchFlightParams } = this.props
     return (
-      <Card>
+      <div className='finish-step-register'>
         <Row>
-          <Col
-            style={{ display: 'flex', alignItems: 'center' }}
-            sm={24}
-            lg={12}
-          >
-            <Lottie
-              options={{
-                animationData: require('../../../assets/animations/1708-success.json'),
-                loop: false,
-              }}
-              style={{
-                marginBottom: 150,
-                height: 200,
-              }}
-            />
+          <Col sm={24} lg={12}>
+            <div>
+              <Lottie
+                options={{
+                  animationData: require('../../../assets/animations/1708-success.json'),
+                  loop: false,
+                }}
+                style={{
+                  height: 300,
+                  margin: 0,
+                  padding: 0,
+                }}
+              />
+            </div>
           </Col>
-          <Col className='text-left border' sm={24} lg={12}>
-            <div className='p-3'>
-              <span className='font-weight-bold'>Khách hàng: </span>
-              <span>
-                {searchFlightParams.fullname_customer_book || 'Nguyễn Văn Tèo'}
-              </span>
-            </div>
-            <div className='p-3'>
-              <span className='font-weight-bold'>Email: </span>
-              <span>
-                {searchFlightParams.email_customer_book ||
-                  'teonguyen@gmail.com'}
-              </span>
-            </div>
-            <div className='p-3'>
-              <span className='font-weight-bold'>Số điện thoại: </span>
-              <span>
-                {searchFlightParams.phonenumber_customer_book || '012456789'}
-              </span>
-            </div>
-            <div className='p-3'>
-              <span className='font-weight-bold'>Thành tiền: </span>
-              <span className='font-weight-bold' style={{ color: '#FFA801' }}>
-                400.000đ
-              </span>
-            </div>
-            <div className='p-3 text-center'>
-              <p>Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi</p>
-            </div>
+          <Col className='tal border' sm={24} lg={12}>
+            <Card style={{ height: '100%' }}>
+              <div className='p10'>
+                <span className='fwb'>Khách hàng: </span>
+                <span>
+                  {searchFlightParams.fullname_customer_book ||
+                    'Nguyễn Văn Tèo'}
+                </span>
+              </div>
+              <div className='p10'>
+                <span className='fwb'>Email: </span>
+                <span>
+                  {searchFlightParams.email_customer_book ||
+                    'teonguyen@gmail.com'}
+                </span>
+              </div>
+              <div className='p10'>
+                <span className='fwb'>Số điện thoại: </span>
+                <span>
+                  {searchFlightParams.phonenumber_customer_book || '012456789'}
+                </span>
+              </div>
+              <div className='p10'>
+                <span className='fwb'>Thành tiền: </span>
+                <span className='fwb' style={{ color: '#FFA801' }}>
+                  400.000đ
+                </span>
+              </div>
+              <Divider />
+              <div className='fwb'>
+                Đơn hàng của bạn đã được ghi nhận. <br />
+                Vui lòng đến chi nhánh gần nhất để thanh toán.
+              </div>
+            </Card>
           </Col>
         </Row>
-      </Card>
+      </div>
     )
   }
 }

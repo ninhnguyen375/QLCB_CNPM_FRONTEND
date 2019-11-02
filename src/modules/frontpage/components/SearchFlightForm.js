@@ -48,7 +48,7 @@ class SearchFlightForm extends Component {
         <Form onSubmit={this.handleSubmit}>
           <Form.Item>
             {getFieldDecorator('type', {
-              initialValue: searchFlightParams.type,
+              initialValue: searchFlightParams.type || 2,
             })(
               <Radio.Group onChange={this.handleChangeType}>
                 <Radio value={1}>Khứ hồi</Radio>
@@ -58,7 +58,9 @@ class SearchFlightForm extends Component {
           </Form.Item>
           <Form.Item label='Điểm đi'>
             {getFieldDecorator('from', {
-              initialValue: searchFlightParams ? searchFlightParams.from : '',
+              initialValue: searchFlightParams
+                ? searchFlightParams.from || 'Ha Noi'
+                : '',
             })(
               <Input
                 placeholder='Điểm đi'
@@ -69,7 +71,9 @@ class SearchFlightForm extends Component {
           </Form.Item>
           <Form.Item label='Điểm đến'>
             {getFieldDecorator('to', {
-              initialValue: searchFlightParams ? searchFlightParams.to : '',
+              initialValue: searchFlightParams
+                ? searchFlightParams.to || 'Da Nang'
+                : '',
             })(
               <Input
                 placeholder='Điểm đến'
@@ -111,10 +115,11 @@ class SearchFlightForm extends Component {
               <Form.Item label='Số người'>
                 {getFieldDecorator('count', {
                   initialValue: searchFlightParams
-                    ? searchFlightParams.count
-                    : '',
+                    ? searchFlightParams.count || 1
+                    : 1,
                 })(
                   <InputNumber
+                    min={1}
                     prefix={<Icon type='user' />}
                     style={{ width: '100%' }}
                     size={'large'}
