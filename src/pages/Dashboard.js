@@ -3,9 +3,9 @@ import UnderContruct from './UnderContruct'
 import MainLayout from '../common/hocs/MainLayout'
 
 class Dashboard extends Component {
-  render () {
+  render() {
     return (
-      <MainLayout mode='1'>
+      <MainLayout mode={this.props.mode}>
         <div>
           <UnderContruct />
         </div>

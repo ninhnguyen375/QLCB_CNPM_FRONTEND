@@ -80,7 +80,7 @@ class ProgressLoading extends Component {
     this.element.setAttribute('data-state', 'hidden')
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     instanceProgressLoading = this
   }
 

@@ -56,7 +56,7 @@ class Header extends React.Component {
             className: 'header0-item',
             visible: 'SIGNINED',
             children: {
-              href: '#/dashboard',
+              href: '#/admin/dashboard',
               children: [{ children: 'TRANG QUẢN TRỊ', name: 'text' }],
             },
           },

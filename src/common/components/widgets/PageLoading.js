@@ -26,7 +26,7 @@ class PageLoading extends Component {
     return isShow
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     PageLoading.instance = this
   }
 

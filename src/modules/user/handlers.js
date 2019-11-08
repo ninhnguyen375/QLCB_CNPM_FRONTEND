@@ -1,44 +1,51 @@
 import { loading, fetch, fetchAuthLoading } from '../../common/effects'
-import { ENDPOINTS } from './models'
-import { setJobSeekerList, setUserInformation, setUserToken } from './actions'
-import { setRoles } from '../../common/actions/common'
+import { ENDPOINTS, LIMIT } from './models'
+import { setUserInformation, setUserToken, setUsers } from './actions'
 
-export function getRoles() {
-  return fetchAuthLoading({
-    url: ENDPOINTS.getRoles,
+export async function getUsersAsync(
+  current = 1,
+  pageSize = LIMIT,
+  params = {},
+) {
+  const res = await fetchAuthLoading({
+    url: ENDPOINTS.getUsers,
     method: 'GET',
-  }).then(response => {
-    return response.data
+    params: {
+      current,
+      pageSize,
+      ...params,
+    },
   })
+  return res.data
 }
 
-export function getMyInformation() {
-  return fetchAuthLoading({
-    url: ENDPOINTS.getUser,
+export const getUserAsync = async id => {
+  const result = await fetchAuthLoading({
+    url: ENDPOINTS.getUser(id),
     method: 'GET',
-  }).then(response => {
-    return response.data
   })
+  return result.data
+}
+
+export const updateUser = async (data, id) => {
+  const result = await fetchAuthLoading({
+    url: ENDPOINTS.updateUser(id),
+    method: 'PUT',
+    data,
+  })
+  return result.data
+}
+
+export async function createUserAsync(user = {}) {
+  const res = await fetchAuthLoading({
+    url: ENDPOINTS.createUser,
+    method: 'POST',
+    data: user,
+  })
+  return res.data
 }
 
 export default (dispatch, props) => ({
-  getUser: async () => {
-    const result = await getMyInformation()
-    if (result && result.success) {
-      if (result.data.userTypeOfUser.code === 'EMPLOYER') {
-      }
-      const parsedData = result.data
-
-      dispatch(
-        setUserInformation({
-          ...result.data,
-          [parsedData.type]: parsedData.detail,
-        }),
-      )
-      return result.data
-    }
-    return false
-  },
   login: async (email, password) => {
     try {
       const result = await loading(async () => {
@@ -50,7 +57,6 @@ export default (dispatch, props) => ({
             password,
           },
         })
-        console.log('DEBUGER: result', result)
         if (result.data && result.data.success && result.data.user) {
           dispatch(setUserToken(result.data.token))
           dispatch(
@@ -63,7 +69,6 @@ export default (dispatch, props) => ({
       })
       return result
     } catch (error) {
-      console.log('DEBUGER: error', error)
       if (error && error.response && error.response.data) {
         const { message } = error.response.data
         return { success: false, msg: message }
@@ -71,22 +76,14 @@ export default (dispatch, props) => ({
       return { success: false, msg: 'Server error.' }
     }
   },
-  getRoles: async () => {
+  getUsers: async (current, pageSize, params) => {
     try {
-      const result = await loading(async () => {
-        const roles = await getRoles()
-        if (roles && roles.success) {
-          dispatch(setRoles(roles.data))
-          return roles.data
-        }
-        return false
-      })
-      return result
+      const res = await getUsersAsync(current, pageSize, params)
+      dispatch(setUsers(res))
+      return { ...res, success: true }
     } catch (err) {
-      return false
+      dispatch(setUsers({}))
+      return { ...err.response.data, success: false }
     }
-  },
-  handlerSetSearchNull() {
-    dispatch(setJobSeekerList([]))
   },
 })

@@ -4,6 +4,7 @@ import { withRouter } from 'react-router'
 import { Layout, Menu, Icon, notification } from 'antd'
 import storeAccessible from '../utils/storeAccessible'
 import { clearAll } from '../actions/common'
+import { ROLE } from '../../modules/user/models'
 const { Header, Content, Sider } = Layout
 const { SubMenu } = Menu
 
@@ -35,15 +36,25 @@ class MenuPage extends React.Component {
   }
 
   setMenus(mode, type) {
+    console.log('Ninh Debug: mode', mode)
     switch (mode) {
-      case '1':
+      case ROLE.ADMIN:
         this.MENUS = [
           {
-            key: 'dashboard',
+            key: 'admin/dashboard',
             title: (
               <span>
                 <Icon type='home' />
-                <span>Dashboard</span>
+                <span>Bảng điều khiển</span>
+              </span>
+            ),
+          },
+          {
+            key: 'admin/user',
+            title: (
+              <span>
+                <Icon type='user' />
+                <span>Nhân viên</span>
               </span>
             ),
           },
@@ -52,7 +63,38 @@ class MenuPage extends React.Component {
             title: (
               <span>
                 <Icon type='logout' />
-                <span>Logout</span>
+                <span>Đăng xuất</span>
+              </span>
+            ),
+          },
+        ]
+        break
+      case ROLE.STAFF:
+        this.MENUS = [
+          {
+            key: 'admin/dashboard',
+            title: (
+              <span>
+                <Icon type='home' />
+                <span>Bảng điều khiển</span>
+              </span>
+            ),
+          },
+          {
+            key: 'admin/customer',
+            title: (
+              <span>
+                <Icon type='user' />
+                <span>Khách hàng</span>
+              </span>
+            ),
+          },
+          {
+            key: 'logout',
+            title: (
+              <span>
+                <Icon type='logout' />
+                <span>Đăng xuất</span>
               </span>
             ),
           },
@@ -82,7 +124,7 @@ class MenuPage extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { language, user, mode } = nextProps
     if (language !== this.props.language) {
       if (user && user.user_type_id === 3 && user.jobSeekerOfUser) {
@@ -131,15 +173,14 @@ class MenuPage extends React.Component {
       return children
     }
     return (
-      <Layout className='menu-page'>
+      <Layout className='menu-page' style={{ height: '100vh' }}>
         <Sider
-          theme='light'
-          style={{
-            height: '100vh',
-            overflow: 'auto',
-          }}
-          collapsed={collapsed}
+          breakpoint='md'
+          collapsedWidth='0'
           onCollapse={this.handleToggle}
+          collapsed={collapsed}
+          theme='light'
+          style={{ boxShadow: '#c3c3c3 1px 74px 28px' }}
         >
           <div
             style={{
@@ -160,22 +201,13 @@ class MenuPage extends React.Component {
                 />
               </a>
             ) : null}
-            <div
-              style={{
-                fontSize: '1.4em',
-                color: '#1890ff',
-                cursor: 'pointer',
-                padding: 6,
-              }}
-              onClick={this.handleToggle}
-            >
-              <Icon type='menu' />
-            </div>
           </div>
           <Menu
             onClick={this.handleClick}
-            defaultSelectedKeys={['dashboard']}
-            selectedKeys={[this.props.location.pathname.replace('/', '')]}
+            defaultSelectedKeys={['admin/dashboard']}
+            selectedKeys={[
+              'admin/' + this.props.location.pathname.split('/')[2],
+            ]}
             theme='light'
             mode='inline'
             style={{
@@ -212,6 +244,7 @@ class MenuPage extends React.Component {
               alignItems: 'center',
               justifyContent: 'flex-end',
               borderBottom: '1px solid #d1d7e2',
+              boxShadow: 'rgb(195, 195, 195) -2px 1px 32px',
             }}
           >
             <div style={{ padding: '0px 10px' }}>
@@ -235,12 +268,17 @@ class MenuPage extends React.Component {
           </Header>
           <Content
             style={{
-              minHeight: 'auto',
-              backgroundColor: '#F5F5F5',
-              padding: 20,
+              overflow: 'auto',
             }}
           >
-            {children}
+            <div
+              style={{
+                margin: 15,
+              }}
+            >
+              {/* {React.cloneElement(this.props.children, { ...this.props })} */}
+              {this.props.children}
+            </div>
           </Content>
         </Layout>
       </Layout>
