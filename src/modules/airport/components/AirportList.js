@@ -11,12 +11,11 @@ import {
   Tag,
 } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
-import AddUserForm from './AddUserForm'
-import { Link } from 'react-router-dom'
+import AddAirportForm from './AddAirportForm'
 import { handleError } from '../../../common/utils/handleError'
-import { STATUS_COLORS, STATUS } from '../models'
+import EditAirportForm from './EditAirportForm'
 
-export class UserList extends Component {
+export class AirportList extends Component {
   state = {
     pagination: {},
     search: {},
@@ -24,46 +23,31 @@ export class UserList extends Component {
 
   columns = [
     {
-      key: 'avatar',
-      align: 'right',
-      render: () => (
-        <img
-          src={require('../../../assets/images/user.svg')}
-          alt='avatar'
-          width={35}
-        />
-      ),
-    },
-    {
-      key: 'FullName',
-      dataIndex: 'fullName',
-      title: ' Họ tên ',
+      key: 'Name',
+      dataIndex: 'name',
+      title: 'Tên sân bay',
       sorter: true,
       render: (value, record) => (
-        <Link to={`/admin/user/${record.id}`}>{value}</Link>
+        <div className='link d-flex'>
+          <img
+            src={require('../../../assets/images/airport.png')}
+            alt='avatar'
+            width={35}
+          />
+          <div>
+            <span style={{ marginLeft: 10 }}>{value}</span>
+            <br />
+            <Tag title='Mã Sân Bay' style={{ marginLeft: 10 }} color='blue'>
+              {record.id}
+            </Tag>
+          </div>
+        </div>
       ),
     },
     {
-      key: 'Email',
-      dataIndex: 'email',
-      title: 'Email',
-    },
-    {
-      key: 'Identifier',
-      dataIndex: 'identifier',
-      title: 'CMND',
-    },
-    {
-      key: 'Phone',
-      dataIndex: 'phone',
-      title: ' SĐT ',
-      render: value => value || '--',
-    },
-    {
-      key: 'Status',
-      dataIndex: 'status',
-      title: 'Trạng thái',
-      render: value => <Tag color={STATUS_COLORS[value]}>{STATUS[value]}</Tag>,
+      key: 'Location',
+      dataIndex: 'location',
+      title: 'Địa Điểm',
     },
     {
       key: 'action',
@@ -72,19 +56,17 @@ export class UserList extends Component {
       render: r => {
         return (
           <div className='d-flex justify-content-end'>
-            <Link to={`/admin/user/${r.id}`}>
-              <Button
-                style={{ marginRight: 5 }}
-                icon='info-circle'
-                type='primary'
-              >
-                Thông tin
-              </Button>
-            </Link>
+            <Button
+              onClick={() => this.handleShowEditForm(r)}
+              style={{ marginRight: 5 }}
+              icon='edit'
+              type='primary'
+            >
+              Sửa
+            </Button>
             <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
               Xóa
             </Button>
-            <Button icon='lock'>Khóa</Button>
           </div>
         )
       },
@@ -97,14 +79,14 @@ export class UserList extends Component {
       order === 'ascend' ? { sortAsc: columnKey } : { sortDesc: columnKey }
 
     columnKey
-      ? await this.getUsers(current, null, sortParam)
-      : await this.getUsers(current)
+      ? await this.getAirports(current, null, sortParam)
+      : await this.getAirports(current)
   }
 
-  getUsers = async (current, pageSize, params) => {
-    const { getUsers } = this.props
+  getAirports = async (current, pageSize, params) => {
+    const { getAirports } = this.props
     const { search } = this.state
-    const res = await getUsers(current, pageSize, { ...search, ...params })
+    const res = await getAirports(current, pageSize, { ...search, ...params })
     if (res.success) {
       this.setState({ pagination: res })
     } else {
@@ -113,19 +95,29 @@ export class UserList extends Component {
   }
 
   async componentDidMount() {
-    await this.getUsers()
+    await this.getAirports()
   }
 
-  handleShowAddUser = () => {
-    Modal.show(<AddUserForm getUsers={this.getUsers} />, {
-      title: <b>THÊM NHÂN VIÊN</b>,
+  handleShowAddAirport = () => {
+    Modal.show(<AddAirportForm getAirports={this.getAirports} />, {
+      title: <b>THÊM SÂN BAY</b>,
       style: { top: 10 },
     })
   }
 
+  handleShowEditForm = airport => {
+    Modal.show(
+      <EditAirportForm airport={airport} getAirports={this.getAirports} />,
+      {
+        title: <b>SỬA SÂN BAY</b>,
+        style: { top: 10 },
+      },
+    )
+  }
+
   handleSearch = name => value => {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
-      this.getUsers()
+      this.getAirports()
       console.log(this.state)
     })
   }
@@ -136,36 +128,34 @@ export class UserList extends Component {
   }
 
   handleReset = () => {
-    this.setState({ search: {} }, () => this.getUsers())
+    this.setState({ search: {} }, () => this.getAirports())
   }
 
   render() {
     const { pagination, search = {} } = this.state
 
-    let { users } = this.props
-    users = users || []
+    let { airports } = this.props
+    airports = airports || []
 
     return (
-      <Card title={<b>Nhân Viên</b>}>
+      <Card title={<b>Sân Bay</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
             <div className='d-flex'>
               <Input.Search
-                value={search.fullname}
+                value={search.name}
                 style={{ marginRight: 5 }}
-                name='fullname'
-                onSearch={this.handleSearch('fullname')}
-                placeholder=' Tìm theo tên '
+                name='name'
+                onSearch={this.handleSearch('name')}
+                placeholder='Tìm theo Tên sân bay'
                 onChange={this.hanleChangeSearch}
-                prefix={<Icon type='user' className='primary-color' />}
               ></Input.Search>
               <Input.Search
-                name='identifier'
-                value={search.identifier}
-                onSearch={this.handleSearch('identifier')}
-                placeholder=' Tìm theo CMND '
+                name='location'
+                value={search.location}
+                onSearch={this.handleSearch('location')}
+                placeholder=' Tìm theo Địa Điểm'
                 onChange={this.hanleChangeSearch}
-                prefix={<Icon type='idcard' className='primary-color' />}
               ></Input.Search>
             </div>
           </Col>
@@ -175,11 +165,11 @@ export class UserList extends Component {
             </Button>{' '}
             <Button
               key='btn-add'
-              onClick={this.handleShowAddUser}
+              onClick={this.handleShowAddAirport}
               type='primary'
             >
               <Icon type='plus'></Icon>
-              THÊM NHÂN VIÊN
+              THÊM SÂN BAY
             </Button>
           </Col>
         </Row>
@@ -190,11 +180,11 @@ export class UserList extends Component {
           onChange={this.handleChangeTable}
           columns={this.columns}
           rowKey={i => i.id}
-          dataSource={users || []}
+          dataSource={airports || []}
         ></Table>
       </Card>
     )
   }
 }
 
-export default UserList
+export default AirportList
