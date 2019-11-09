@@ -163,7 +163,7 @@ class Header extends React.Component {
                 <Item key='user-avatar'>
                   <a
                     className='header0-item-block header0-item'
-                    href='#dashboard'
+                    href='#/admin/dashboard'
                   >
                     <img
                       src={require('../../../assets/images/user.svg')}

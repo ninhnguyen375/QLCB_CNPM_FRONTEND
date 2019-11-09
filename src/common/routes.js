@@ -12,6 +12,7 @@ import UserListPage from '../pages/UserListPage'
 import UserDetailPage from '../pages/UserDetailPage'
 import AirportListPage from '../pages/AirportListPage'
 import AirlineListPage from '../pages/AirlineListPage'
+import LuggageListPage from '../pages/LuggageListPage'
 
 export default class Routes extends Component {
   render() {
@@ -63,7 +64,7 @@ export default class Routes extends Component {
               <AirlineListPage mode={user.user.role} />
             </Route>
             <Route key='luggage' path='/admin/luggage' exact>
-              <UserListPage mode={user.user.role} />
+              <LuggageListPage mode={user.user.role} />
             </Route>
             <Route key='ticket-category' path='/admin/ticket-category' exact>
               <UserListPage mode={user.user.role} />

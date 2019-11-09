@@ -13,7 +13,7 @@ export const handleError = (err, form, noti) => {
   Object.keys(errors).forEach(key => {
     if (isOnFormError) {
       form.setFields({
-        [key.toLocaleLowerCase()]: {
+        [key.charAt(0).toLocaleLowerCase() + key.substring(1)]: {
           errors: Array.isArray(errors[key])
             ? errors[key].map(e => new Error(e))
             : [new Error(errors[key])],

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import AirlineList from '../modules/airline/containers/AirlineList'
+import LuggageList from '../modules/luggage/containers/LuggageList'
 import CustomBreadcrumb from '../common/components/widgets/CustomBreadcrumb'
 import MainLayout from '../common/hocs/MainLayout'
 import { withRouter } from 'react-router-dom'
 
-class AirlineListPage extends Component {
+class LuggageListPage extends Component {
   render() {
     const { history, match } = this.props
 
@@ -13,13 +13,13 @@ class AirlineListPage extends Component {
         <CustomBreadcrumb
           items={[
             { url: '/admin/dashboard', icon: 'home', title: 'Bảng Điều Khiển' },
-            { url: '/admin/airline', icon: 'stock', title: 'Hãng hàng không' },
+            { url: '/admin/luggage', icon: 'container', title: 'Loại Hành Lý' },
           ]}
         />
-        <AirlineList history={history} match={match}></AirlineList>
+        <LuggageList history={history} match={match}></LuggageList>
       </MainLayout>
     )
   }
 }
 
-export default withRouter(AirlineListPage)
+export default withRouter(LuggageListPage)
