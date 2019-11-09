@@ -1,8 +1,20 @@
 import React, { Component } from 'react'
-import { Table, Card, Button, Row, Col, Input, Icon } from 'antd'
+import {
+  Table,
+  Card,
+  Button,
+  Row,
+  Col,
+  Input,
+  Icon,
+  notification,
+  Tag,
+} from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import AddUserForm from './AddUserForm'
 import { Link } from 'react-router-dom'
+import { handleError } from '../../../common/utils/handleError'
+import { STATUS_COLORS, STATUS } from '../models'
 
 export class UserList extends Component {
   state = {
@@ -47,15 +59,27 @@ export class UserList extends Component {
       render: value => value || '--',
     },
     {
+      key: 'status',
+      dataIndex: 'status',
+      title: 'Trạng thái',
+      render: value => <Tag color={STATUS_COLORS[value]}>{STATUS[value]}</Tag>,
+    },
+    {
       key: 'action',
       title: ' Thao tác ',
       align: 'right',
       render: r => {
         return (
           <div className='d-flex justify-content-end'>
-            <Button style={{ marginRight: 5 }} icon='edit' type='primary'>
-              Sửa
-            </Button>
+            <Link to={`/admin/user/${r.id}`}>
+              <Button
+                style={{ marginRight: 5 }}
+                icon='info-circle'
+                type='primary'
+              >
+                Thông tin
+              </Button>
+            </Link>
             <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
               Xóa
             </Button>
@@ -73,11 +97,11 @@ export class UserList extends Component {
   getUsers = async (current, pageSize) => {
     const { getUsers } = this.props
     const { search } = this.state
-
     const res = await getUsers(current, pageSize, search)
     if (res.success) {
       this.setState({ pagination: res })
     } else {
+      handleError(res, null, notification)
     }
   }
 
@@ -126,6 +150,7 @@ export class UserList extends Component {
                 onSearch={this.handleSearch('fullname')}
                 placeholder=' Tìm theo tên '
                 onChange={this.hanleChangeSearch}
+                prefix={<Icon type='user' className='primary-color' />}
               ></Input.Search>
               <Input.Search
                 name='identifier'
@@ -133,6 +158,7 @@ export class UserList extends Component {
                 onSearch={this.handleSearch('identifier')}
                 placeholder=' Tìm theo CMND '
                 onChange={this.hanleChangeSearch}
+                prefix={<Icon type='idcard' className='primary-color' />}
               ></Input.Search>
             </div>
           </Col>

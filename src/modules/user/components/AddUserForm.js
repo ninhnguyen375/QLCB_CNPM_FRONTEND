@@ -88,10 +88,14 @@ class AddUserForm extends Component {
             })(<Input placeholder='Email' />)}
           </Form.Item>
           <div className='d-flex justify-content-end'>
-            <Button onClick={() => Modal.hide()} style={{ marginRight: 5 }}>
+            <Button
+              onClick={() => Modal.hide()}
+              icon='close-circle'
+              style={{ marginRight: 5 }}
+            >
               Hủy
             </Button>
-            <Button htmlType='submit' type='primary'>
+            <Button htmlType='submit' type='primary' icon='plus-circle'>
               Thêm
             </Button>
           </div>

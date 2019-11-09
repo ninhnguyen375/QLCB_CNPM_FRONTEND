@@ -4,6 +4,7 @@ import { getChildrenToRender } from './utils'
 import { logout } from '../../../common/effects'
 import TweenOne from 'rc-tween-one'
 import { enquireScreen } from 'enquire-js'
+import { getUserRole } from '../../../common/utils/authUtils'
 
 const { Item } = Menu
 
@@ -33,6 +34,7 @@ class Header extends React.Component {
             name: 'item1',
             className: 'header0-item',
             visible: 'UNSIGNINED',
+            accept: 'ALL',
             children: {
               href: '#/login',
               children: [{ children: 'ĐĂNG NHẬP', name: 'text' }],
@@ -42,6 +44,7 @@ class Header extends React.Component {
             name: 'item4',
             className: 'header0-item',
             visible: 'SIGNINED',
+            accept: 'ALL',
             children: {
               href: '#/',
               children: [{ children: 'ĐĂNG XUẤT', name: 'text' }],
@@ -55,6 +58,7 @@ class Header extends React.Component {
             name: 'item3',
             className: 'header0-item',
             visible: 'SIGNINED',
+            accept: ['ADMIN', 'STAFF'],
             children: {
               href: '#/admin/dashboard',
               children: [{ children: 'TRANG QUẢN TRỊ', name: 'text' }],
@@ -83,18 +87,24 @@ class Header extends React.Component {
     const { user } = this.props
     const { isMobile } = this.state
     const visibleCode = user && user.id ? 'SIGNINED' : 'UNSIGNINED'
+    const authRole = getUserRole()
     const { phoneOpen } = this.state
     const navData = this.dataSource.Menu.children
     const navChildren = navData.map(item => {
-      const { children: a, visible, ...itemProps } = item
+      const { children: a, visible, accept, ...itemProps } = item
       if (visible === visibleCode || visible === 'ALL') {
-        return (
-          <Item key={item.name} {...itemProps}>
-            <a {...a} className={`header0-item-block ${a.className}`.trim()}>
-              {a.children.map(getChildrenToRender)}
-            </a>
-          </Item>
-        )
+        if (
+          accept === 'ALL' ||
+          (Array.isArray(accept) && accept.find(i => i === authRole))
+        ) {
+          return (
+            <Item key={item.name} {...itemProps}>
+              <a {...a} className={`header0-item-block ${a.className}`.trim()}>
+                {a.children.map(getChildrenToRender)}
+              </a>
+            </Item>
+          )
+        }
       }
       return null
     })

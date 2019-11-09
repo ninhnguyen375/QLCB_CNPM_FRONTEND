@@ -45,7 +45,7 @@ class MenuPage extends React.Component {
             title: (
               <span>
                 <Icon type='home' />
-                <span>Bảng điều khiển</span>
+                <span>Bảng Điều Khiển</span>
               </span>
             ),
           },
@@ -54,7 +54,7 @@ class MenuPage extends React.Component {
             title: (
               <span>
                 <Icon type='user' />
-                <span>Nhân viên</span>
+                <span>Nhân Viên</span>
               </span>
             ),
           },
@@ -76,7 +76,7 @@ class MenuPage extends React.Component {
             title: (
               <span>
                 <Icon type='home' />
-                <span>Bảng điều khiển</span>
+                <span>Bảng Điều Khiển</span>
               </span>
             ),
           },
@@ -238,7 +238,7 @@ class MenuPage extends React.Component {
               background: 'white',
               padding: 0,
               paddingLeft: 20,
-              paddingRight: 20,
+              paddingRight: 40,
               height: 55,
               display: 'flex',
               alignItems: 'center',

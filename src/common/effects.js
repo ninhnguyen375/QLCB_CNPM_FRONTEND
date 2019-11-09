@@ -1,44 +1,40 @@
 import axios from 'axios'
 import { TIMEOUT } from './models'
-import {
-  fetchEnd,
-  fetchStart,
-  fetchSuccess,
-  fetchFailure,
-  loadStart,
-  loadEnd,
-} from './actions/session'
+import { loadEnd } from './actions/session'
 import { clearAll } from './actions/common'
 import storeAccessible from './utils/storeAccessible'
 import { MODULE_NAME as MODULE_USER } from '../modules/user/models'
+import nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 export async function loading(fetchingProcess, done = undefined) {
-  storeAccessible.dispatch(loadStart({ config: { key: 'loading' } }))
+  nprogress.start()
   try {
     const ret = await fetchingProcess()
     storeAccessible.dispatch(loadEnd({ config: { key: 'loading' } }))
     if (done) {
       await done()
     }
+    nprogress.done()
     return ret
   } catch (error) {
-    storeAccessible.dispatch(loadEnd({ config: { key: 'loading' } }))
+    nprogress.done()
     console.error('ERROR', error)
     throw error
   }
 }
 
 export async function loadingProcess(fetchingProcess, done = undefined) {
-  storeAccessible.dispatch(fetchStart({ config: { key: 'loading' } }))
+  nprogress.start()
   try {
     const ret = await fetchingProcess()
-    storeAccessible.dispatch(fetchEnd({ config: { key: 'loading' } }))
+    nprogress.done()
     if (done) {
       await done()
     }
     return ret
   } catch (error) {
-    storeAccessible.dispatch(fetchEnd({ config: { key: 'loading' } }))
+    nprogress.done()
     console.error('ERROR', error)
     throw error
   }
@@ -64,7 +60,7 @@ export function fetch({ url, headers, ...options }) {
 }
 
 export function fetchLoading({ url, headers, ...options }) {
-  storeAccessible.dispatch(fetchStart({ config: { key: url } }))
+  nprogress.start()
   return axios({
     method: 'get',
     timeout: TIMEOUT,
@@ -76,11 +72,11 @@ export function fetchLoading({ url, headers, ...options }) {
     ...options,
   })
     .then(response => {
-      storeAccessible.dispatch(fetchSuccess({ config: { key: url } }))
+      nprogress.done()
       return response
     })
     .catch(err => {
-      storeAccessible.dispatch(fetchFailure({ config: { key: url } }))
+      nprogress.done()
       throw err
     })
 }
@@ -117,7 +113,7 @@ export function fetchAuthLoading({ url, headers, ...options }) {
   if (!user || !user.token) {
     throw new Error('MISSING_USER_TOKEN')
   }
-  storeAccessible.dispatch(fetchStart({ config: { key: url } }))
+  nprogress.start()
   return axios({
     method: 'get',
     timeout: TIMEOUT,
@@ -130,11 +126,11 @@ export function fetchAuthLoading({ url, headers, ...options }) {
     ...options,
   })
     .then(response => {
-      storeAccessible.dispatch(fetchSuccess({ config: { key: url } }))
+      nprogress.done()
       return response
     })
     .catch(error => {
-      storeAccessible.dispatch(fetchFailure({ config: { key: url } }))
+      nprogress.done()
       if (error.response && error.response.status === 401) {
         logout()
       }

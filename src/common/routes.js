@@ -79,6 +79,19 @@ export default class Routes extends Component {
       )
     }
 
-    return <Route path='*' component={UnderContruct} />
+    return (
+      <ScrollToTop>
+        <Switch>
+          <Route key='home' path='/' exact component={HomePage} />
+          <Route
+            key='search-flight'
+            path='/search-flight'
+            exact
+            component={SearchFlight}
+          />
+          <Route key='null' path='*' component={PageNotFound} />
+        </Switch>
+      </ScrollToTop>
+    )
   }
 }
