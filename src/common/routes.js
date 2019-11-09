@@ -10,6 +10,7 @@ import SearchFlight from '../modules/frontpage/containers/SearchFlight'
 import { ROLE } from '../modules/user/models'
 import UserListPage from '../pages/UserListPage'
 import UserDetailPage from '../pages/UserDetailPage'
+import AirportListPage from '../pages/AirportListPage'
 
 export default class Routes extends Component {
   render() {
@@ -49,6 +50,27 @@ export default class Routes extends Component {
               <Dashboard mode={user.user.role} />
             </Route>
             <Route key='user' path='/admin/user' exact>
+              <UserListPage mode={user.user.role} />
+            </Route>
+            <Route key='order' path='/admin/order' exact>
+              <UserListPage mode={user.user.role} />
+            </Route>
+            <Route key='airport' path='/admin/airport' exact>
+              <AirportListPage mode={user.user.role} />
+            </Route>
+            <Route key='airline' path='/admin/airline' exact>
+              <UserListPage mode={user.user.role} />
+            </Route>
+            <Route key='luggage' path='/admin/luggage' exact>
+              <UserListPage mode={user.user.role} />
+            </Route>
+            <Route key='ticket-category' path='/admin/ticket-category' exact>
+              <UserListPage mode={user.user.role} />
+            </Route>
+            <Route key='flight' path='/admin/flight' exact>
+              <UserListPage mode={user.user.role} />
+            </Route>
+            <Route key='date' path='/admin/date' exact>
               <UserListPage mode={user.user.role} />
             </Route>
             <Route key='user' path='/admin/user/:id' exact>
