@@ -4,13 +4,13 @@ const menu = {
   [ROLE.ADMIN]: [
     {
       key: 'admin/dashboard',
-      name: 'Bảng điều khiển',
+      name: 'Bảng Điều Khiển',
       icon: 'safety-certificate',
       children: [],
     },
     {
       key: 'admin/staff',
-      name: 'Nhân viên',
+      name: 'Nhân Viên',
       icon: 'user',
       children: [],
     },
@@ -48,7 +48,7 @@ const menu = {
   [ROLE.STAFF]: [
     {
       key: 'admin/dashboard',
-      name: 'Bảng điều khiển',
+      name: 'Bảng Điều Khiển',
       icon: 'safety-certificate',
       children: [],
     },

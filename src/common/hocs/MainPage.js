@@ -6,40 +6,45 @@ import Modal from '../components/widgets/Modal'
 import PageLoading from '../components/widgets/PageLoading'
 import ProgressLoading from '../components/widgets/ProgressLoading'
 import Loading from '../components/widgets/Loading'
-// import userHandlers from '../../modules/user/handlers'
+import userHandlers from '../../modules/user/handlers'
 
 class MainPage extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-      loading: false
+      loading: false,
     }
   }
 
-  async componentDidMount () {
-    const { user, getUser } = this.props
+  async componentDidMount() {
+    const { user, getMe } = this.props
     if (user && user.id) {
       try {
-        await getUser(user.id)
-        this.setState({
-          loading: false
-        }, () => {
-          this.forceUpdate()
-        })
-      } catch (err) {
-      }
+        await getMe()
+        this.setState(
+          {
+            loading: false,
+          },
+          () => {
+            this.forceUpdate()
+          },
+        )
+      } catch (err) {}
     }
   }
 
-  shouldComponentUpdate (nextProps) {
+  shouldComponentUpdate(nextProps) {
     const { user } = this.props
-    if ((!user && nextProps.user) || (nextProps.user && user.id !== nextProps.user.id)) {
+    if (
+      (!user && nextProps.user) ||
+      (nextProps.user && user.id !== nextProps.user.id)
+    ) {
       return true
     }
     return false
   }
 
-  render () {
+  render() {
     const { loading } = this.state
     const { store } = this.props
     if (loading) {
@@ -59,12 +64,13 @@ class MainPage extends Component {
 }
 
 export default connect(
-  (state) => {
+  state => {
     return {
-      user: state.user ? (state.user.user || {}) : {}
+      user: state.user ? state.user.user || {} : {},
     }
-  }, (dispatch) => ({
-    dispatch
-    // ...userHandlers(dispatch)
-  })
+  },
+  dispatch => ({
+    dispatch,
+    ...userHandlers(dispatch),
+  }),
 )(MainPage)

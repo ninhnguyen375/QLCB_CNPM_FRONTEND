@@ -8,16 +8,16 @@ export const ENDPOINTS = {
   createUser: `${DEFAULT_URL}/users`,
   getUser: id => `${DEFAULT_URL}/users/${id}`,
   updateUser: id => `${DEFAULT_URL}/users/${id}`,
+  getMe: `${DEFAULT_URL}/auth/me`,
 }
 
 export const LIMIT = 10
 export const emptyString = '---'
 
 export const STATUS = {
-  0: 'NEW',
-  1: 'APPROVE',
-  2: 'BANNED',
-  3: 'DELETED',
+  1: ' ĐANG HOẠT ĐỘNG ',
+  2: ' ĐÃ KHÓA ',
+  3: ' ĐÃ XÓA ',
 }
 
 export const ROLE = {
@@ -26,8 +26,7 @@ export const ROLE = {
 }
 
 export const STATUS_COLORS = {
-  0: 'green',
-  1: 'blue',
-  2: 'gray',
-  3: 'red',
+  1: 'green',
+  2: 'red',
+  3: 'gray',
 }

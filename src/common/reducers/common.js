@@ -5,9 +5,11 @@ const defaultState = {
   language: 'en',
   timeout: 30000,
   roles: [],
-  locations: []
+  locations: [],
 }
 
-const handlers = { [actions.clearAll]: (state, action) => ({ ...defaultState }) }
+const handlers = {
+  [actions.clearAll]: (state, action) => ({ ...defaultState }),
+}
 
 export default handleActions(handlers, defaultState)

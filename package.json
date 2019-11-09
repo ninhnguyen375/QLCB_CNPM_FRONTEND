@@ -11,6 +11,7 @@
     "less-loader": "^5.0.0",
     "lottie-web": "^5.5.8",
     "moment": "^2.24.0",
+    "nprogress": "^0.2.0",
     "rc-queue-anim": "^1.8.2",
     "rc-scroll-anim": "^2.6.2",
     "react": "^16.9.0",

@@ -1,4 +1,9 @@
-import { loading, fetch, fetchAuthLoading } from '../../common/effects'
+import {
+  loading,
+  fetch,
+  fetchAuthLoading,
+  fetchLoading,
+} from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setUserInformation, setUserToken, setUsers } from './actions'
 
@@ -83,7 +88,34 @@ export default (dispatch, props) => ({
       return { ...res, success: true }
     } catch (err) {
       dispatch(setUsers({}))
-      return { ...err.response.data, success: false }
+      return { ...err, success: false }
+    }
+  },
+  getMe: async () => {
+    try {
+      const result = await loading(async () => {
+        const result = await fetchAuthLoading({
+          url: ENDPOINTS.getMe,
+          method: 'POST',
+        })
+        if (result.data && result.data.success && result.data.user) {
+          dispatch(setUserToken(result.data.token))
+          dispatch(
+            setUserInformation({
+              ...result.data.user,
+            }),
+          )
+          console.log('Ninh Debug: result', result)
+        }
+        return result.data
+      })
+      return result
+    } catch (error) {
+      if (error && error.response && error.response.data) {
+        const { message } = error.response.data
+        return { success: false, msg: message }
+      }
+      return { success: false, msg: 'Server error.' }
     }
   },
 })
