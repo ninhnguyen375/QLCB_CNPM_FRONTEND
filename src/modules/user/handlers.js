@@ -118,4 +118,18 @@ export default (dispatch, props) => ({
       return { success: false, msg: 'Server error.' }
     }
   },
+  blockUser: async id => {
+    const result = await fetchAuthLoading({
+      url: ENDPOINTS.blockUser(id),
+      method: 'PUT',
+    })
+    return result.data
+  },
+  unblockUser: async id => {
+    const result = await fetchAuthLoading({
+      url: ENDPOINTS.unblockUser(id),
+      method: 'PUT',
+    })
+    return result.data
+  },
 })

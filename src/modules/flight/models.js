@@ -13,11 +13,11 @@ export const LIMIT = 10
 export const emptyString = '---'
 
 export const STATUS = {
-  0: 'HOẠT ĐỘNG',
-  1: 'KHÔNG HOẠT ĐỘNG',
+  0: 'KHÔNG HOẠT ĐỘNG',
+  1: 'HOẠT ĐỘNG',
 }
 
 export const STATUS_COLORS = {
-  0: 'green',
-  1: 'gray',
+  0: 'gray',
+  1: 'green',
 }
