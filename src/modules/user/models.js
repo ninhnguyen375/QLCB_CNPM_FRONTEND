@@ -8,6 +8,8 @@ export const ENDPOINTS = {
   createUser: `${DEFAULT_URL}/users`,
   getUser: id => `${DEFAULT_URL}/users/${id}`,
   updateUser: id => `${DEFAULT_URL}/users/${id}`,
+  blockUser: id => `${DEFAULT_URL}/users/${id}/block`,
+  unblockUser: id => `${DEFAULT_URL}/users/${id}/unblock`,
   getMe: `${DEFAULT_URL}/auth/me`,
 }
 

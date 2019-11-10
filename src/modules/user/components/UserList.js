@@ -9,6 +9,7 @@ import {
   Icon,
   notification,
   Tag,
+  Popconfirm,
 } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import AddUserForm from './AddUserForm'
@@ -62,6 +63,7 @@ export class UserList extends Component {
     {
       key: 'Status',
       dataIndex: 'status',
+      sorter: true,
       title: 'Trạng thái',
       render: value => <Tag color={STATUS_COLORS[value]}>{STATUS[value]}</Tag>,
     },
@@ -72,6 +74,34 @@ export class UserList extends Component {
       render: r => {
         return (
           <div className='d-flex justify-content-end'>
+            {r.status === 1 ? (
+              <Popconfirm
+                title='Bạn có chắc chắn?'
+                okText='Có'
+                cancelText='Hủy'
+                onConfirm={() => this.handleBlockUser(r.id)}
+              >
+                <Button style={{ marginRight: 5 }} icon='lock'>
+                  Khóa
+                </Button>
+              </Popconfirm>
+            ) : (
+              ''
+            )}
+            {r.status === 2 ? (
+              <Popconfirm
+                title='Bạn có chắc chắn?'
+                okText='Có'
+                cancelText='Hủy'
+                onConfirm={() => this.handleUnblockUser(r.id)}
+              >
+                <Button style={{ marginRight: 5 }} icon='unlock'>
+                  Mở Khóa
+                </Button>
+              </Popconfirm>
+            ) : (
+              ''
+            )}
             <Link to={`/admin/user/${r.id}`}>
               <Button
                 style={{ marginRight: 5 }}
@@ -81,15 +111,36 @@ export class UserList extends Component {
                 Thông tin
               </Button>
             </Link>
-            <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
+            <Button icon='delete' type='danger'>
               Xóa
             </Button>
-            <Button icon='lock'>Khóa</Button>
           </div>
         )
       },
     },
   ]
+
+  handleBlockUser = async id => {
+    const { blockUser } = this.props
+    try {
+      await blockUser(id)
+      await this.getUsers()
+      notification.success({ message: 'Thành công' })
+    } catch (error) {
+      handleError(error, null, notification)
+    }
+  }
+
+  handleUnblockUser = async id => {
+    const { unblockUser } = this.props
+    try {
+      await unblockUser(id)
+      await this.getUsers()
+      notification.success({ message: 'Thành công' })
+    } catch (error) {
+      handleError(error, null, notification)
+    }
+  }
 
   handleChangeTable = async ({ current }, fillter, sorter) => {
     const { columnKey, order } = sorter
