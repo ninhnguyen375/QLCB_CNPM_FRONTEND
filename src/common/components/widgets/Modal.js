@@ -30,7 +30,7 @@ class ModalComponent extends Component {
     this.setState({
       isShow: false,
       title: '',
-      // component: undefined,
+      component: undefined,
     })
   }
 

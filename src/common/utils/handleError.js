@@ -3,10 +3,9 @@ export const handleError = (err, form, noti) => {
   const isOnFormError = !!form
 
   if (!data) {
-    noti.error({ message: 'Server Error' })
+    noti.error({ message: err.message || 'Server Error' })
     return
   }
-  console.log('Ninh Debug: data', data)
 
   let errors = data.errors ? data.errors : data
 
