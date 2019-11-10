@@ -3,12 +3,12 @@ import { Modal } from 'antd'
 
 let instanceModalComponent
 class ModalComponent extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isShow: false,
       params: {},
-      component: undefined
+      component: undefined,
     }
 
     this.activateModal = this.activateModal.bind(this)
@@ -16,58 +16,58 @@ class ModalComponent extends Component {
     this.getApplicationNode = this.getApplicationNode.bind(this)
   }
 
-  activateModal (component, params) {
+  activateModal(component, params) {
     this.setState({
       isShow: true,
       component,
-      params
+      params,
     })
   }
 
-  deactivateModal () {
+  deactivateModal() {
     const { deactiveCallback } = this.state
     deactiveCallback && deactiveCallback()
     this.setState({
       isShow: false,
       title: '',
-      component: undefined
+      // component: undefined,
     })
   }
 
-  getApplicationNode () {
+  getApplicationNode() {
     return document.getElementById('application')
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { global } = this.props
     if (global) {
       instanceModalComponent = this
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     const { global } = this.props
     if (global) {
       instanceModalComponent = null
     }
   }
 
-  render () {
+  render() {
     // const { classes } = this.props
     const { isShow, component, params } = this.state
-    if (!isShow || !component) {
-      return null
-    }
+    // if (!isShow || !component) {
+    //   return null
+    // }
     return (
       <Modal
         title='Notification'
-        visible
+        visible={!!isShow && !!component}
         closable
         onCancel={this.deactivateModal}
         footer={null}
         bodyStyle={{
           padding: 0,
-          ...(params.bodyStyle || {})
+          ...(params.bodyStyle || {}),
         }}
         {...params}
       >
@@ -79,13 +79,17 @@ class ModalComponent extends Component {
 
 export default {
   Component: ModalComponent,
-  show (component, params = {}) {
-    instanceModalComponent && instanceModalComponent.activateModal(component, params)
+  show(component, params = {}) {
+    instanceModalComponent &&
+      instanceModalComponent.activateModal(component, params)
   },
-  hide () {
+  hide() {
     instanceModalComponent && instanceModalComponent.deactivateModal()
   },
-  getApplicationNode () {
-    return (instanceModalComponent && instanceModalComponent.getApplicationNode()) || undefined
-  }
+  getApplicationNode() {
+    return (
+      (instanceModalComponent && instanceModalComponent.getApplicationNode()) ||
+      undefined
+    )
+  },
 }
