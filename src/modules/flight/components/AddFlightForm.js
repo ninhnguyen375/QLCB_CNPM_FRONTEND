@@ -15,11 +15,29 @@ import { createFlightAsync } from '../handlers'
 import { handleError } from '../../../common/utils/handleError'
 import { getAirportsAsync } from '../../airport/handlers'
 import removeNullObject from '../../../common/utils/removeObjectNull'
+import { getTicketCategoriesAsync } from '../../ticketcategory/handlers'
 
 class AddFlightForm extends Component {
   state = {
     loading: false,
     airports: [],
+    ticketCategories: [],
+    addTicketCategories: {
+      count: 0,
+      selectedKeys: [],
+    },
+    ticketCategoriesOfFlight: {},
+    isShowAddTCButton: true,
+  }
+
+  getTicketCategories = async (search = {}) => {
+    try {
+      const values = removeNullObject(search)
+      const res = await getTicketCategoriesAsync(undefined, undefined, values)
+      this.setState({ ticketCategories: res.data })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
   }
 
   getAirports = async (search = {}) => {
@@ -34,12 +52,137 @@ class AddFlightForm extends Component {
 
   componentDidMount() {
     this.getAirports()
+    this.getTicketCategories()
+  }
+
+  renderTicketAddTicketInput = count => {
+    const { ticketCategories, ticketCategoriesOfFlight } = this.state
+    let arr = []
+    const options = Array.isArray(ticketCategories)
+      ? ticketCategories.map(t => (
+          <Select.Option key={t.id} value={t.id}>
+            {t.name}
+          </Select.Option>
+        ))
+      : ''
+
+    for (let i = 0; i < count; i++) {
+      const key = `ticketCategory_${i}`
+      const item = ticketCategoriesOfFlight[key]
+
+      arr.push(
+        <div
+          className='d-flex align-items-center'
+          style={{ marginBottom: 10 }}
+          key={i}
+        >
+          <Select
+            disabled={item ? item.done : false}
+            style={{ width: 200, marginRight: 10 }}
+            placeholder='Loại vé'
+            onChange={this.handleSelectTicketCategory(key)}
+          >
+            {options}
+          </Select>
+          <InputNumber
+            style={{ width: 150, marginRight: 10 }}
+            placeholder='Giá vé'
+            min={1}
+            onChange={this.handleInputPriceForTicketCategory(key)}
+          />
+          <b style={{ marginRight: 10 }}>VNĐ</b>
+          {!(item && item.done) ? (
+            <Button
+              type='primary'
+              disabled={!(item && item.ticketCategoryId && item.price)}
+              onClick={() => {
+                this.setState(
+                  {
+                    ticketCategoriesOfFlight: {
+                      ...ticketCategoriesOfFlight,
+                      [key]: {
+                        ...ticketCategoriesOfFlight[key],
+                        done: true,
+                      },
+                    },
+                    isShowAddTCButton: true,
+                  },
+                  () => {
+                    const {
+                      ticketCategoryId,
+                    } = this.state.ticketCategoriesOfFlight[key]
+                    this.setState({
+                      ticketCategories: [
+                        ...this.state.ticketCategories.filter(
+                          t => t.id !== ticketCategoryId,
+                        ),
+                      ],
+                    })
+                  },
+                )
+              }}
+            >
+              Thêm
+            </Button>
+          ) : (
+            <Icon
+              type='check-circle'
+              theme='filled'
+              style={{ color: '#0bab0b', fontSize: '1.4em', marginLeft: 10 }}
+            />
+          )}
+        </div>,
+      )
+    }
+    return arr
+  }
+
+  handleSelectTicketCategory = name => value => {
+    const { ticketCategoriesOfFlight } = this.state
+    this.setState({
+      ticketCategoriesOfFlight: {
+        ...ticketCategoriesOfFlight,
+        [name]: {
+          ...ticketCategoriesOfFlight[name],
+          ticketCategoryId: value,
+        },
+      },
+    })
+  }
+
+  handleInputPriceForTicketCategory = name => value => {
+    const { ticketCategoriesOfFlight } = this.state
+    this.setState({
+      ticketCategoriesOfFlight: {
+        ...ticketCategoriesOfFlight,
+        [name]: {
+          ...ticketCategoriesOfFlight[name],
+          price: value,
+        },
+      },
+    })
+  }
+
+  handleClickAddTicketCategories = () => {
+    this.setState({
+      addTicketCategories: {
+        ...this.state.addTicketCategories,
+        count: this.state.addTicketCategories.count + 1,
+      },
+      isShowAddTCButton: false,
+    })
   }
 
   handleSubmit = e => {
     e.preventDefault()
     this.setState({ loading: true })
     const { form } = this.props
+    let { ticketCategoriesOfFlight } = this.state
+
+    ticketCategoriesOfFlight = Object.values(ticketCategoriesOfFlight).filter(
+      t => t.done,
+    )
+
     form.validateFieldsAndScroll(
       { scroll: { offsetTop: 50 } },
       async (err, values) => {
@@ -49,7 +192,7 @@ class AddFlightForm extends Component {
         }
 
         try {
-          await createFlightAsync(values)
+          await createFlightAsync({ ...values, ticketCategoriesOfFlight })
           await this.props.getFlights()
           notification.success({ message: 'Thành công' })
           Modal.hide()
@@ -77,12 +220,16 @@ class AddFlightForm extends Component {
 
   render() {
     const { form } = this.props
-    const { airports } = this.state
+    const { airports, addTicketCategories } = this.state
     const { getFieldDecorator } = form
 
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
+          <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>
+            I. Thông tin chuyến bay:
+          </div>
+          <br />
           <div className='row'>
             <div className='col-lg-4'>
               <Form.Item label='Mã chuyến bay'>
@@ -209,6 +356,22 @@ class AddFlightForm extends Component {
                 )}
               </Form.Item>
             </div>
+          </div>
+
+          <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>
+            I. Giá từng loại vé:
+          </div>
+          <br />
+          <div className=''>
+            {this.renderTicketAddTicketInput(addTicketCategories.count)}
+            <br />
+            <Button
+              icon='plus-circle'
+              disabled={!this.state.isShowAddTCButton}
+              onClick={this.handleClickAddTicketCategories}
+            >
+              Thêm loại vé
+            </Button>
           </div>
           <div className='d-flex justify-content-end'>
             <Button

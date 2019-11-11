@@ -14,6 +14,7 @@ import Modal from '../../../common/components/widgets/Modal'
 import AddLuggageForm from './AddLuggageForm'
 import { handleError } from '../../../common/utils/handleError'
 import EditLuggageForm from './EditLuggageForm'
+import removeNullObject from '../../../common/utils/removeObjectNull'
 
 export class LuggageList extends Component {
   state = {
@@ -86,7 +87,7 @@ export class LuggageList extends Component {
     },
   ]
 
-  handleChangeTable = async ({ current }, fillter, sorter) => {
+  handleChangeTable = async ({ current }, filter, sorter) => {
     const { columnKey, order } = sorter
     const sortParam =
       order === 'ascend' ? { sortAsc: columnKey } : { sortDesc: columnKey }
@@ -98,7 +99,9 @@ export class LuggageList extends Component {
 
   getLuggages = async (current, pageSize, params) => {
     const { getLuggages } = this.props
-    const { search } = this.state
+    let { search } = this.state
+
+    search = removeNullObject(search)
     const res = await getLuggages(current, pageSize, { ...search, ...params })
     if (res.success) {
       this.setState({ pagination: res })

@@ -1,19 +1,10 @@
 import React, { Component } from 'react'
-import {
-  Table,
-  Card,
-  Button,
-  Row,
-  Col,
-  Input,
-  Icon,
-  notification,
-  Tag,
-} from 'antd'
+import { Table, Card, Button, Row, Col, Input, Icon, notification } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import AddTicketCategoryForm from './AddTicketCategoryForm'
 import { handleError } from '../../../common/utils/handleError'
 import EditTicketCategoryForm from './EditTicketCategoryForm'
+import removeNullObject from '../../../common/utils/removeObjectNull'
 
 export class TicketCategoryList extends Component {
   state = {
@@ -32,7 +23,7 @@ export class TicketCategoryList extends Component {
           <img
             src={require('../../../assets/images/ticketCategory.png')}
             alt='avatar'
-            height={35}
+            height={30}
           />
           <div>
             <span style={{ marginLeft: 10 }}>{value}</span>
@@ -64,7 +55,7 @@ export class TicketCategoryList extends Component {
     },
   ]
 
-  handleChangeTable = async ({ current }, fillter, sorter) => {
+  handleChangeTable = async ({ current }, filter, sorter) => {
     const { columnKey, order } = sorter
     const sortParam =
       order === 'ascend' ? { sortAsc: columnKey } : { sortDesc: columnKey }
@@ -76,7 +67,9 @@ export class TicketCategoryList extends Component {
 
   getTicketCategories = async (current, pageSize, params) => {
     const { getTicketCategories } = this.props
-    const { search } = this.state
+    let { search } = this.state
+
+    search = removeNullObject(search)
     const res = await getTicketCategories(current, pageSize, {
       ...search,
       ...params,

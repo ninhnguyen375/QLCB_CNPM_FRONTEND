@@ -14,6 +14,7 @@ import Modal from '../../../common/components/widgets/Modal'
 import AddAirportForm from './AddAirportForm'
 import { handleError } from '../../../common/utils/handleError'
 import EditAirportForm from './EditAirportForm'
+import removeNullObject from '../../../common/utils/removeObjectNull'
 
 export class AirportList extends Component {
   state = {
@@ -73,7 +74,7 @@ export class AirportList extends Component {
     },
   ]
 
-  handleChangeTable = async ({ current }, fillter, sorter) => {
+  handleChangeTable = async ({ current }, filter, sorter) => {
     const { columnKey, order } = sorter
     const sortParam =
       order === 'ascend' ? { sortAsc: columnKey } : { sortDesc: columnKey }
@@ -85,7 +86,9 @@ export class AirportList extends Component {
 
   getAirports = async (current, pageSize, params) => {
     const { getAirports } = this.props
-    const { search } = this.state
+    let { search } = this.state
+
+    search = removeNullObject(search)
     const res = await getAirports(current, pageSize, { ...search, ...params })
     if (res.success) {
       this.setState({ pagination: res })

@@ -16,6 +16,7 @@ import AddUserForm from './AddUserForm'
 import { Link } from 'react-router-dom'
 import { handleError } from '../../../common/utils/handleError'
 import { STATUS_COLORS, STATUS } from '../models'
+import removeNullObject from '../../../common/utils/removeObjectNull'
 
 export class UserList extends Component {
   state = {
@@ -142,7 +143,7 @@ export class UserList extends Component {
     }
   }
 
-  handleChangeTable = async ({ current }, fillter, sorter) => {
+  handleChangeTable = async ({ current }, filter, sorter) => {
     const { columnKey, order } = sorter
     const sortParam =
       order === 'ascend' ? { sortAsc: columnKey } : { sortDesc: columnKey }
@@ -154,7 +155,9 @@ export class UserList extends Component {
 
   getUsers = async (current, pageSize, params) => {
     const { getUsers } = this.props
-    const { search } = this.state
+    let { search } = this.state
+
+    search = removeNullObject(search)
     const res = await getUsers(current, pageSize, { ...search, ...params })
     if (res.success) {
       this.setState({ pagination: res })

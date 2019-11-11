@@ -6,6 +6,7 @@ import { handleError } from '../../../common/utils/handleError'
 import EditDateForm from './EditDateForm'
 import moment from 'moment'
 import SelectableFlightList from '../../flight/components/SelectableFlightList'
+import removeNullObject from '../../../common/utils/removeObjectNull'
 
 export class DateList extends Component {
   state = {
@@ -75,7 +76,7 @@ export class DateList extends Component {
   handleShowAddFlightToDate = date => {
     Modal.show(
       <SelectableFlightList
-        fillters={{ status: 1 }}
+        filters={{ status: 1 }}
         onCancel={() => Modal.hide()}
         onOk={this.handleAddFlightToDate}
       />,
@@ -88,7 +89,7 @@ export class DateList extends Component {
     )
   }
 
-  handleChangeTable = async ({ current }, fillter, sorter) => {
+  handleChangeTable = async ({ current }, filter, sorter) => {
     const { columnKey, order } = sorter
     const sortParam =
       order === 'ascend' ? { sortAsc: columnKey } : { sortDesc: columnKey }
@@ -100,7 +101,9 @@ export class DateList extends Component {
 
   getDates = async (current, pageSize, params) => {
     const { getDates } = this.props
-    const { search } = this.state
+    let { search } = this.state
+
+    search = removeNullObject(search)
     const res = await getDates(current, pageSize, {
       ...search,
       ...params,

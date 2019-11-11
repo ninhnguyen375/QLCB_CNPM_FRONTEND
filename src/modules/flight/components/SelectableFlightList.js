@@ -14,6 +14,7 @@ import { handleError } from '../../../common/utils/handleError'
 import { STATUS_COLORS, STATUS } from '../models'
 import { minutesToTimeWithType } from '../../../common/utils/timeFormater'
 import { getFlightsAsync } from '../handlers'
+import removeNullObject from '../../../common/utils/removeObjectNull'
 
 class SelectableFlightList extends Component {
   state = {
@@ -88,7 +89,7 @@ class SelectableFlightList extends Component {
     },
   ]
 
-  handleChangeTable = async ({ current }, fillter, sorter) => {
+  handleChangeTable = async ({ current }, filter, sorter) => {
     const { columnKey, order } = sorter
     const sortParam =
       order === 'ascend' ? { sortAsc: columnKey } : { sortDesc: columnKey }
@@ -99,14 +100,16 @@ class SelectableFlightList extends Component {
   }
 
   getFlights = async (current, pageSize, params) => {
-    const { search } = this.state
-    const { fillters = {} } = this.props
+    let { search } = this.state
+
+    search = removeNullObject(search)
+    const { filters = {} } = this.props
 
     try {
       const res = await getFlightsAsync(current, pageSize, {
         ...search,
         ...params,
-        ...fillters,
+        ...filters,
       })
       this.setState({ pagination: res, flights: res.data })
     } catch (err) {
