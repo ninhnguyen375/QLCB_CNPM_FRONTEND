@@ -59,6 +59,15 @@ class MenuPage extends React.Component {
             ),
           },
           {
+            key: 'admin/customer',
+            title: (
+              <span>
+                <Icon type='user' />
+                <span>Khách hàng</span>
+              </span>
+            ),
+          },
+          {
             key: 'admin/order',
             title: (
               <span>
