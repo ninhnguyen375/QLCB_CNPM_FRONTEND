@@ -100,15 +100,14 @@ class EditFlightForm extends Component {
           <div className='row'>
             <div className='col-lg-4'>
               <Form.Item label='Mã chuyến bay'>
-                {getFieldDecorator('id', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Mã chuyến bay là bắt buộc',
-                    },
-                  ],
-                  initialValue: flight.id,
-                })(<Input placeholder='Mã chuyến bay' />)}
+                <Tag
+                  title='Mã Chuyến Bay'
+                  className='tac'
+                  style={{ fontSize: '1em', padding: '5px 10px', width: 130 }}
+                  color='blue'
+                >
+                  {flight.id}
+                </Tag>
               </Form.Item>
             </div>
             <div className='col-lg-4'>

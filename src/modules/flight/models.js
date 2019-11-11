@@ -13,7 +13,7 @@ export const LIMIT = 10
 export const emptyString = '---'
 
 export const STATUS = {
-  0: 'KHÔNG HOẠT ĐỘNG',
+  0: 'NGƯNG HOẠT ĐỘNG',
   1: 'HOẠT ĐỘNG',
 }
 

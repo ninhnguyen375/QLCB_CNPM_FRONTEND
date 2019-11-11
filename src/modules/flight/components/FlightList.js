@@ -16,6 +16,7 @@ import { handleError } from '../../../common/utils/handleError'
 import EditFlightForm from './EditFlightForm'
 import { STATUS_COLORS, STATUS } from '../models'
 import { minutesToTimeWithType } from '../../../common/utils/timeFormater'
+import removeNullObject from '../../../common/utils/removeObjectNull'
 
 export class FlightList extends Component {
   state = {
@@ -54,6 +55,7 @@ export class FlightList extends Component {
     },
     {
       key: 'FlightTime',
+      sorter: true,
       dataIndex: 'flightTime',
       title: 'Thời gian bay',
       render: value => (
@@ -64,24 +66,28 @@ export class FlightList extends Component {
     },
     {
       key: 'AirportFrom',
+      sorter: true,
       dataIndex: 'airportFrom',
       title: 'Sân bay đi',
       render: value => <div className='link'>{value}</div>,
     },
     {
       key: 'AirportTo',
+      sorter: true,
       dataIndex: 'airportTo',
       title: 'Sân bay đến',
       render: value => <div className='link'>{value}</div>,
     },
     {
       key: 'SeatsCount',
+      sorter: true,
       dataIndex: 'seatsCount',
       title: 'Tổng Số lượng ghế',
       render: value => <Tag color='orange'>{value} Ghế</Tag>,
     },
     {
       key: 'Status',
+      sorter: true,
       dataIndex: 'status',
       title: 'Trạng thái',
       render: value => <Tag color={STATUS_COLORS[value]}>{STATUS[value]}</Tag>,
@@ -89,7 +95,6 @@ export class FlightList extends Component {
     {
       key: 'action',
       title: ' Thao tác ',
-      align: 'right',
       render: r => {
         return (
           <div className='d-flex justify-content-end'>
@@ -110,7 +115,7 @@ export class FlightList extends Component {
     },
   ]
 
-  handleChangeTable = async ({ current }, fillter, sorter) => {
+  handleChangeTable = async ({ current }, filter, sorter) => {
     const { columnKey, order } = sorter
     const sortParam =
       order === 'ascend' ? { sortAsc: columnKey } : { sortDesc: columnKey }
@@ -122,7 +127,9 @@ export class FlightList extends Component {
 
   getFlights = async (current, pageSize, params) => {
     const { getFlights } = this.props
-    const { search } = this.state
+    let { search } = this.state
+
+    search = removeNullObject(search)
     const res = await getFlights(current, pageSize, { ...search, ...params })
     if (res.success) {
       this.setState({ pagination: res })
@@ -217,7 +224,7 @@ export class FlightList extends Component {
         <br />
 
         <Table
-          scroll={{ x: '100%' }}
+          scroll={{ x: '110%' }}
           pagination={pagination}
           onChange={this.handleChangeTable}
           columns={this.columns}
