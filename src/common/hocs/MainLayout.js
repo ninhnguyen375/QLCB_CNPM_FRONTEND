@@ -162,6 +162,69 @@ class MenuPage extends React.Component {
             ),
           },
           {
+            key: 'admin/order',
+            title: (
+              <span>
+                <Icon type='unordered-list' />
+                <span>Đơn Hàng</span>
+              </span>
+            ),
+          },
+          {
+            key: 'admin/airport',
+            title: (
+              <span>
+                <Icon type='gold' />
+                <span>Sân Bay</span>
+              </span>
+            ),
+          },
+          {
+            key: 'admin/airline',
+            title: (
+              <span>
+                <Icon type='stock' />
+                <span>Hãng Hàng Không</span>
+              </span>
+            ),
+          },
+          {
+            key: 'admin/luggage',
+            title: (
+              <span>
+                <Icon type='container' />
+                <span>Loại Hành Lý</span>
+              </span>
+            ),
+          },
+          {
+            key: 'admin/ticket-category',
+            title: (
+              <span>
+                <Icon type='credit-card' />
+                <span>Loại Vé</span>
+              </span>
+            ),
+          },
+          {
+            key: 'admin/flight',
+            title: (
+              <span>
+                <Icon type='rocket' style={{ transform: 'rotate(30deg)' }} />
+                <span>Chuyến Bay</span>
+              </span>
+            ),
+          },
+          {
+            key: 'admin/date',
+            title: (
+              <span>
+                <Icon type='calendar' />
+                <span>Ngày Bay</span>
+              </span>
+            ),
+          },
+          {
             key: 'logout',
             title: (
               <span>

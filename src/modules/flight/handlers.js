@@ -47,16 +47,24 @@ export const updateFlight = async (data, id) => {
 }
 
 export async function createFlightAsync(flight = {}) {
-  const { startTime, flightTime } = flight
+  let { startTime, flightTime, ticketCategoriesOfFlight } = flight
   if (!startTime || !flightTime) {
     throw new Error('ERR001: Invalid input values')
   }
+  ticketCategoriesOfFlight = Array.isArray(ticketCategoriesOfFlight)
+    ? ticketCategoriesOfFlight.map(t => {
+        delete t.done
+        return t
+      })
+    : undefined
 
-  const data = {
+  let data = {
     ...flight,
     startTime: startTime.hour() * 60 + startTime.minute(),
     flightTime: flightTime.hour() * 60 + flightTime.minute(),
   }
+
+  data = ticketCategoriesOfFlight ? { ...data, ticketCategoriesOfFlight } : data
 
   const res = await fetchAuthLoading({
     url: ENDPOINTS.createFlight,

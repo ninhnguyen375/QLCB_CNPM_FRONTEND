@@ -6,6 +6,7 @@ import { MODULE_NAME as MODULE_LUGGAGE } from './luggage/models'
 import { MODULE_NAME as MODULE_FLIGHT } from './flight/models'
 import { MODULE_NAME as MODULE_DATE } from './date/models'
 import { MODULE_NAME as MODULE_CUSTOMER } from './customer/models'
+import { MODULE_NAME as MODULE_ORDER } from './order/models'
 import { MODULE_NAME as MODULE_TICKETCATEGORY } from './ticketcategory/models'
 import { MODULE_NAME as MODULE_FRONT } from './frontpage/models'
 // MODULE REDUCERS
@@ -16,6 +17,7 @@ import luggageReducers from './luggage/reducers'
 import flightReducers from './flight/reducers'
 import dateReducers from './date/reducers'
 import customerReducers from './customer/reducers'
+import orderReducers from './order/reducers'
 import ticketCategoryReducers from './ticketcategory/reducers'
 import frontReducers from './frontpage/reducers'
 
@@ -27,6 +29,7 @@ export const MODULE_REDUCERS = {
   [MODULE_LUGGAGE]: luggageReducers,
   [MODULE_FLIGHT]: flightReducers,
   [MODULE_DATE]: dateReducers,
+  [MODULE_ORDER]: orderReducers,
   [MODULE_CUSTOMER]: customerReducers,
   [MODULE_TICKETCATEGORY]: ticketCategoryReducers,
 }
