@@ -39,10 +39,10 @@ class FlightDetail extends Component {
       >
         <div className='container'>
           <h1>
-            <b>Thông tin chuyến bay:</b>
+            <b>I. Thông tin chuyến bay:</b>
           </h1>
           <br />
-          <div className='row'>
+          <div className='row container'>
             <div className='col-lg-4'>
               <h4>
                 <b>Chuyến bay:</b>
@@ -83,7 +83,7 @@ class FlightDetail extends Component {
             </div>
           </div>
           <br />
-          <div className='row'>
+          <div className='row container'>
             <div className='col-lg-4'>
               <h4>
                 <b>Nơi đi:</b>
@@ -124,10 +124,10 @@ class FlightDetail extends Component {
           </div>
           <Divider />
           <h1>
-            <b>Thông tin loại vé:</b>
+            <b>II. Thông tin loại vé:</b>
           </h1>
           <br />
-          <div className='row'>
+          <div className='row container'>
             <div className='col-lg-4'>
               <h4>
                 <b>Loại vé:</b>
@@ -146,7 +146,7 @@ class FlightDetail extends Component {
           flight.flightTicketCategories &&
           Array.isArray(flight.flightTicketCategories)
             ? flight.flightTicketCategories.map((t, index) => (
-                <div className='row' key={index}>
+                <div className='row container' key={index}>
                   <div className='col-lg-4'>
                     <div style={{ marginTop: 10 }}></div>
 

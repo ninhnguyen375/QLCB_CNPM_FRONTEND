@@ -56,11 +56,29 @@ export default (dispatch, props) => ({
       return { ...err, success: false }
     }
   },
-  addFlightsToDate: async flightIds => {
+  addFlightsToDate: async (id, flightIds) => {
+    if (!flightIds || !Array.isArray(flightIds)) {
+      throw new Error('Invalide flightIds')
+    }
+
+    if (flightIds.length === 0) return
+
     const res = await fetchAuthLoading({
-      url: ENDPOINTS.createDate,
+      url: ENDPOINTS.addFlightsToDate(id),
       method: 'POST',
-      data: flightIds,
+      data: { dateFlights: flightIds.map(id => ({ flightId: id })) },
+    })
+    return res.data
+  },
+  removeFlightFromDate: async (id, flightId) => {
+    if (!flightId) {
+      throw new Error('Missing params id or flightId')
+    }
+
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.removeFlightFromDate(id),
+      method: 'DELETE',
+      data: { flightId: flightId },
     })
     return res.data
   },

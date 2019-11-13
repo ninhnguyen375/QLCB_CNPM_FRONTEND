@@ -188,7 +188,6 @@ class SelectableFlightList extends Component {
           </Col>
         </Row>
         <br />
-
         <Table
           rowSelection={{
             selectedRowKeys: selectedRowKeys || [],
@@ -201,6 +200,7 @@ class SelectableFlightList extends Component {
           rowKey={i => i.id}
           dataSource={flights || []}
         ></Table>
+        <br />
         <div className='d-flex justify-content-end'>
           <Button style={{ marginRight: 10 }} onClick={() => onCancel()}>
             <Icon type='close-circle' /> Hủy
