@@ -35,7 +35,10 @@ class AddFlightForm extends Component {
   getTicketCategories = async (search = {}) => {
     try {
       const values = removeNullObject(search)
-      const res = await getTicketCategoriesAsync(undefined, undefined, values)
+      const res = await getTicketCategoriesAsync(undefined, undefined, {
+        ...values,
+        pageSize: 999,
+      })
       this.setState({ ticketCategories: res.data })
     } catch (err) {
       handleError(err, null, notification)

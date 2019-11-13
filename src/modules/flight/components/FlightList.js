@@ -15,7 +15,10 @@ import AddFlightForm from './AddFlightForm'
 import { handleError } from '../../../common/utils/handleError'
 import EditFlightForm from './EditFlightForm'
 import { STATUS_COLORS, STATUS } from '../models'
-import { minutesToTimeWithType } from '../../../common/utils/timeFormater'
+import {
+  minutesToTimeWithType,
+  minutesToTime,
+} from '../../../common/utils/timeFormater'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 import { Link } from 'react-router-dom'
 export class FlightList extends Component {
@@ -51,7 +54,7 @@ export class FlightList extends Component {
       sorter: true,
       render: value => (
         <Tag>
-          <Icon type='clock-circle' /> {minutesToTimeWithType(value)}
+          <Icon type='clock-circle' /> {minutesToTime(value)}
         </Tag>
       ),
     },
