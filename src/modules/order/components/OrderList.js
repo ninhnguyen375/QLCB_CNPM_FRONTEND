@@ -9,11 +9,13 @@ import {
   Icon,
   notification,
   Tag,
+  Popconfirm,
 } from 'antd'
-import Modal from '../../../common/components/widgets/Modal'
 import { handleError } from '../../../common/utils/handleError'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 import { Link } from 'react-router-dom'
+import { STATUS, STATUS_COLOR } from '../models'
+import moment from 'moment'
 
 export class OrderList extends Component {
   state = {
@@ -23,43 +25,73 @@ export class OrderList extends Component {
 
   columns = [
     {
-      key: 'avatar',
-      align: 'right',
-      render: () => (
-        <img
-          src={require('../../../assets/images/user.svg')}
-          alt='avatar'
-          width={35}
-        />
-      ),
-    },
-    {
-      key: 'FullName',
-      dataIndex: 'fullName',
-      title: ' Họ tên ',
+      key: 'Id',
+      dataIndex: 'id',
+      title: 'Mã hóa đơn',
       sorter: true,
       render: (value, record) => (
         <Link to={`/admin/order/${record.id}`}>{value}</Link>
       ),
     },
     {
-      key: 'Phone',
-      dataIndex: 'phone',
-      title: 'Số điện thoại',
-      sorter: true,
-      render: (value, record) => (
+      key: 'CustomerId',
+      dataIndex: 'customer',
+      title: 'Khách hàng',
+      render: (customer, record) => (
         <div>
-          <Icon type='phone' /> {value}
+          <div>
+            <Icon type='idcard' /> {customer && customer.id}
+          </div>
+          <div>
+            <Icon type='user' /> {customer && customer.fullName}
+          </div>
+          <div>
+            <Icon type='phone' /> {customer && customer.phone}
+          </div>
         </div>
       ),
     },
     {
-      key: 'BookingCount',
-      dataIndex: 'bookingCount',
-      title: 'Số lần đặt',
-      sorter: true,
+      key: 'TicketCount',
+      dataIndex: 'ticketCount',
+      title: 'Tổng số vé',
       align: 'center',
-      render: (value, record) => <Tag color='blue'>{value}</Tag>,
+      sorter: true,
+    },
+    {
+      key: 'TotalPrice',
+      dataIndex: 'totalPrice',
+      title: 'Thành tiền',
+      sorter: true,
+      render: value => (
+        <div className='price-color fwb'>
+          {value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0}{' '}
+          VNĐ
+        </div>
+      ),
+    },
+    {
+      key: 'CreateAt',
+      dataIndex: 'createAt',
+      title: 'Ngày lập',
+      sorter: true,
+      render: value => (
+        <div>
+          <Icon type='calendar' />{' '}
+          {moment(value)
+            .format('DD-MM-YYYY')
+            .toString()}
+        </div>
+      ),
+    },
+    {
+      key: 'Status',
+      dataIndex: 'status',
+      title: 'Trạng thái',
+      sorter: true,
+      render: (value, record) => (
+        <Tag color={STATUS_COLOR[value]}>{STATUS[value]}</Tag>
+      ),
     },
     {
       key: 'action',
@@ -69,15 +101,72 @@ export class OrderList extends Component {
         return (
           <div className='d-flex justify-content-end'>
             <Link to={`/admin/order/${r.id}`}>
-              <Button type='primary' icon='info-circle'>
+              <Button style={{ marginRight: 5 }} icon='info-circle'>
                 Chi tiết
               </Button>
             </Link>
+            {/* 0 is New */}
+            {r.status === 0 ? (
+              <>
+                <Popconfirm
+                  title='Bạn có chắc chắn?'
+                  onConfirm={() => this.handleRefuseOrder(r.id)}
+                  okText='Có'
+                  cancelText='Hủy'
+                >
+                  <Button
+                    style={{ marginRight: 5 }}
+                    type='danger'
+                    icon='close-circle'
+                  >
+                    Từ chối
+                  </Button>
+                </Popconfirm>
+                <Popconfirm
+                  title='Bạn có chắc chắn?'
+                  onConfirm={() => this.handleAcceptOrder(r.id)}
+                  okText='Có'
+                  cancelText='Hủy'
+                >
+                  <Button
+                    style={{ marginRight: 5 }}
+                    type='primary'
+                    icon='check-circle'
+                  >
+                    Xác nhận
+                  </Button>
+                </Popconfirm>
+              </>
+            ) : (
+              ''
+            )}
           </div>
         )
       },
     },
   ]
+
+  handleRefuseOrder = async id => {
+    const { refuseOrder } = this.props
+    try {
+      await refuseOrder(id)
+      await this.getOrders()
+      notification.success({ message: 'Thành công' })
+    } catch (error) {
+      handleError(error, null, notification)
+    }
+  }
+
+  handleAcceptOrder = async id => {
+    const { acceptOrder } = this.props
+    try {
+      await acceptOrder(id)
+      await this.getOrders()
+      notification.success({ message: 'Thành công' })
+    } catch (error) {
+      handleError(error, null, notification)
+    }
+  }
 
   handleChangeTable = async ({ current }, filter, sorter) => {
     const { columnKey, order } = sorter
