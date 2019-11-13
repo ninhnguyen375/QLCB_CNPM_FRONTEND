@@ -56,4 +56,26 @@ export default (dispatch, props) => ({
       return { ...err, success: false }
     }
   },
+  refuseOrder: async id => {
+    if (!id) {
+      throw new Error('Missing param id')
+    }
+
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.refuseOrder(id),
+      method: 'PUT',
+    })
+    return res.data
+  },
+  acceptOrder: async id => {
+    if (!id) {
+      throw new Error('Missing param id')
+    }
+
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.acceptOrder(id),
+      method: 'PUT',
+    })
+    return res.data
+  },
 })

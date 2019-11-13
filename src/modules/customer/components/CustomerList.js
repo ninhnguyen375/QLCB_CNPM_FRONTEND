@@ -69,9 +69,7 @@ export class CustomerList extends Component {
         return (
           <div className='d-flex justify-content-end'>
             <Link to={`/admin/customer/${r.id}`}>
-              <Button type='primary' icon='info-circle'>
-                Chi tiết
-              </Button>
+              <Button icon='info-circle'>Chi tiết</Button>
             </Link>
           </div>
         )
