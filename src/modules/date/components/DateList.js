@@ -78,6 +78,7 @@ export class DateList extends Component {
       <SelectableFlightList
         filters={{ status: 1 }}
         onCancel={() => Modal.hide()}
+        ignoreIds={['VJ100', 'VJ101']}
         onOk={this.handleAddFlightToDate}
       />,
       {

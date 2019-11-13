@@ -17,7 +17,7 @@ import EditFlightForm from './EditFlightForm'
 import { STATUS_COLORS, STATUS } from '../models'
 import { minutesToTimeWithType } from '../../../common/utils/timeFormater'
 import removeNullObject from '../../../common/utils/removeObjectNull'
-
+import { Link } from 'react-router-dom'
 export class FlightList extends Component {
   state = {
     pagination: {},
@@ -32,14 +32,16 @@ export class FlightList extends Component {
       sorter: true,
       align: 'left',
       render: (value, record) => (
-        <Tag
-          title='Mã Chuyến Bay'
-          className='tac'
-          style={{ fontSize: '1em', padding: '5px 10px', width: 130 }}
-          color='blue'
-        >
-          {record.id}
-        </Tag>
+        <Link to={`/admin/flight/${value}`}>
+          <Tag
+            title='Mã Chuyến Bay'
+            className='tac link'
+            style={{ fontSize: '1em', padding: '5px 10px', width: 130 }}
+            color='blue'
+          >
+            {record.id}
+          </Tag>
+        </Link>
       ),
     },
     {
@@ -67,16 +69,16 @@ export class FlightList extends Component {
     {
       key: 'AirportFrom',
       sorter: true,
-      dataIndex: 'airportFrom',
+      dataIndex: 'airportFromData',
       title: 'Sân bay đi',
-      render: value => <div className='link'>{value}</div>,
+      render: value => <div className='link'>{value && value.name}</div>,
     },
     {
       key: 'AirportTo',
       sorter: true,
-      dataIndex: 'airportTo',
+      dataIndex: 'airportToData',
       title: 'Sân bay đến',
-      render: value => <div className='link'>{value}</div>,
+      render: value => <div className='link'>{value && value.name}</div>,
     },
     {
       key: 'SeatsCount',
