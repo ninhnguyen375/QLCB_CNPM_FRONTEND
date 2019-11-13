@@ -16,11 +16,13 @@ import { handleError } from '../../../common/utils/handleError'
 import { getAirportsAsync } from '../../airport/handlers'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 import { getTicketCategoriesAsync } from '../../ticketcategory/handlers'
+import { getAirlinesAsync } from '../../airline/handlers'
 
 class AddFlightForm extends Component {
   state = {
     loading: false,
     airports: [],
+    airlines: [],
     ticketCategories: [],
     addTicketCategories: {
       count: 0,
@@ -50,9 +52,20 @@ class AddFlightForm extends Component {
     }
   }
 
+  getAirlines = async (search = {}) => {
+    try {
+      const values = removeNullObject(search)
+      const res = await getAirlinesAsync(undefined, undefined, values)
+      this.setState({ airlines: res.data })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
+  }
+
   componentDidMount() {
     this.getAirports()
     this.getTicketCategories()
+    this.getAirlines()
   }
 
   renderTicketAddTicketInput = count => {
@@ -197,7 +210,6 @@ class AddFlightForm extends Component {
           notification.success({ message: 'Thành công' })
           Modal.hide()
         } catch (err) {
-          console.log('Ninh Debug: err', err)
           handleError(err, form, notification)
         }
         this.setState({ loading: false })
@@ -214,13 +226,22 @@ class AddFlightForm extends Component {
     }, 500)
   }
 
+  handleSearchAirline = value => {
+    if (this.searchAirlineTimeout) {
+      clearTimeout(this.searchAirlineTimeout)
+    }
+    this.searchAirlineTimeout = setTimeout(() => {
+      this.getAirlines({ name: value })
+    }, 500)
+  }
+
   componentWillUnmount() {
     clearTimeout(this.searchAirportTimeoutĐiện)
   }
 
   render() {
     const { form } = this.props
-    const { airports, addTicketCategories } = this.state
+    const { airports, addTicketCategories, airlines } = this.state
     const { getFieldDecorator } = form
 
     return (
@@ -358,8 +379,39 @@ class AddFlightForm extends Component {
             </div>
           </div>
 
+          <div className='row'>
+            <div className='col-lg-4'>
+              <Form.Item label='Hãng hàng không'>
+                {getFieldDecorator('airlineId', {
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Hãng hàng không là bắt buộc',
+                    },
+                  ],
+                })(
+                  <Select
+                    showSearch
+                    placeholder='Hãng hàng không'
+                    notFoundContent={null}
+                    onSearch={this.handleSearchAirline}
+                    filterOption={false}
+                  >
+                    {Array.isArray(airlines)
+                      ? airlines.map(airline => (
+                          <Select.Option value={airline.id} key={airline.id}>
+                            {airline ? airline.name || '' : ''}
+                          </Select.Option>
+                        ))
+                      : ''}
+                  </Select>,
+                )}
+              </Form.Item>
+            </div>
+          </div>
+
           <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>
-            I. Giá từng loại vé:
+            II. Giá từng loại vé:
           </div>
           <br />
           <div className=''>

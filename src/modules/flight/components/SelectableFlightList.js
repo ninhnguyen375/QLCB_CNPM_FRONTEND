@@ -34,7 +34,7 @@ class SelectableFlightList extends Component {
       render: (value, record) => (
         <Tag
           title='Mã Chuyến Bay'
-          className='tac'
+          className='tac link'
           style={{ fontSize: '1em', padding: '5px 10px', width: 130 }}
           color='blue'
         >
@@ -55,6 +55,7 @@ class SelectableFlightList extends Component {
     },
     {
       key: 'FlightTime',
+      sorter: true,
       dataIndex: 'flightTime',
       title: 'Thời gian bay',
       render: value => (
@@ -65,24 +66,28 @@ class SelectableFlightList extends Component {
     },
     {
       key: 'AirportFrom',
-      dataIndex: 'airportFrom',
+      sorter: true,
+      dataIndex: 'airportFromData',
       title: 'Sân bay đi',
-      render: value => <div className='link'>{value}</div>,
+      render: value => <div className='link'>{value && value.name}</div>,
     },
     {
       key: 'AirportTo',
-      dataIndex: 'airportTo',
+      sorter: true,
+      dataIndex: 'airportToData',
       title: 'Sân bay đến',
-      render: value => <div className='link'>{value}</div>,
+      render: value => <div className='link'>{value && value.name}</div>,
     },
     {
       key: 'SeatsCount',
+      sorter: true,
       dataIndex: 'seatsCount',
       title: 'Tổng Số lượng ghế',
       render: value => <Tag color='orange'>{value} Ghế</Tag>,
     },
     {
       key: 'Status',
+      sorter: true,
       dataIndex: 'status',
       title: 'Trạng thái',
       render: value => <Tag color={STATUS_COLORS[value]}>{STATUS[value]}</Tag>,
@@ -101,17 +106,23 @@ class SelectableFlightList extends Component {
 
   getFlights = async (current, pageSize, params) => {
     let { search } = this.state
+    const { ignoreIds } = this.props
 
     search = removeNullObject(search)
     const { filters = {} } = this.props
 
     try {
-      const res = await getFlightsAsync(current, pageSize, {
+      let res = await getFlightsAsync(current, pageSize, {
         ...search,
         ...params,
         ...filters,
       })
-      this.setState({ pagination: res, flights: res.data })
+      if (ignoreIds && Array.isArray(ignoreIds)) {
+        res = res.data.filter(i => {
+          return ignoreIds.find(id => id === i.id) ? false : true
+        })
+      }
+      this.setState({ pagination: res, flights: res })
     } catch (err) {
       handleError(err, null, notification)
     }
@@ -138,7 +149,6 @@ class SelectableFlightList extends Component {
   }
 
   handleSelectChange = selectedRowKeys => {
-    console.log('Ninh Debug: selectedRowKeys', selectedRowKeys)
     this.setState({ selectedRowKeys })
   }
 

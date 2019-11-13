@@ -19,6 +19,7 @@ import CustomerListPage from '../pages/CustomerListPage'
 import CustomerDetailPage from '../pages/CustomerDetailPage'
 import OrderListPage from '../pages/OrderListPage'
 import OrderDetailPage from '../pages/OrderDetailPage'
+import FlightDetailPage from '../pages/FlightDetailPage'
 
 export default class Routes extends Component {
   render() {
@@ -87,6 +88,9 @@ export default class Routes extends Component {
             <Route key='flight' path='/admin/flight' exact>
               <FlightListPage mode={user.user.role} />
             </Route>
+            <Route key='flight-detail' path='/admin/flight/:id' exact>
+              <FlightDetailPage mode={user.user.role} />
+            </Route>
             <Route key='date' path='/admin/date' exact>
               <DateListPage mode={user.user.role} />
             </Route>
@@ -141,6 +145,9 @@ export default class Routes extends Component {
             </Route>
             <Route key='flight' path='/admin/flight' exact>
               <FlightListPage mode={user.user.role} />
+            </Route>
+            <Route key='flight-detail' path='/admin/flight/:id' exact>
+              <FlightDetailPage mode={user.user.role} />
             </Route>
             <Route key='date' path='/admin/date' exact>
               <DateListPage mode={user.user.role} />

@@ -20,6 +20,7 @@ import { getAirportsAsync } from '../../airport/handlers'
 import moment from 'moment'
 import { minutesToTime } from '../../../common/utils/timeFormater'
 import { STATUS, STATUS_COLORS } from '../models'
+import { getAirlinesAsync } from '../../airline/handlers'
 
 class EditFlightForm extends Component {
   state = {
@@ -37,8 +38,9 @@ class EditFlightForm extends Component {
     }
   }
 
-  componentDidMount() {
-    this.getAirports()
+  async componentDidMount() {
+    await this.getAirlines()
+    await this.getAirports()
   }
 
   handleSubmit = e => {
@@ -67,12 +69,30 @@ class EditFlightForm extends Component {
           notification.success({ message: 'Thành công' })
           Modal.hide()
         } catch (err) {
-          console.log('Ninh Debug: err', err)
           handleError(err, form, notification)
         }
       },
     )
     this.setState({ loading: false })
+  }
+
+  handleSearchAirline = value => {
+    if (this.searchAirlineTimeout) {
+      clearTimeout(this.searchAirlineTimeout)
+    }
+    this.searchAirlineTimeout = setTimeout(() => {
+      this.getAirlines({ name: value })
+    }, 500)
+  }
+
+  getAirlines = async (search = {}) => {
+    try {
+      const values = removeNullObject(search)
+      const res = await getAirlinesAsync(undefined, undefined, values)
+      this.setState({ airlines: res.data })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
   }
 
   handleSearchAirport = value => {
@@ -90,7 +110,7 @@ class EditFlightForm extends Component {
 
   render() {
     const { form, flight } = this.props
-    const { airports } = this.state
+    const { airports, airlines } = this.state
 
     const { getFieldDecorator } = form
 
@@ -236,6 +256,37 @@ class EditFlightForm extends Component {
             </div>
           </div>
 
+          <div className='row'>
+            <div className='col-lg-4'>
+              <Form.Item label='Hãng hàng không'>
+                {getFieldDecorator('airlineId', {
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Hãng hàng không là bắt buộc',
+                    },
+                  ],
+                  initialValue: Array.isArray(airlines) ? flight.airlineId : '',
+                })(
+                  <Select
+                    showSearch
+                    placeholder='Hãng hàng không'
+                    notFoundContent={null}
+                    onSearch={this.handleSearchAirline}
+                    filterOption={false}
+                  >
+                    {Array.isArray(airlines)
+                      ? airlines.map(airline => (
+                          <Select.Option value={airline.id} key={airline.id}>
+                            {airline ? airline.name || '' : ''}
+                          </Select.Option>
+                        ))
+                      : ''}
+                  </Select>,
+                )}
+              </Form.Item>
+            </div>
+          </div>
           <div className='row'>
             <div className='col'>
               <Form.Item label='Trạng thái'>

@@ -56,4 +56,12 @@ export default (dispatch, props) => ({
       return { ...err, success: false }
     }
   },
+  addFlightsToDate: async flightIds => {
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.createDate,
+      method: 'POST',
+      data: flightIds,
+    })
+    return res.data
+  },
 })
