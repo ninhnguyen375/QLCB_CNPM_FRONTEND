@@ -119,7 +119,7 @@ class EditFlightForm extends Component {
         <Form onSubmit={this.handleSubmit}>
           <div className='row'>
             <div className='col-lg-4'>
-              <Form.Item label='Mã chuyến bay'>
+              <Form.Item hasFeedback label='Mã chuyến bay'>
                 <Tag
                   title='Mã Chuyến Bay'
                   className='tac'
@@ -131,7 +131,7 @@ class EditFlightForm extends Component {
               </Form.Item>
             </div>
             <div className='col-lg-4'>
-              <Form.Item label='Thời gian bắt đầu (Giờ : phút)'>
+              <Form.Item hasFeedback label='Thời gian bắt đầu (Giờ : phút)'>
                 {getFieldDecorator('startTime', {
                   rules: [
                     {
@@ -153,7 +153,7 @@ class EditFlightForm extends Component {
               </Form.Item>
             </div>
             <div className='col-lg-4'>
-              <Form.Item label='Thời gian bay (Giờ : phút)'>
+              <Form.Item hasFeedback label='Thời gian bay (Giờ : phút)'>
                 {getFieldDecorator('flightTime', {
                   rules: [
                     {
@@ -178,7 +178,7 @@ class EditFlightForm extends Component {
 
           <div className='row'>
             <div className='col-lg-4'>
-              <Form.Item label='Sân bay đi'>
+              <Form.Item hasFeedback label='Sân bay đi'>
                 {getFieldDecorator('airportFrom', {
                   rules: [
                     {
@@ -207,7 +207,7 @@ class EditFlightForm extends Component {
               </Form.Item>
             </div>
             <div className='col-lg-4'>
-              <Form.Item label='Sân bay đến'>
+              <Form.Item hasFeedback label='Sân bay đến'>
                 {getFieldDecorator('airportTo', {
                   rules: [
                     {
@@ -236,7 +236,7 @@ class EditFlightForm extends Component {
               </Form.Item>
             </div>
             <div className='col-lg-4'>
-              <Form.Item label='Tổng Số lượng ghế'>
+              <Form.Item hasFeedback label='Tổng Số lượng ghế'>
                 {getFieldDecorator('seatsCount', {
                   rules: [
                     {
@@ -258,7 +258,7 @@ class EditFlightForm extends Component {
 
           <div className='row'>
             <div className='col-lg-4'>
-              <Form.Item label='Hãng hàng không'>
+              <Form.Item hasFeedback label='Hãng hàng không'>
                 {getFieldDecorator('airlineId', {
                   rules: [
                     {
@@ -289,7 +289,7 @@ class EditFlightForm extends Component {
           </div>
           <div className='row'>
             <div className='col'>
-              <Form.Item label='Trạng thái'>
+              <Form.Item hasFeedback label='Trạng thái'>
                 {getFieldDecorator('status', {
                   rules: [
                     {

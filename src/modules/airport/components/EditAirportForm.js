@@ -50,7 +50,7 @@ class EditAirportForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item label='Tên sân bay'>
+          <Form.Item hasFeedback label='Tên sân bay'>
             {getFieldDecorator('name', {
               rules: [
                 {
@@ -61,7 +61,7 @@ class EditAirportForm extends Component {
               initialValue: airport ? airport.name || '' : '',
             })(<Input placeholder='Tên sân bay' />)}
           </Form.Item>
-          <Form.Item label='Địa Điểm'>
+          <Form.Item hasFeedback label='Địa Điểm'>
             {getFieldDecorator('location', {
               rules: [
                 {

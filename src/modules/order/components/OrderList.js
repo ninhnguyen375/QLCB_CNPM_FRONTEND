@@ -245,7 +245,7 @@ export class OrderList extends Component {
     orders = orders || []
 
     return (
-      <Card title={<b>Đơn Hàng</b>}>
+      <Card title={<b>ĐƠN HÀNG</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
             <div className='d-flex flex-wrap'>

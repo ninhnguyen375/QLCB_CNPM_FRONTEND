@@ -141,7 +141,7 @@ export class AirportList extends Component {
     airports = airports || []
 
     return (
-      <Card title={<b>Sân Bay</b>}>
+      <Card title={<b>SÂN BAY</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
             <div className='d-flex'>

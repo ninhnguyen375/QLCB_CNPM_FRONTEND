@@ -50,7 +50,7 @@ class AddLuggageForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item label='Khối lượng hành lý'>
+          <Form.Item hasFeedback label='Khối lượng hành lý'>
             {getFieldDecorator('luggageWeight', {
               rules: [
                 {
@@ -66,7 +66,7 @@ class AddLuggageForm extends Component {
               />,
             )}
           </Form.Item>
-          <Form.Item label='Giá tiền'>
+          <Form.Item hasFeedback label='Giá tiền'>
             {getFieldDecorator('price', {
               rules: [
                 {

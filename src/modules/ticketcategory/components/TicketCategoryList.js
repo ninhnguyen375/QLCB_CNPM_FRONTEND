@@ -131,7 +131,7 @@ export class TicketCategoryList extends Component {
     ticketCategories = Array.isArray(ticketCategories) ? ticketCategories : []
 
     return (
-      <Card title={<b>Loại Vé</b>}>
+      <Card title={<b>LOẠI VÉ</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
             <div className='d-flex flex-wrap'>

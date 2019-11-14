@@ -9,7 +9,7 @@ class InformationCustomer extends Component {
     for (let i = 0; i < count; i++) {
       arr.push(
         <div key={i}>
-          <Form.Item className='text-left' label={`Khách hàng ${i + 1}`}>
+          <Form.Item hasFeedback className='text-left' label={`Khách hàng ${i + 1}`}>
             {getFieldDecorator(`customers[${i}].fullname`)(
               <Input
                 prefix={<Icon type='user' />}
@@ -18,7 +18,7 @@ class InformationCustomer extends Component {
               ></Input>,
             )}
           </Form.Item>
-          <Form.Item className='text-left' label='Hanh ly'>
+          <Form.Item hasFeedback className='text-left' label='Hanh ly'>
             {getFieldDecorator(`customers[${i}].luggage`)(
               <Input
                 prefix={<Icon type='user' />}
@@ -113,7 +113,7 @@ class InformationCustomer extends Component {
           <div className='col-lg-6'>
             <Card title={<b>THÔNG TIN NGƯỜI ĐẶT</b>}>
               <Form>
-                <Form.Item className='text-left' label='Họ và tên'>
+                <Form.Item hasFeedback className='text-left' label='Họ và tên'>
                   {getFieldDecorator('fullname_customer_book')(
                     <Input
                       prefix={<Icon type='user' />}
@@ -121,7 +121,7 @@ class InformationCustomer extends Component {
                     ></Input>,
                   )}
                 </Form.Item>
-                <Form.Item className='text-left' label='Email'>
+                <Form.Item hasFeedback className='text-left' label='Email'>
                   {getFieldDecorator('email_customer_book')(
                     <Input
                       prefix={<Icon type='mail' />}
@@ -129,7 +129,7 @@ class InformationCustomer extends Component {
                     ></Input>,
                   )}
                 </Form.Item>
-                <Form.Item className='text-left' label='Số điện thoại'>
+                <Form.Item hasFeedback className='text-left' label='Số điện thoại'>
                   {getFieldDecorator('phonenumber_customer_book')(
                     <Input
                       prefix={<Icon type='phone' />}

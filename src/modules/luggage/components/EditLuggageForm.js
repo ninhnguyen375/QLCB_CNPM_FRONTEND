@@ -50,7 +50,7 @@ class EditLuggageForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item label='Giá tiền'>
+          <Form.Item hasFeedback label='Giá tiền'>
             {getFieldDecorator('price', {
               rules: [
                 {

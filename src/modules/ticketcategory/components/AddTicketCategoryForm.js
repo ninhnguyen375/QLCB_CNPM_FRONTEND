@@ -42,7 +42,7 @@ class AddTicketCategoryForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item label='Loại vé'>
+          <Form.Item hasFeedback label='Loại vé'>
             {getFieldDecorator('name', {
               rules: [
                 {

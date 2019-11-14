@@ -191,7 +191,7 @@ export class UserList extends Component {
     users = users || []
 
     return (
-      <Card title={<b>Nhân Viên</b>}>
+      <Card title={<b>NHÂN VIÊN</b>}>
         <div className='d-flex flex-wrap justify-content-between'>
           <div className='d-flex flex-wrap'>
             <Input.Search

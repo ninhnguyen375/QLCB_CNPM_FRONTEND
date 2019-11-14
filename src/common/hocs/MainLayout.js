@@ -419,7 +419,7 @@ class MenuPage extends React.Component {
                 </Menu>
               }
             >
-              <div>
+              <div className='d-flex align-items-center'>
                 <img
                   src={require('../../assets/images/user.svg')}
                   alt='avatar'

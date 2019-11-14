@@ -50,7 +50,7 @@ class EditTicketCategoryForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item label='Tên loại vé'>
+          <Form.Item hasFeedback label='Tên loại vé'>
             {getFieldDecorator('name', {
               rules: [
                 {
