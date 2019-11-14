@@ -195,9 +195,9 @@ class AddFlightForm extends Component {
     const { form } = this.props
     let { ticketCategoriesOfFlight } = this.state
 
-    ticketCategoriesOfFlight = Object.values(ticketCategoriesOfFlight).filter(
-      t => t.done,
-    )
+    const flightTicketCategories = Object.values(
+      ticketCategoriesOfFlight,
+    ).filter(t => t.done)
 
     form.validateFieldsAndScroll(
       { scroll: { offsetTop: 50 } },
@@ -208,7 +208,7 @@ class AddFlightForm extends Component {
         }
 
         try {
-          await createFlightAsync({ ...values, ticketCategoriesOfFlight })
+          await createFlightAsync({ ...values, flightTicketCategories })
           await this.props.getFlights()
           notification.success({ message: 'Thành công' })
           Modal.hide()

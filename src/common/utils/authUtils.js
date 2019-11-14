@@ -6,3 +6,9 @@ export const getUserRole = () => {
 
   return user && user.user ? user.user.role : null
 }
+
+export const getUserId = () => {
+  const user = storeAccessible.getState(MODULE_NAME)
+
+  return user && user.user ? user.user.role : null
+}

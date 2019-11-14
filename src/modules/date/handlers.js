@@ -1,6 +1,7 @@
 import { fetchAuthLoading } from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setDates } from './actions'
+import moment from 'moment'
 
 export async function getDatesAsync(
   current = 1,
@@ -40,7 +41,9 @@ export async function createDateAsync(date = {}) {
   const res = await fetchAuthLoading({
     url: ENDPOINTS.createDate,
     method: 'POST',
-    data: date,
+    data: {
+      departureDate: moment(date).format('YYYY-MM-DD'),
+    },
   })
   return res.data
 }

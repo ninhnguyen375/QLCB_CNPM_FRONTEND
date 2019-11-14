@@ -4,6 +4,7 @@ import { getUserRole } from '../../../common/utils/authUtils'
 import { handleError } from '../../../common/utils/handleError'
 import { getFlightAsync } from '../handlers'
 import { minutesToTime } from '../../../common/utils/timeFormater'
+import { priceFormat } from '../../../common/utils/stringFormater'
 
 class FlightDetail extends Component {
   state = {
@@ -95,7 +96,8 @@ class FlightDetail extends Component {
               - Sân bay:{' '}
               {flight && flight.airportFromData
                 ? flight.airportFromData.name
-                : '---'}
+                : '---'}{' '}
+              ({flight ? flight.airportFrom : '---'})
             </div>
 
             <div className='col-lg-4'>
@@ -109,7 +111,8 @@ class FlightDetail extends Component {
               - Sân bay:{' '}
               {flight && flight.airportToData
                 ? flight.airportToData.name
-                : '---'}
+                : '---'}{' '}
+              ({flight ? flight.airportTo : '---'})
             </div>
 
             <div className='col-lg-4'>
@@ -155,12 +158,7 @@ class FlightDetail extends Component {
                   <div className='col-lg-4'>
                     <div style={{ marginTop: 10 }}></div>
                     <div className='price-color fwb'>
-                      {t
-                        ? t.price
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                        : 0}{' '}
-                      VNĐ
+                      {priceFormat(t.price)}VNĐ
                     </div>
                   </div>
                   <br />

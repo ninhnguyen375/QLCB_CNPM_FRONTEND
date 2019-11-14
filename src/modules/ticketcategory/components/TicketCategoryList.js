@@ -134,7 +134,7 @@ export class TicketCategoryList extends Component {
       <Card title={<b>Loại Vé</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
-            <div className='d-flex'>
+            <div className='d-flex flex-wrap'>
               <Input.Search
                 value={search.name}
                 style={{ marginRight: 5, width: 250 }}
@@ -146,9 +146,13 @@ export class TicketCategoryList extends Component {
             </div>
           </Col>
           <Col>
-            <Button onClick={this.handleReset} icon='sync'>
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={this.handleReset}
+              icon='sync'
+            >
               Làm mới
-            </Button>{' '}
+            </Button>
             <Button
               key='btn-add'
               onClick={this.handleShowAddTicketCategory}
@@ -167,6 +171,7 @@ export class TicketCategoryList extends Component {
           columns={this.columns}
           rowKey={i => i.id}
           dataSource={ticketCategories || []}
+          scroll={{ x: '100%' }}
         ></Table>
       </Card>
     )

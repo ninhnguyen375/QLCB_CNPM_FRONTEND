@@ -10,12 +10,15 @@ import {
   notification,
   Tag,
   Popconfirm,
+  Dropdown,
+  Menu,
 } from 'antd'
 import { handleError } from '../../../common/utils/handleError'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 import { Link } from 'react-router-dom'
 import { STATUS, STATUS_COLOR } from '../models'
 import moment from 'moment'
+import { priceFormat } from '../../../common/utils/stringFormater'
 
 export class OrderList extends Component {
   state = {
@@ -30,7 +33,16 @@ export class OrderList extends Component {
       title: 'Mã hóa đơn',
       sorter: true,
       render: (value, record) => (
-        <Link to={`/admin/order/${record.id}`}>{value}</Link>
+        <Link to={`/admin/order/${record.id}`}>
+          <Tag
+            title='Mã Hóa Đơn'
+            className='tac link'
+            style={{ fontSize: '1em', padding: '5px 10px', width: 100 }}
+            color='blue'
+          >
+            {value}
+          </Tag>
+        </Link>
       ),
     },
     {
@@ -39,11 +51,12 @@ export class OrderList extends Component {
       title: 'Khách hàng',
       render: (customer, record) => (
         <div>
+          <Link to={`/admin/customer/${customer && customer.id}`}>
+            <Icon type='user' />
+            <b> {customer && customer.fullName}</b>
+          </Link>
           <div>
             <Icon type='idcard' /> {customer && customer.id}
-          </div>
-          <div>
-            <Icon type='user' /> {customer && customer.fullName}
           </div>
           <div>
             <Icon type='phone' /> {customer && customer.phone}
@@ -57,18 +70,7 @@ export class OrderList extends Component {
       title: 'Tổng số vé',
       align: 'center',
       sorter: true,
-    },
-    {
-      key: 'TotalPrice',
-      dataIndex: 'totalPrice',
-      title: 'Thành tiền',
-      sorter: true,
-      render: value => (
-        <div className='price-color fwb'>
-          {value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0}{' '}
-          VNĐ
-        </div>
-      ),
+      render: value => <Tag color='blue'>{value}</Tag>,
     },
     {
       key: 'CreateAt',
@@ -79,9 +81,18 @@ export class OrderList extends Component {
         <div>
           <Icon type='calendar' />{' '}
           {moment(value)
-            .format('DD-MM-YYYY')
+            .format('DD-MM-YYYY, HH:mm')
             .toString()}
         </div>
+      ),
+    },
+    {
+      key: 'TotalPrice',
+      dataIndex: 'totalPrice',
+      title: 'Thành tiền',
+      sorter: true,
+      render: value => (
+        <div className='price-color fwb'>{priceFormat(value)}VNĐ</div>
       ),
     },
     {
@@ -100,45 +111,61 @@ export class OrderList extends Component {
       render: r => {
         return (
           <div className='d-flex justify-content-end'>
-            <Link to={`/admin/order/${r.id}`}>
-              <Button style={{ marginRight: 5 }} icon='info-circle'>
-                Chi tiết
-              </Button>
-            </Link>
             {/* 0 is New */}
             {r.status === 0 ? (
-              <>
-                <Popconfirm
-                  title='Bạn có chắc chắn?'
-                  onConfirm={() => this.handleRefuseOrder(r.id)}
-                  okText='Có'
-                  cancelText='Hủy'
-                >
-                  <Button
-                    style={{ marginRight: 5 }}
-                    type='danger'
-                    icon='close-circle'
-                  >
-                    Từ chối
-                  </Button>
-                </Popconfirm>
-                <Popconfirm
-                  title='Bạn có chắc chắn?'
-                  onConfirm={() => this.handleAcceptOrder(r.id)}
-                  okText='Có'
-                  cancelText='Hủy'
-                >
-                  <Button
-                    style={{ marginRight: 5 }}
-                    type='primary'
-                    icon='check-circle'
-                  >
-                    Xác nhận
-                  </Button>
-                </Popconfirm>
-              </>
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item>
+                      <Link to={`/admin/order/${r.id}`}>
+                        <Button style={{ width: '100%' }} icon='info-circle'>
+                          Chi tiết
+                        </Button>
+                      </Link>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <Popconfirm
+                        title='Bạn có chắc chắn?'
+                        onConfirm={() => this.handleRefuseOrder(r.id)}
+                        okText='Có'
+                        cancelText='Hủy'
+                      >
+                        <Button
+                          style={{ width: '100%' }}
+                          type='danger'
+                          icon='close-circle'
+                        >
+                          Từ chối
+                        </Button>
+                      </Popconfirm>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <Popconfirm
+                        title='Bạn có chắc chắn?'
+                        onConfirm={() => this.handleAcceptOrder(r.id)}
+                        okText='Có'
+                        cancelText='Hủy'
+                      >
+                        <Button
+                          style={{ width: '100%' }}
+                          type='primary'
+                          icon='check-circle'
+                        >
+                          Xác nhận
+                        </Button>
+                      </Popconfirm>
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <Button>
+                  <Icon type='ellipsis' />
+                </Button>
+              </Dropdown>
             ) : (
-              ''
+              <Link to={`/admin/order/${r.id}`}>
+                <Button icon='info-circle'>Chi tiết</Button>
+              </Link>
             )}
           </div>
         )
@@ -221,13 +248,21 @@ export class OrderList extends Component {
       <Card title={<b>Đơn Hàng</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
-            <div className='d-flex'>
+            <div className='d-flex flex-wrap'>
               <Input.Search
-                value={search.name}
+                value={search.id}
+                style={{ marginRight: 10, width: 250 }}
+                name='id'
+                onSearch={this.handleSearch('id')}
+                placeholder='Tìm theo Mã đơn hàng'
+                onChange={this.hanleChangeSearch}
+              ></Input.Search>
+              <Input.Search
+                value={search.customerId}
                 style={{ marginRight: 5, width: 250 }}
-                name='name'
-                onSearch={this.handleSearch('name')}
-                placeholder='Tìm theo Tên đơn hàng'
+                name='customerId'
+                onSearch={this.handleSearch('customerId')}
+                placeholder='Tìm theo CMND khách hàng'
                 onChange={this.hanleChangeSearch}
               ></Input.Search>
             </div>
@@ -246,6 +281,7 @@ export class OrderList extends Component {
           columns={this.columns}
           rowKey={i => i.id}
           dataSource={orders || []}
+          scroll={{ x: '100%' }}
         ></Table>
       </Card>
     )

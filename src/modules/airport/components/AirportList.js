@@ -147,25 +147,29 @@ export class AirportList extends Component {
             <div className='d-flex'>
               <Input.Search
                 value={search.name}
-                style={{ marginRight: 5 }}
+                style={{ marginRight: 10 }}
                 name='name'
                 onSearch={this.handleSearch('name')}
                 placeholder='Tìm theo Tên sân bay'
                 onChange={this.hanleChangeSearch}
-              ></Input.Search>
+              />
               <Input.Search
                 name='location'
                 value={search.location}
                 onSearch={this.handleSearch('location')}
                 placeholder=' Tìm theo Địa Điểm'
                 onChange={this.hanleChangeSearch}
-              ></Input.Search>
+              />
             </div>
           </Col>
           <Col>
-            <Button onClick={this.handleReset} icon='sync'>
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={this.handleReset}
+              icon='sync'
+            >
               Làm mới
-            </Button>{' '}
+            </Button>
             <Button
               key='btn-add'
               onClick={this.handleShowAddAirport}
@@ -184,6 +188,7 @@ export class AirportList extends Component {
           columns={this.columns}
           rowKey={i => i.id}
           dataSource={airports || []}
+          scroll={{ x: '100%' }}
         ></Table>
       </Card>
     )

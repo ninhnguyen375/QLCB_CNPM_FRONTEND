@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { Layout, Menu, Icon, notification } from 'antd'
+import { Layout, Menu, Icon, notification, Dropdown, Tag } from 'antd'
 import storeAccessible from '../utils/storeAccessible'
 import { clearAll } from '../actions/common'
 import { ROLE } from '../../modules/user/models'
+import { getUserRole } from '../utils/authUtils'
 const { Header, Content, Sider } = Layout
 const { SubMenu } = Menu
 
@@ -287,9 +288,7 @@ class MenuPage extends React.Component {
     const { history } = this.props
     switch (value.key) {
       case 'logout':
-        storeAccessible.dispatch(clearAll())
-        history.push('/')
-        notification.success({ message: 'Good bye!' })
+        this.handleLogout()
         break
       default:
         history.push(`/${value.key}`)
@@ -297,16 +296,21 @@ class MenuPage extends React.Component {
     }
   }
 
+  handleLogout = () => {
+    const { history } = this.props
+    storeAccessible.dispatch(clearAll())
+    history.push('/')
+  }
+
   render() {
     const { collapsed } = this.state
-    const {
-      children,
-      history: { location },
-      userName,
-    } = this.props
-    if (FULL_PAGES.includes(location.pathname)) {
+    const { children, history, userName, user } = this.props
+    const authRole = getUserRole()
+
+    if (FULL_PAGES.includes(history.location.pathname)) {
       return children
     }
+
     return (
       <Layout className='menu-page' style={{ height: '100vh' }}>
         <Sider
@@ -373,44 +377,64 @@ class MenuPage extends React.Component {
               background: 'white',
               padding: 0,
               paddingLeft: 20,
-              paddingRight: 40,
+              paddingRight: 30,
               height: 55,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end',
               borderBottom: '1px solid #d1d7e2',
               boxShadow: 'rgb(195, 195, 195) -2px 1px 32px',
+              minWidth: 260,
             }}
           >
-            <div style={{ padding: '0px 10px' }}>
-              <img
-                src={require('../../assets/images/user.svg')}
-                alt='avatar'
-                width={35}
-              />
-            </div>
-            <div
-              style={{
-                color: '#2c3e50',
-                maxWidth: 350,
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-                display: 'inline-block',
-              }}
+            <Dropdown
+              trigger={['click']}
+              overlay={
+                <Menu>
+                  <Menu.Item>
+                    <div className='d-flex' style={{ paddingBottom: 5 }}>
+                      <img
+                        src={require('../../assets/images/user.svg')}
+                        alt='avatar'
+                        width={35}
+                        style={{ marginRight: 10, paddingTop: 10 }}
+                      />
+                      <div>
+                        <span>{userName || ''}</span>
+                        <br />
+                        <Tag color='blue'>{authRole}</Tag>
+                      </div>
+                    </div>
+                  </Menu.Item>
+                  <Menu.Divider></Menu.Divider>
+                  {authRole === ROLE.STAFF && (
+                    <Menu.Item onClick={() => history.push(`/admin/profile`)}>
+                      {console.log(user, 'curr')}
+                      <Icon type='user' /> Thông tin cá nhân
+                    </Menu.Item>
+                  )}
+                  <Menu.Item onClick={this.handleLogout}>
+                    <Icon type='logout' /> Đăng xuất
+                  </Menu.Item>
+                </Menu>
+              }
             >
-              {userName || ''}
-            </div>
+              <div>
+                <img
+                  src={require('../../assets/images/user.svg')}
+                  alt='avatar'
+                  width={35}
+                />
+              </div>
+            </Dropdown>
           </Header>
           <Content
             style={{
               overflow: 'auto',
+              minWidth: '260px',
             }}
           >
-            <div
-              style={{
-                margin: 15,
-              }}
-            >
+            <div className='main-content-margin'>
               {/* {React.cloneElement(this.props.children, { ...this.props })} */}
               {this.props.children}
             </div>

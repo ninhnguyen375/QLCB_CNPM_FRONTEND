@@ -32,7 +32,7 @@ export class UserList extends Component {
         <img
           src={require('../../../assets/images/user.svg')}
           alt='avatar'
-          width={35}
+          width={25}
         />
       ),
     },
@@ -103,15 +103,6 @@ export class UserList extends Component {
             ) : (
               ''
             )}
-            <Link to={`/admin/user/${r.id}`}>
-              <Button
-                style={{ marginRight: 5 }}
-                icon='info-circle'
-                type='primary'
-              >
-                Thông tin
-              </Button>
-            </Link>
             <Button icon='delete' type='danger'>
               Xóa
             </Button>
@@ -201,33 +192,41 @@ export class UserList extends Component {
 
     return (
       <Card title={<b>Nhân Viên</b>}>
-        <Row type='flex' justify='space-between'>
-          <Col>
-            <div className='d-flex'>
-              <Input.Search
-                value={search.fullname}
-                style={{ marginRight: 5 }}
-                name='fullname'
-                onSearch={this.handleSearch('fullname')}
-                placeholder=' Tìm theo tên '
-                onChange={this.hanleChangeSearch}
-                prefix={<Icon type='user' className='primary-color' />}
-              ></Input.Search>
-              <Input.Search
-                name='identifier'
-                value={search.identifier}
-                onSearch={this.handleSearch('identifier')}
-                placeholder=' Tìm theo CMND '
-                onChange={this.hanleChangeSearch}
-                prefix={<Icon type='idcard' className='primary-color' />}
-              ></Input.Search>
-            </div>
-          </Col>
-          <Col>
-            <Button onClick={this.handleReset} icon='sync'>
-              Làm mới
-            </Button>{' '}
+        <div className='d-flex flex-wrap justify-content-between'>
+          <div className='d-flex flex-wrap'>
+            <Input.Search
+              style={{ maxWidth: 237, marginBottom: 10, marginRight: 10 }}
+              value={search.fullname}
+              name='fullname'
+              className='sm-max-width'
+              onSearch={this.handleSearch('fullname')}
+              placeholder=' Tìm theo tên '
+              onChange={this.hanleChangeSearch}
+              prefix={<Icon type='user' className='primary-color' />}
+            />
+            <Input.Search
+              style={{ maxWidth: 237, marginBottom: 10 }}
+              className='sm-max-width'
+              name='identifier'
+              value={search.identifier}
+              onSearch={this.handleSearch('identifier')}
+              placeholder=' Tìm theo CMND '
+              onChange={this.hanleChangeSearch}
+              prefix={<Icon type='idcard' className='primary-color' />}
+            />
+          </div>
+          <div className='sm-max-width'>
             <Button
+              className='sm-max-width'
+              style={{ marginBottom: 10, marginRight: 10 }}
+              onClick={this.handleReset}
+              icon='sync'
+            >
+              Làm mới
+            </Button>
+            <Button
+              className='sm-max-width'
+              style={{ marginBottom: 10 }}
               key='btn-add'
               onClick={this.handleShowAddUser}
               type='primary'
@@ -235,9 +234,8 @@ export class UserList extends Component {
               <Icon type='plus'></Icon>
               THÊM NHÂN VIÊN
             </Button>
-          </Col>
-        </Row>
-        <br />
+          </div>
+        </div>
 
         <Table
           pagination={pagination}
@@ -245,6 +243,7 @@ export class UserList extends Component {
           columns={this.columns}
           rowKey={i => i.id}
           dataSource={users || []}
+          scroll={{ x: '100%' }}
         ></Table>
       </Card>
     )
