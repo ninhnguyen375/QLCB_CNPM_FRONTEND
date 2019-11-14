@@ -20,12 +20,12 @@ import CustomerDetailPage from '../pages/CustomerDetailPage'
 import OrderListPage from '../pages/OrderListPage'
 import OrderDetailPage from '../pages/OrderDetailPage'
 import FlightDetailPage from '../pages/FlightDetailPage'
+import ProfilePage from '../pages/ProfilePage'
 
 export default class Routes extends Component {
   render() {
     const { store } = this.props
     const { user } = store.getState()
-    console.log('DEBUGER: user', user)
 
     if (!user || !user.user || !user.user.id) {
       return (
@@ -119,11 +119,14 @@ export default class Routes extends Component {
             <Route key='user' path='/admin/user' exact>
               <UserListPage mode={user.user.role} />
             </Route>
-            <Route key='user' path='/admin/customer' exact>
+            <Route key='customer' path='/admin/customer' exact>
               <CustomerListPage mode={user.user.role} />
             </Route>
             <Route key='user-detail' path='/admin/customer/:id' exact>
               <CustomerDetailPage mode={user.user.role} />
+            </Route>
+            <Route key='profile' path='/admin/profile' exact>
+              <ProfilePage mode={user.user.role} />
             </Route>
             <Route key='order' path='/admin/order' exact>
               <OrderListPage mode={user.user.role} />

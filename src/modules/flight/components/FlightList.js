@@ -39,7 +39,7 @@ export class FlightList extends Component {
           <Tag
             title='Mã Chuyến Bay'
             className='tac link'
-            style={{ fontSize: '1em', padding: '5px 10px', width: 130 }}
+            style={{ fontSize: '1em', padding: '5px 10px', width: 100 }}
             color='blue'
           >
             {record.id}
@@ -73,15 +73,29 @@ export class FlightList extends Component {
       key: 'AirportFrom',
       sorter: true,
       dataIndex: 'airportFromData',
-      title: 'Sân bay đi',
-      render: value => <div className='link'>{value && value.name}</div>,
+      title: 'Điểm đi',
+      render: value => (
+        <div>
+          <div className='link'>Sân bay: {value ? value.name : '--'}</div>
+          <Tag>
+            <Icon type='environment' /> {value ? value.location : '--'}
+          </Tag>
+        </div>
+      ),
     },
     {
       key: 'AirportTo',
       sorter: true,
       dataIndex: 'airportToData',
-      title: 'Sân bay đến',
-      render: value => <div className='link'>{value && value.name}</div>,
+      title: 'Điểm đến',
+      render: value => (
+        <div>
+          <div className='link'>Sân bay: {value ? value.name : '--'}</div>
+          <Tag>
+            <Icon type='environment' /> {value ? value.location : '--'}
+          </Tag>
+        </div>
+      ),
     },
     {
       key: 'SeatsCount',
@@ -213,9 +227,13 @@ export class FlightList extends Component {
             </div>
           </Col>
           <Col>
-            <Button onClick={this.handleReset} icon='sync'>
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={this.handleReset}
+              icon='sync'
+            >
               Làm mới
-            </Button>{' '}
+            </Button>
             <Button
               key='btn-add'
               onClick={this.handleShowAddFlight}

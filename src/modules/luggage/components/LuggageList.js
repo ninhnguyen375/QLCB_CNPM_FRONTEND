@@ -15,6 +15,7 @@ import AddLuggageForm from './AddLuggageForm'
 import { handleError } from '../../../common/utils/handleError'
 import EditLuggageForm from './EditLuggageForm'
 import removeNullObject from '../../../common/utils/removeObjectNull'
+import { priceFormat } from '../../../common/utils/stringFormater'
 
 export class LuggageList extends Component {
   state = {
@@ -57,10 +58,7 @@ export class LuggageList extends Component {
       title: 'Giá tiền',
       sorter: true,
       render: (value, record) => (
-        <div className='price-color fwb'>
-          {value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0}{' '}
-          VNĐ
-        </div>
+        <div className='price-color fwb'>{priceFormat(value)}VNĐ</div>
       ),
     },
     {
@@ -160,9 +158,13 @@ export class LuggageList extends Component {
             <div className='d-flex'></div>
           </Col>
           <Col>
-            <Button onClick={this.handleReset} icon='sync'>
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={this.handleReset}
+              icon='sync'
+            >
               Làm mới
-            </Button>{' '}
+            </Button>
             <Button
               key='btn-add'
               onClick={this.handleShowAddLuggage}
@@ -181,6 +183,7 @@ export class LuggageList extends Component {
           columns={this.columns}
           rowKey={i => i.id}
           dataSource={luggages || []}
+          scroll={{ x: '100%' }}
         ></Table>
       </Card>
     )

@@ -288,9 +288,13 @@ export class DateList extends Component {
         <Row type='flex' justify='space-between'>
           <Col></Col>
           <Col>
-            <Button onClick={this.handleReset} icon='sync'>
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={this.handleReset}
+              icon='sync'
+            >
               Làm mới
-            </Button>{' '}
+            </Button>
             <Button
               key='btn-add'
               onClick={this.handleShowAddDate}
@@ -309,6 +313,7 @@ export class DateList extends Component {
           columns={this.columns}
           rowKey={i => i.id}
           dataSource={dates || []}
+          scroll={{ x: '100%' }}
         ></Table>
         <Drawer
           title={<b>Thông tin chi tiết ngày bay</b>}
@@ -346,6 +351,7 @@ export class DateList extends Component {
               columns={this.flightColumns}
               rowKey={i => i.flightId}
               dataSource={currentDateDetail.dateFlights || []}
+              scroll={{ x: '100%' }}
             ></Table>
           ) : (
             ''

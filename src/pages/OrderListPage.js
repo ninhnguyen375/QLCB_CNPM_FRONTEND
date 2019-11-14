@@ -13,7 +13,7 @@ class OrderListPage extends Component {
         <CustomBreadcrumb
           items={[
             { url: '/admin/dashboard', icon: 'home', title: 'Bảng Điều Khiển' },
-            { url: '/admin/order', icon: 'idcard', title: 'Đơn Hàng' },
+            { url: '/admin/order', icon: 'bars', title: 'Đơn Hàng' },
           ]}
         />
         <OrderList history={history} match={match}></OrderList>

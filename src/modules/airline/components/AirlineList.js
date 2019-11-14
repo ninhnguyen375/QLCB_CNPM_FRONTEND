@@ -143,7 +143,7 @@ export class AirlineList extends Component {
       <Card title={<b>Hãng Hàng Không</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
-            <div className='d-flex'>
+            <div className='d-flex flex-wrap'>
               <Input.Search
                 value={search.name}
                 style={{ marginRight: 5, width: 250 }}
@@ -155,9 +155,13 @@ export class AirlineList extends Component {
             </div>
           </Col>
           <Col>
-            <Button onClick={this.handleReset} icon='sync'>
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={this.handleReset}
+              icon='sync'
+            >
               Làm mới
-            </Button>{' '}
+            </Button>
             <Button
               key='btn-add'
               onClick={this.handleShowAddAirline}
@@ -176,6 +180,7 @@ export class AirlineList extends Component {
           columns={this.columns}
           rowKey={i => i.id}
           dataSource={airlines || []}
+          scroll={{ x: '100%' }}
         ></Table>
       </Card>
     )

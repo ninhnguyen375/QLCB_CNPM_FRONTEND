@@ -130,7 +130,7 @@ export class CustomerList extends Component {
       <Card title={<b>Khách Hàng</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
-            <div className='d-flex'>
+            <div className='d-flex flex-wrap'>
               <Input.Search
                 value={search.name}
                 style={{ marginRight: 5, width: 250 }}
@@ -155,6 +155,7 @@ export class CustomerList extends Component {
           columns={this.columns}
           rowKey={i => i.id}
           dataSource={customers || []}
+          scroll={{ x: '100%' }}
         ></Table>
       </Card>
     )

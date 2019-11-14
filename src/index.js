@@ -7,6 +7,7 @@ import Root from './common/hocs/Root'
 import store, { history } from './common/store'
 import './assets/css/bootstrap-grid.css'
 import './assets/css/styles.less'
+import './assets/css/responsive.less'
 
 ReactDOM.render(
   <Root {...store} history={history} />,
