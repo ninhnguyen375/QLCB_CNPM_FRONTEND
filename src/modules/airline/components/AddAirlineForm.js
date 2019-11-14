@@ -42,7 +42,7 @@ class AddAirlineForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item label='Mã hãng hàng không'>
+          <Form.Item hasFeedback label='Mã hãng hàng không'>
             {getFieldDecorator('id', {
               rules: [
                 {
@@ -52,7 +52,7 @@ class AddAirlineForm extends Component {
               ],
             })(<Input placeholder='Mã hãng hàng không' />)}
           </Form.Item>
-          <Form.Item label='Tên hãng hàng không'>
+          <Form.Item hasFeedback label='Tên hãng hàng không'>
             {getFieldDecorator('name', {
               rules: [
                 {

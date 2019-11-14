@@ -205,7 +205,7 @@ export class FlightList extends Component {
     flights = flights || []
 
     return (
-      <Card title={<b>Chuyến Bay</b>}>
+      <Card title={<b>CHUYẾN BAY</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
             <div className='d-flex'>

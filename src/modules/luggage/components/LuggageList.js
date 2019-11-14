@@ -152,7 +152,7 @@ export class LuggageList extends Component {
     luggages = luggages || []
 
     return (
-      <Card title={<b>Loại Hành Lý</b>}>
+      <Card title={<b>LOẠI HÀNH LÝ</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
             <div className='d-flex'></div>

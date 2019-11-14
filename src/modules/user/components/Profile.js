@@ -137,7 +137,7 @@ class UserDetail extends Component {
                   >
                     <div style={{ overflow: 'hidden' }}>
                       {isEditing.fullName ? (
-                        <Form.Item style={{ marginBottom: 0 }}>
+                        <Form.Item hasFeedback style={{ marginBottom: 0 }}>
                           {getFieldDecorator('fullName', {
                             rules: [
                               {
@@ -171,7 +171,7 @@ class UserDetail extends Component {
                   >
                     <div style={{ overflow: 'hidden' }}>
                       {isEditing.identifier ? (
-                        <Form.Item style={{ marginBottom: 0 }}>
+                        <Form.Item hasFeedback style={{ marginBottom: 0 }}>
                           {getFieldDecorator('identifier', {
                             rules: [
                               {
@@ -205,7 +205,7 @@ class UserDetail extends Component {
                   >
                     <div style={{ overflow: 'hidden' }}>
                       {isEditing.phone ? (
-                        <Form.Item style={{ marginBottom: 0 }}>
+                        <Form.Item hasFeedback style={{ marginBottom: 0 }}>
                           {getFieldDecorator('phone', {
                             initialValue: user.phone,
                           })(<Input placeholder='Mời điền SDT' />)}
@@ -236,7 +236,7 @@ class UserDetail extends Component {
                   >
                     <div style={{ overflow: 'hidden' }}>
                       {isEditing.email ? (
-                        <Form.Item style={{ marginBottom: 0 }}>
+                        <Form.Item hasFeedback style={{ marginBottom: 0 }}>
                           {getFieldDecorator('email', {
                             rules: [
                               {

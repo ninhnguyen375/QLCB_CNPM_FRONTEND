@@ -284,7 +284,7 @@ export class DateList extends Component {
     dates = Array.isArray(dates) ? dates : []
 
     return (
-      <Card title={<b>Ngày Bay</b>}>
+      <Card title={<b>NGÀY BAY</b>}>
         <Row type='flex' justify='space-between'>
           <Col></Col>
           <Col>

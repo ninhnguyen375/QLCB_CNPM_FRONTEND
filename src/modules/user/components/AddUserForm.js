@@ -35,7 +35,7 @@ class AddUserForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item label='CMND'>
+          <Form.Item hasFeedback label='CMND'>
             {getFieldDecorator('identifier', {
               rules: [
                 {
@@ -49,7 +49,7 @@ class AddUserForm extends Component {
               ],
             })(<Input placeholder='CMND' />)}
           </Form.Item>
-          <Form.Item label='Họ tên'>
+          <Form.Item hasFeedback label='Họ tên'>
             {getFieldDecorator('fullname', {
               rules: [
                 {
@@ -59,7 +59,7 @@ class AddUserForm extends Component {
               ],
             })(<Input placeholder='Họ tên' />)}
           </Form.Item>
-          <Form.Item label='SĐT'>
+          <Form.Item hasFeedback label='SĐT'>
             {getFieldDecorator('phone', {
               rules: [
                 {
@@ -73,7 +73,7 @@ class AddUserForm extends Component {
               ],
             })(<Input placeholder='SĐT' />)}
           </Form.Item>
-          <Form.Item label='Email'>
+          <Form.Item hasFeedback label='Email'>
             {getFieldDecorator('email', {
               rules: [
                 {

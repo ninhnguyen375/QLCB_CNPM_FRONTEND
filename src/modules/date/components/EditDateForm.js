@@ -51,7 +51,7 @@ class EditDateForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item label='Ngày Bay'>
+          <Form.Item hasFeedback label='Ngày Bay'>
             {getFieldDecorator('departureDate', {
               rules: [
                 {

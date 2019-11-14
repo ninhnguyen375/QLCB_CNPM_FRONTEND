@@ -50,7 +50,7 @@ class EditAirlineForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item label='Tên hãng hàng không'>
+          <Form.Item hasFeedback label='Tên hãng hàng không'>
             {getFieldDecorator('name', {
               rules: [
                 {

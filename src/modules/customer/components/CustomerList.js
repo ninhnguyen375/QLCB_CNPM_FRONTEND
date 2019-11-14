@@ -127,7 +127,7 @@ export class CustomerList extends Component {
     customers = customers || []
 
     return (
-      <Card title={<b>Khách Hàng</b>}>
+      <Card title={<b>KHÁCH HÀNG</b>}>
         <Row type='flex' justify='space-between'>
           <Col>
             <div className='d-flex flex-wrap'>
