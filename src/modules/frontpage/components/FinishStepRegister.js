@@ -27,23 +27,17 @@ export class FinishStepRegister extends Component {
             <Card style={{ height: '100%' }}>
               <div className='p10'>
                 <span className='fwb'>Khách hàng: </span>
-                <span>
-                  {searchFlightParams.fullname_customer_book ||
-                    'Nguyễn Văn Tèo'}
-                </span>
+                <span>{searchFlightParams.customerId || 'Nguyễn Văn Tèo'}</span>
               </div>
               <div className='p10'>
                 <span className='fwb'>Email: </span>
                 <span>
-                  {searchFlightParams.email_customer_book ||
-                    'teonguyen@gmail.com'}
+                  {searchFlightParams.fullName || 'teonguyen@gmail.com'}
                 </span>
               </div>
               <div className='p10'>
                 <span className='fwb'>Số điện thoại: </span>
-                <span>
-                  {searchFlightParams.phonenumber_customer_book || '012456789'}
-                </span>
+                <span>{searchFlightParams.phone || '012456789'}</span>
               </div>
               <div className='p10'>
                 <span className='fwb'>Thành tiền: </span>

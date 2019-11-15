@@ -142,7 +142,7 @@ class SearchFlightForm extends Component {
 
     return (
       <Card
-        style={{ height: '100%', overflow: 'auto' }}
+        style={{ height: '583px', overflow: 'auto' }}
         title={<b>TÌM CHUYẾN BAY</b>}
       >
         <Form onSubmit={this.handleSubmit}>
@@ -240,7 +240,6 @@ class SearchFlightForm extends Component {
                 )}
               </Form.Item>
             </Col>
-            {console.log(type)}
             {type === 1 ? (
               <Col lg={12}>
                 <Form.Item label='Ngày về'>

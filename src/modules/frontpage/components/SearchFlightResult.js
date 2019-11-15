@@ -13,7 +13,7 @@ export class SearchFlightResult extends Component {
     searchFlightResult: {},
   }
 
-  completeSelect = values => {
+  completeSelect = (values = {}) => {
     this.props.setSearchFlightParams({ selectedFlight: values })
     this.props.next()
   }
@@ -22,7 +22,7 @@ export class SearchFlightResult extends Component {
     const { type } = this.props.searchFlightParams
     this.setState({ selectedFlightFrom: id })
     if (type !== 2) return
-    this.completeSelect([id])
+    this.completeSelect({ departureFlight: id })
   }
 
   handleSelectFlightTo = id => {
@@ -31,7 +31,10 @@ export class SearchFlightResult extends Component {
       message.error('Vui lòng chọn vé chiều đi trước')
       return
     }
-    this.completeSelect([this.state.selectedFlightFrom, id])
+    this.completeSelect({
+      departureFlight: selectedFlightFrom,
+      returnFlight: id,
+    })
   }
 
   async componentDidMount() {

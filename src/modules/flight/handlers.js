@@ -1,4 +1,4 @@
-import { fetchAuthLoading } from '../../common/effects'
+import { fetchAuthLoading, fetchLoading } from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setFlights } from './actions'
 
@@ -20,7 +20,7 @@ export async function getFlightsAsync(
 }
 
 export const getFlightAsync = async id => {
-  const result = await fetchAuthLoading({
+  const result = await fetchLoading({
     url: ENDPOINTS.getFlight(id),
     method: 'GET',
   })
