@@ -36,7 +36,8 @@ export class SearchFlightResult extends Component {
   }
 
   componentDidMount() {
-    // fetch api flight here and show
+    const { searchFlightParams } = this.props
+    console.log('Ninh Debug: searchFlightParams', searchFlightParams)
   }
 
   showFlyFrom() {

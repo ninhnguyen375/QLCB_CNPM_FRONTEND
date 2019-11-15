@@ -1,4 +1,4 @@
-import { fetchAuthLoading } from '../../common/effects'
+import { fetchAuthLoading, fetchLoading } from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setTicketCategories } from './actions'
 
@@ -7,7 +7,7 @@ export async function getTicketCategoriesAsync(
   pageSize = LIMIT,
   params = {},
 ) {
-  const res = await fetchAuthLoading({
+  const res = await fetchLoading({
     url: ENDPOINTS.getTicketCategories,
     method: 'GET',
     params: {

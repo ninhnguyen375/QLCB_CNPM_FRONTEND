@@ -41,12 +41,10 @@ class Banner extends React.PureComponent {
       <div {...this.props} {...this.dataSource.wrapper}>
         <div className='container d-flex justify-content-center flex-wrap'>
           <div className='col-lg-6' style={{ marginTop: 20 }}>
-            <div>
-              <SearchFlightForm history={this.props.history} />
-            </div>
+            <SearchFlightForm history={this.props.history} />
           </div>
           <div className='col-lg-6' style={{ marginTop: 20 }}>
-            <Card style={{ height: '100%' }}>
+            <Card>
               <Carousel autoPlay={true} interval={1000} infiniteLoop={true}>
                 <div>
                   <img

@@ -240,6 +240,7 @@ class AddFlightForm extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.searchAirportTimeoutĐiện)
+    clearTimeout(this.searchAirlineTimeout)
   }
 
   render() {
