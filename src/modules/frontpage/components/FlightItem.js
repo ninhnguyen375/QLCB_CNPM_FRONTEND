@@ -212,7 +212,13 @@ export class FlightItem extends Component {
                         const ticketCategoryPrice = ftc
                           ? ftc.price || 99999999
                           : 99999999
-
+                        const quantity = ticketCategoriesInForm[
+                          ftc.ticketCategoryId
+                        ]
+                          ? ticketCategoriesInForm[ftc.ticketCategoryId]
+                              .quantity
+                          : 0
+                        if (quantity === 0) return ''
                         return (
                           <p key={ftc.flightId + ftc.ticketCategoryId}>
                             {ticketCategoryName} +{' '}
@@ -233,6 +239,7 @@ export class FlightItem extends Component {
                           ? ticketCategoriesInForm[ftc.ticketCategoryId]
                               .quantity
                           : 0
+                        if (quantity === 0) return ''
                         return (
                           <p
                             className='tac'
