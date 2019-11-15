@@ -1,4 +1,4 @@
-import { fetchAuthLoading } from '../../common/effects'
+import { fetchAuthLoading, fetchLoading } from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setAirports } from './actions'
 
@@ -7,7 +7,7 @@ export async function getAirportsAsync(
   pageSize = LIMIT,
   params = {},
 ) {
-  const res = await fetchAuthLoading({
+  const res = await fetchLoading({
     url: ENDPOINTS.getAirports,
     method: 'GET',
     params: {
@@ -20,7 +20,7 @@ export async function getAirportsAsync(
 }
 
 export const getAirportAsync = async id => {
-  const result = await fetchAuthLoading({
+  const result = await fetchLoading({
     url: ENDPOINTS.getAirport(id),
     method: 'GET',
   })

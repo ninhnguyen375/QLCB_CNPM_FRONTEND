@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   Form,
   Radio,
-  Input,
   Row,
   Col,
   DatePicker,
@@ -10,85 +9,238 @@ import {
   Button,
   Icon,
   Card,
+  Select,
+  notification,
 } from 'antd'
 import moment from 'moment'
+import removeNullObject from '../../../common/utils/removeObjectNull'
+import { getAirportsAsync } from '../../airport/handlers'
+import { handleError } from '../../../common/utils/handleError'
+import { getTicketCategoriesAsync } from '../../ticketcategory/handlers'
 
 const nowDate = new Date()
 
 class SearchFlightForm extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      type: 1,
-    }
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChangeType = this.handleChangeType.bind(this)
+  state = {
+    airports: [],
+    type: 1,
+    ticketCategories: [],
   }
-  handleSubmit(e) {
+
+  componentWillUnmount() {
+    clearTimeout(this.searchAirportTimeout)
+  }
+
+  handleSearchAirport = value => {
+    if (this.searchAirportTimeout) {
+      clearTimeout(this.searchAirportTimeout)
+    }
+    this.searchAirportTimeout = setTimeout(() => {
+      this.getAirports({ name: value })
+    }, 500)
+  }
+
+  handleSubmit = e => {
     e.preventDefault()
     const { form, setSearchFlightParams, history } = this.props
+
     form.validateFields((errors, values) => {
-      if (!errors) {
-        setSearchFlightParams(values)
-        history.push('/search-flight')
-      }
+      if (errors) return
+
+      // Mapping ticketCategories
+      const ticketCategories = []
+      Array.isArray(values.ticketCategoriesInForm) &&
+        values.ticketCategoriesInForm.forEach((t, i) => {
+          ticketCategories.push({
+            id: i,
+            ...t,
+          })
+        })
+
+      setSearchFlightParams({ ...values, ticketCategories })
+      history.push('/search-flight')
     })
   }
-  handleChangeType() {
+
+  handleChangeType = () => {
     this.setState({
       type: this.state.type === 1 ? 2 : 1,
     })
   }
+
+  disabledDate = current => {
+    return current && current < moment().startOf('day')
+  }
+
+  handleSearchAirport = value => {
+    if (this.searchAirportTimeout) {
+      clearTimeout(this.searchAirportTimeout)
+    }
+    this.searchAirportTimeout = setTimeout(() => {
+      this.getAirports({ name: value })
+    }, 500)
+  }
+
+  getAirports = async (search = {}) => {
+    try {
+      const values = removeNullObject(search)
+      const res = await getAirportsAsync(undefined, undefined, {
+        ...values,
+        pageSize: 9999,
+      })
+      this.setState({ airports: res.data })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
+  }
+
+  getTicketCategories = async (search = {}) => {
+    try {
+      const values = removeNullObject(search)
+      const res = await getTicketCategoriesAsync(undefined, undefined, {
+        ...values,
+        pageSize: 9999,
+      })
+      this.setState({ ticketCategories: res.data })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
+  }
+
+  componentDidMount() {
+    this.getAirports()
+    this.getTicketCategories()
+  }
+
+  renderTicketCategories = (ticketCategories = []) => {
+    if (!Array.isArray(ticketCategories)) {
+      throw new Error('ticketCategories must be array')
+    }
+
+    const { searchFlightParams, form } = this.props
+    const { getFieldDecorator } = form
+
+    return ticketCategories.map(t => (
+      <Form.Item key={t.id} label={t ? t.name : '--'} style={{ width: '30%' }}>
+        {getFieldDecorator(`ticketCategoriesInForm[${t.id}].quantity`, {
+          initialValue:
+            searchFlightParams &&
+            searchFlightParams.ticketCategoriesInForm &&
+            searchFlightParams.ticketCategoriesInForm[t.id]
+              ? searchFlightParams.ticketCategoriesInForm[t.id].quantity
+              : 1,
+        })(
+          <InputNumber
+            min={0}
+            max={9}
+            prefix={<Icon type='user' />}
+            style={{ width: '100%' }}
+            size={'large'}
+          ></InputNumber>,
+        )}
+      </Form.Item>
+    ))
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form
     const { searchFlightParams } = this.props
-    const { type } = this.state
+    const { type, airports, ticketCategories } = this.state
+
     return (
-      <Card title={<b>TÌM CHUYẾN BAY</b>}>
+      <Card
+        style={{ height: '100%', overflow: 'auto' }}
+        title={<b>TÌM CHUYẾN BAY</b>}
+      >
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item>
+          <div>
             {getFieldDecorator('type', {
-              initialValue: searchFlightParams.type || 2,
+              initialValue: searchFlightParams.type || 1,
             })(
-              <Radio.Group onChange={this.handleChangeType}>
+              <Radio.Group size='large' onChange={this.handleChangeType}>
                 <Radio value={1}>Khứ hồi</Radio>
                 <Radio value={2}>Một chiều</Radio>
               </Radio.Group>,
             )}
-          </Form.Item>
-          <Form.Item label='Điểm đi'>
-            {getFieldDecorator('from', {
-              initialValue: searchFlightParams
-                ? searchFlightParams.from || 'Ha Noi'
-                : '',
-            })(
-              <Input
-                placeholder='Điểm đi'
-                size={'large'}
-                prefix={<Icon type='environment' />}
-              />,
-            )}
-          </Form.Item>
-          <Form.Item label='Điểm đến'>
-            {getFieldDecorator('to', {
-              initialValue: searchFlightParams
-                ? searchFlightParams.to || 'Da Nang'
-                : '',
-            })(
-              <Input
-                placeholder='Điểm đến'
-                size={'large'}
-                prefix={<Icon type='environment' />}
-              />,
-            )}
-          </Form.Item>
-          <Row gutter={6}>
+          </div>
+
+          <div>
+            <Form.Item label='Điểm đi'>
+              {getFieldDecorator('airportFrom', {
+                rules: [{ required: true, message: 'Vui lòng chọn điểm đi' }],
+                initialValue: searchFlightParams
+                  ? searchFlightParams.airportFrom
+                  : '',
+              })(
+                <Select
+                  suffixIcon={
+                    <span>
+                      ĐIỂM ĐI <Icon type='down' />
+                    </span>
+                  }
+                  size='large'
+                  showSearch
+                  placeholder='Điểm đi'
+                  notFoundContent={null}
+                  onSearch={this.handleSearchAirport}
+                  filterOption={false}
+                  menuItemSelectedIcon={<Icon type='environment' />}
+                >
+                  {Array.isArray(airports)
+                    ? airports.map(airport => (
+                        <Select.Option value={airport.id} key={airport.id}>
+                          {airport ? airport.location || '' : ''}
+                        </Select.Option>
+                      ))
+                    : ''}
+                </Select>,
+              )}
+            </Form.Item>
+          </div>
+
+          <div>
+            <Form.Item label='Điểm đến'>
+              {getFieldDecorator('airportTo', {
+                rules: [{ required: true, message: 'Vui lòng chọn điểm đến' }],
+                initialValue: searchFlightParams
+                  ? searchFlightParams.airportTo
+                  : '',
+              })(
+                <Select
+                  suffixIcon={
+                    <div>
+                      ĐIỂM ĐẾN <Icon type='down' />
+                    </div>
+                  }
+                  size='large'
+                  showSearch
+                  placeholder='Điểm đến'
+                  notFoundContent={null}
+                  onSearch={this.handleSearchAirport}
+                  filterOption={false}
+                  menuItemSelectedIcon={<Icon type='environment' />}
+                >
+                  {Array.isArray(airports)
+                    ? airports.map(airport => (
+                        <Select.Option value={airport.id} key={airport.id}>
+                          {airport ? airport.location || '' : ''}
+                        </Select.Option>
+                      ))
+                    : ''}
+                </Select>,
+              )}
+            </Form.Item>
+          </div>
+
+          <Row style={{ marginTop: 10 }} gutter={6}>
             <Col lg={type === 1 ? 12 : 24}>
               <Form.Item label='Ngày đi'>
-                {getFieldDecorator('date_from', {
+                {getFieldDecorator('departureDate', {
+                  rules: [{ required: true, message: 'Vui lòng chọn ngày đi' }],
                   initialValue: moment(nowDate),
                 })(
                   <DatePicker
+                    disabledDate={this.disabledDate}
                     style={{ width: '100%' }}
                     size={'large'}
                   ></DatePicker>,
@@ -98,10 +250,14 @@ class SearchFlightForm extends Component {
             {type === 1 ? (
               <Col lg={12}>
                 <Form.Item label='Ngày về'>
-                  {getFieldDecorator('date_to', {
+                  {getFieldDecorator('returnDate', {
+                    rules: [
+                      { required: true, message: 'Vui lòng chọn ngày về' },
+                    ],
                     initialValue: moment(nowDate),
                   })(
                     <DatePicker
+                      disabledDate={this.disabledDate}
                       style={{ width: '100%' }}
                       size={'large'}
                     ></DatePicker>,
@@ -110,36 +266,21 @@ class SearchFlightForm extends Component {
               </Col>
             ) : null}
           </Row>
-          <Row gutter={6}>
-            <Col lg={12}>
-              <Form.Item label='Số người'>
-                {getFieldDecorator('count', {
-                  initialValue: searchFlightParams
-                    ? searchFlightParams.count || 1
-                    : 1,
-                })(
-                  <InputNumber
-                    min={1}
-                    prefix={<Icon type='user' />}
-                    style={{ width: '100%' }}
-                    size={'large'}
-                  ></InputNumber>,
-                )}
-              </Form.Item>
-            </Col>
-            <Col lg={12}>
-              <Form.Item style={{ marginTop: 39 }}>
-                <Button
-                  size='large'
-                  style={{ width: '100%' }}
-                  type='primary'
-                  htmlType='submit'
-                >
-                  <Icon type='search' /> TÌM CHUYẾN BAY
-                </Button>
-              </Form.Item>
-            </Col>
-          </Row>
+
+          <div className='d-flex justify-content-between flex-wrap'>
+            {this.renderTicketCategories(ticketCategories || [])}
+          </div>
+
+          <div>
+            <Button
+              size='large'
+              style={{ width: '100%' }}
+              type='primary'
+              htmlType='submit'
+            >
+              <Icon type='search' /> TÌM CHUYẾN BAY
+            </Button>
+          </div>
         </Form>
       </Card>
     )
