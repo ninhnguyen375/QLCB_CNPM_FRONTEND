@@ -1,4 +1,4 @@
-import { fetchAuthLoading } from '../../common/effects'
+import { fetchAuthLoading, fetchLoading } from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setDates } from './actions'
 import moment from 'moment'
@@ -16,6 +16,28 @@ export async function getDatesAsync(
       pageSize,
       ...params,
     },
+  })
+  return res.data
+}
+
+export async function searchFlightFromDate(data = {}) {
+  const result = { ...data }
+  // delete useless params
+  delete result.ticketCategoriesInForm
+  delete result.type
+
+  // format to valid Date
+  result.departureDate = moment(result.departureDate)
+    .format('YYYY-MM-DD')
+    .toString()
+  result.returnDate = moment(result.returnDate)
+    .format('YYYY-MM-DD')
+    .toString()
+
+  const res = await fetchLoading({
+    url: ENDPOINTS.searchFlightFromDate,
+    method: 'GET',
+    params: result,
   })
   return res.data
 }

@@ -132,10 +132,10 @@ export class CustomerList extends Component {
           <Col>
             <div className='d-flex flex-wrap'>
               <Input.Search
-                value={search.name}
+                value={search.fullName}
                 style={{ marginRight: 5, width: 250 }}
-                name='name'
-                onSearch={this.handleSearch('name')}
+                name='fullName'
+                onSearch={this.handleSearch('fullName')}
                 placeholder='Tìm theo Tên khách hàng'
                 onChange={this.hanleChangeSearch}
               ></Input.Search>

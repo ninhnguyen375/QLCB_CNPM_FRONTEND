@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
-import { Card, Select, notification } from 'antd'
+import { Card, Select, notification, message } from 'antd'
 import FlightItem from './FlightItem'
+import { handleError } from '../../../common/utils/handleError'
+import { searchFlightFromDate } from '../../date/handlers'
+import { getValueFromObj } from '../../../common/utils/makeupObject'
+import moment from 'moment'
 
 export class SearchFlightResult extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedFlightFrom: '',
-      selectedFlightTo: '',
-    }
-    this.showFlyFrom = this.showFlyFrom.bind(this)
+  state = {
+    selectedFlightFrom: '',
+    selectedFlightTo: '',
+    searchFlightResult: {},
   }
 
   completeSelect = values => {
@@ -27,57 +28,75 @@ export class SearchFlightResult extends Component {
   handleSelectFlightTo = id => {
     const { selectedFlightFrom } = this.state
     if (!selectedFlightFrom) {
-      notification.error({
-        message: `Please select selectedFlightFrom`,
-      })
+      message.error('Vui lòng chọn vé chiều đi trước')
       return
     }
     this.completeSelect([this.state.selectedFlightFrom, id])
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { searchFlightParams } = this.props
-    console.log('Ninh Debug: searchFlightParams', searchFlightParams)
+    try {
+      const res = await searchFlightFromDate(searchFlightParams)
+      this.setState({ searchFlightResult: res })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
   }
 
-  showFlyFrom() {
-    let arr = []
-    for (let i = 0; i < 10; i++) {
-      const id = `item-fly-from-${i}`
-      arr.push(
-        <FlightItem
-          id={id}
-          key={id}
-          isSelected={id === this.state.selectedFlightFrom}
-          onSelectFlight={this.handleSelectFlightFrom}
-        ></FlightItem>,
-      )
-    }
-    return arr
+  showFlyFrom = (departureFlights = []) => {
+    const { searchFlightParams = {} } = this.props
+    let { departureDate, ticketCategoriesInForm } = searchFlightParams
+    departureDate = moment(departureDate)
+      .format('DD-MM-YYYY')
+      .toString()
+
+    return departureFlights.map(f => (
+      <FlightItem
+        id={f.id}
+        key={f.id}
+        ticketCategoriesInForm={ticketCategoriesInForm}
+        departureDate={departureDate}
+        flight={f || {}}
+        isSelected={f.id === this.state.selectedFlightFrom}
+        onSelectFlight={this.handleSelectFlightFrom}
+      />
+    ))
   }
 
-  showFlyTo() {
-    let arr = []
-    for (let i = 0; i < 5; i++) {
-      const id = `item-fly-to${i}`
-      arr.push(
-        <FlightItem
-          id={id}
-          key={id}
-          isSelected={id === this.state.selectedFlightFrom}
-          onSelectFlight={this.handleSelectFlightTo}
-        ></FlightItem>,
-      )
-    }
-    return arr
+  showFlyTo = (returnFlights = []) => {
+    const { searchFlightParams = {} } = this.props
+    let { returnDate, ticketCategoriesInForm } = searchFlightParams
+    returnDate = moment(returnDate)
+      .format('DD-MM-YYYY')
+      .toString()
+
+    return returnFlights.map(f => (
+      <FlightItem
+        id={f.id}
+        key={f.id}
+        ticketCategoriesInForm={ticketCategoriesInForm}
+        departureDate={returnDate}
+        flight={f || {}}
+        isSelected={f.id === this.state.selectedFlightTo}
+        onSelectFlight={this.handleSelectFlightTo}
+      />
+    ))
   }
 
   render() {
     const { type } = this.props.searchFlightParams
+    const { searchFlightResult = {} } = this.state
+    const { departureFlights, returnFlights } = searchFlightResult
+
     return (
       <div className='search-flight-result'>
         <p className='title'>
-          Tìm chuyến bay từ Hà Nội (HAN) đến Hồ Chí Mình (SGN)
+          Tìm chuyến bay từ{' '}
+          {getValueFromObj('0.airportFromData.location', departureFlights)} (
+          {getValueFromObj('0.airportFromData.id', departureFlights)}) đến{' '}
+          {getValueFromObj('0.airportToData.location', departureFlights)} (
+          {getValueFromObj('0.airportToData.id', departureFlights)})
         </p>
 
         <div>
@@ -99,10 +118,24 @@ export class SearchFlightResult extends Component {
                 <div>
                   <p>CHỌN CHIỀU ĐI</p>
                   <br />
-                  <p>Hà Nội (HAN) đến Hồ Chí Mình (SGN)</p>
+                  <p>
+                    {getValueFromObj(
+                      '0.airportFromData.location',
+                      departureFlights,
+                    )}{' '}
+                    ({getValueFromObj('0.airportFromData.id', departureFlights)}
+                    ) đến{' '}
+                    {getValueFromObj(
+                      '0.airportToData.location',
+                      departureFlights,
+                    )}{' '}
+                    ({getValueFromObj('0.airportToData.id', departureFlights)})
+                  </p>
                 </div>
                 <div>
-                  <p className='tar'>2 kết quả</p>
+                  <p className='tar'>
+                    {departureFlights ? departureFlights.length : 0} kết quả
+                  </p>
                   <br />
                   <p className='tar'>Giá vé đã bao gồm thuế và phụ phí</p>
                 </div>
@@ -133,7 +166,7 @@ export class SearchFlightResult extends Component {
                 </div>
               </div>
             </div>
-            <div>{this.showFlyFrom()}</div>
+            <div>{this.showFlyFrom(departureFlights || [])}</div>
           </div>
         </div>
         <div style={{ marginTop: 50 }}></div>
@@ -157,10 +190,29 @@ export class SearchFlightResult extends Component {
                   <div>
                     <p>CHỌN CHIỀU VỀ</p>
                     <br />
-                    <p>Hà Nội (HAN) đến Hồ Chí Mình (SGN)</p>
+                    <p>
+                      {getValueFromObj(
+                        '0.airportToData.location',
+                        departureFlights,
+                      )}{' '}
+                      ({getValueFromObj('0.airportToData.id', departureFlights)}
+                      ) đến{' '}
+                      {getValueFromObj(
+                        '0.airportFromData.location',
+                        departureFlights,
+                      )}{' '}
+                      (
+                      {getValueFromObj(
+                        '0.airportFromData.id',
+                        departureFlights,
+                      )}
+                      )
+                    </p>
                   </div>
                   <div>
-                    <p className='tar'>2 kết quả</p>
+                    <p className='tar'>
+                      {returnFlights ? returnFlights.length : 0} kết quả
+                    </p>
                     <br />
                     <p className='tar'>Giá vé đã bao gồm thuế và phụ phí</p>
                   </div>
@@ -191,7 +243,7 @@ export class SearchFlightResult extends Component {
                   </div>
                 </div>
               </div>
-              <div>{this.showFlyTo()}</div>
+              <div>{this.showFlyTo(returnFlights)}</div>
             </div>
           </div>
         ) : null}

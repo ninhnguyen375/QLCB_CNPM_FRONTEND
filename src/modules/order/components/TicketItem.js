@@ -52,8 +52,8 @@ class TicketItem extends Component {
               </div>
             </div>
             <div>
-              <p className='fwb'>{minutesToTime(flight.startTime)}</p>
-              <p>
+              <p className='tac fwb'>{minutesToTime(flight.startTime)}</p>
+              <p className='tac'>
                 {flight.airportFromData
                   ? flight.airportFromData.location
                   : 'No Location Name'}
