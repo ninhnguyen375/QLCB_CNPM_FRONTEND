@@ -23,7 +23,9 @@ const nowDate = new Date()
 class SearchFlightForm extends Component {
   state = {
     airports: [],
-    type: 1,
+    type: this.props.searchFlightParams
+      ? this.props.searchFlightParams.type || 1
+      : 1,
     ticketCategories: [],
   }
 
@@ -36,7 +38,7 @@ class SearchFlightForm extends Component {
       clearTimeout(this.searchAirportTimeout)
     }
     this.searchAirportTimeout = setTimeout(() => {
-      this.getAirports({ name: value })
+      this.getAirports({ location: value })
     }, 500)
   }
 
@@ -70,15 +72,6 @@ class SearchFlightForm extends Component {
 
   disabledDate = current => {
     return current && current < moment().startOf('day')
-  }
-
-  handleSearchAirport = value => {
-    if (this.searchAirportTimeout) {
-      clearTimeout(this.searchAirportTimeout)
-    }
-    this.searchAirportTimeout = setTimeout(() => {
-      this.getAirports({ name: value })
-    }, 500)
   }
 
   getAirports = async (search = {}) => {
@@ -145,7 +138,7 @@ class SearchFlightForm extends Component {
   render() {
     const { getFieldDecorator } = this.props.form
     const { searchFlightParams } = this.props
-    const { type, airports, ticketCategories } = this.state
+    const { airports, ticketCategories, type } = this.state
 
     return (
       <Card
@@ -153,7 +146,7 @@ class SearchFlightForm extends Component {
         title={<b>TÌM CHUYẾN BAY</b>}
       >
         <Form onSubmit={this.handleSubmit}>
-          <div>
+          <div className='tac'>
             {getFieldDecorator('type', {
               initialValue: searchFlightParams.type || 1,
             })(
@@ -247,6 +240,7 @@ class SearchFlightForm extends Component {
                 )}
               </Form.Item>
             </Col>
+            {console.log(type)}
             {type === 1 ? (
               <Col lg={12}>
                 <Form.Item label='Ngày về'>
@@ -264,7 +258,9 @@ class SearchFlightForm extends Component {
                   )}
                 </Form.Item>
               </Col>
-            ) : null}
+            ) : (
+              ''
+            )}
           </Row>
 
           <div className='d-flex justify-content-between flex-wrap'>

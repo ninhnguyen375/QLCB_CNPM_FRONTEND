@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 import point from '../../../assets/images/01-point.png'
 import TweenOne from 'rc-tween-one'
-import { Button, Card, Divider } from 'antd'
+import { Button, Card, Divider, Tag } from 'antd'
+import {
+  minutesToTime,
+  minutesToTimeWithType,
+} from '../../../common/utils/timeFormater'
+import moment from 'moment'
+import { getValueFromObj } from '../../../common/utils/makeupObject'
+import { priceFormat } from '../../../common/utils/stringFormater'
 
 export class FlightItem extends Component {
   state = {
@@ -12,8 +19,27 @@ export class FlightItem extends Component {
     this.setState({ isShowDetails: !this.state.isShowDetails })
   }
 
+  getTotalPrice = (
+    flightTicketCategories = [],
+    ticketCategoriesInForm = [],
+  ) => {
+    let totalPrice = 0
+
+    flightTicketCategories.forEach(ftc => {
+      const quantity = ticketCategoriesInForm[ftc.ticketCategoryId]
+        ? ticketCategoriesInForm[ftc.ticketCategoryId].quantity
+        : 0
+      const ticketCategoryPrice = ftc ? ftc.price || 99999999 : 99999999
+      totalPrice += parseFloat(ticketCategoryPrice) * parseFloat(quantity)
+    })
+    return totalPrice
+  }
+
   render() {
-    const { id, onSelectFlight, isSelected } = this.props
+    const { id, onSelectFlight, isSelected, flight = {} } = this.props
+    const { departureDate, ticketCategoriesInForm = [] } = this.props
+    const { flightTicketCategories = [] } = flight
+
     return (
       <div style={{ width: '100%', marginBottom: 10 }}>
         <Card style={{ borderRadius: 5 }}>
@@ -29,21 +55,49 @@ export class FlightItem extends Component {
                   marginRight: 10,
                   borderRadius: 5,
                 }}
-                src={require('../../../assets/images/logo.png')}
+                src={require('../../../assets/images/airline.png')}
               />
-              <span>Vietjet Air</span>
+              <div>
+                <a
+                  href={`https://www.google.com/search?q=${
+                    flight.airline ? flight.airline.name : ''
+                  }`}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {flight.airline ? flight.airline.name : 'No Airline Name'}
+                </a>
+                <br />
+                <Tag
+                  title='Mã Hãng Hàng Không'
+                  style={{ marginTop: 5 }}
+                  color='blue'
+                >
+                  {flight.airline ? flight.airline.id : 'No Airline Id'}
+                </Tag>
+              </div>
             </div>
             <div>
-              <p className='fwb'>21:15</p>
-              <p>Hà Nội</p>
+              <p className='tac fwb'>{minutesToTime(flight.startTime)}</p>
+              <p className='tac'>
+                {flight.airportFromData
+                  ? flight.airportFromData.location
+                  : 'No Location Name'}
+              </p>
             </div>
             <div>
-              <p className='tac'>1h</p>
+              <p className='tac'>{minutesToTimeWithType(flight.flightTime)}</p>
               <img alt='flight' src={point} />
             </div>
             <div>
-              <p className='tac fwb'>22:15</p>
-              <p className='tac'>Hồ Chí Minh</p>
+              <p className='tac fwb'>
+                {minutesToTime(flight.startTime + flight.flightTime)}
+              </p>
+              <p className='tac'>
+                {flight.airportToData
+                  ? flight.airportToData.location
+                  : 'No Location Name'}
+              </p>
             </div>
             <div>
               <p
@@ -55,7 +109,13 @@ export class FlightItem extends Component {
             </div>
             <div>
               <p className='fwb' style={{ color: '#FFA801' }}>
-                200.000đ
+                {priceFormat(
+                  this.getTotalPrice(
+                    flightTicketCategories || [],
+                    ticketCategoriesInForm || [],
+                  ),
+                )}
+                VNĐ
               </p>
             </div>
             <div>
@@ -82,44 +142,136 @@ export class FlightItem extends Component {
           >
             <Card style={{ color: '#6A6A6A', marginTop: '-1px' }}>
               <div className='d-flex flex-wrap justify-content-between'>
-                <div className='row d-flex align-items-center justify-content-between'>
+                <div className='row d-flex justify-content-between'>
                   <div className='col'>
-                    <p className='fwb'>Hà Nội</p>
-                    <p>21:15, 12/11/2019</p>
-                    <p>Sân Bay Nội Bài</p>
+                    <p className='fwb'>
+                      {flight.airportFromData
+                        ? flight.airportFromData.location
+                        : 'No Location Name'}
+                    </p>
+                    <p>
+                      <Tag>
+                        {minutesToTime(flight.startTime)}, {departureDate}
+                      </Tag>
+                    </p>
+                    <p>
+                      Sân bay{' '}
+                      {flight.airportFromData
+                        ? flight.airportFromData.name
+                        : 'No Airport Name'}
+                    </p>
                   </div>
                   <div className='col'>
-                    <img
-                      alt='point'
-                      style={{ paddingBottom: 10, paddingLeft: 7 }}
-                      src={point}
-                    />
+                    <div>
+                      <p className='tac'>
+                        {minutesToTimeWithType(flight.flightTime)}
+                      </p>
+                      <img
+                        alt='point'
+                        style={{ paddingBottom: 10, paddingLeft: 7 }}
+                        src={point}
+                      />
+                    </div>
                   </div>
                   <div className='col'>
-                    <p className='fwb'>Hồ Chí Minh</p>
-                    <p>21:15, 12/11/2019</p>
-                    <p>Sân Bay Tân Sơn Nhất</p>
+                    <p className='fwb'>
+                      {flight.airportToData
+                        ? flight.airportToData.location
+                        : 'No Location Name'}
+                    </p>
+                    <p>
+                      <Tag>
+                        {moment(
+                          `${departureDate}, ${minutesToTime(
+                            flight.startTime,
+                          )}`,
+                          'DD-MM-YYYY, HH:mm',
+                        )
+                          .add(flight.flightTime, 'minutes')
+                          .format('HH:mm, DD-MM-YYYY')
+                          .toString()}
+                      </Tag>
+                    </p>
+                    <p>
+                      Sân Bay{' '}
+                      {flight.airportToData
+                        ? flight.airportToData.name
+                        : 'No Airport Name'}
+                    </p>
                   </div>
                 </div>
                 <Divider type='vertical' style={{ height: 80 }} />
                 <div>
                   <p>Loại vé:</p>
-                  <p>Vé loại 1</p>
+                  {Array.isArray(flightTicketCategories)
+                    ? flightTicketCategories.map(ftc => {
+                        const ticketCategoryName = getValueFromObj(
+                          'ticketCategory.name',
+                          ftc,
+                        )
+                        const ticketCategoryPrice = ftc
+                          ? ftc.price || 99999999
+                          : 99999999
+
+                        return (
+                          <p key={ftc.flightId + ftc.ticketCategoryId}>
+                            {ticketCategoryName} +{' '}
+                            {priceFormat(ticketCategoryPrice)}VNĐ
+                          </p>
+                        )
+                      })
+                    : ''}
                 </div>
                 <Divider type='vertical' style={{ height: 80 }} />
                 <div>
                   <p>Số lượng:</p>
-                  <p>2</p>
-                </div>
-                <Divider type='vertical' style={{ height: 80 }} />
-                <div>
-                  <p>Giá vé:</p>
-                  <p>200.000đ</p>
+                  {Array.isArray(flightTicketCategories)
+                    ? flightTicketCategories.map(ftc => {
+                        const quantity = ticketCategoriesInForm[
+                          ftc.ticketCategoryId
+                        ]
+                          ? ticketCategoriesInForm[ftc.ticketCategoryId]
+                              .quantity
+                          : 0
+                        return (
+                          <p
+                            className='tac'
+                            key={ftc.flightId + ftc.ticketCategoryId}
+                          >
+                            {quantity}
+                          </p>
+                        )
+                      })
+                    : ''}
                 </div>
                 <Divider type='vertical' style={{ height: 80 }} />
                 <div>
                   <p className='fwb'>Tổng cộng</p>
-                  <p>400.000đ</p>
+                  {Array.isArray(flightTicketCategories)
+                    ? flightTicketCategories.map(ftc => {
+                        const quantity = ticketCategoriesInForm[
+                          ftc.ticketCategoryId
+                        ]
+                          ? ticketCategoriesInForm[ftc.ticketCategoryId]
+                              .quantity
+                          : 0
+                        const ticketCategoryPrice = ftc
+                          ? ftc.price || 99999999
+                          : 99999999
+                        return (
+                          <p
+                            className='tac'
+                            key={ftc.flightId + ftc.ticketCategoryId}
+                          >
+                            {priceFormat(
+                              parseFloat(ticketCategoryPrice) *
+                                parseFloat(quantity),
+                            )}
+                            VNĐ
+                          </p>
+                        )
+                      })
+                    : ''}
                 </div>
               </div>
               <Divider />
@@ -127,7 +279,13 @@ export class FlightItem extends Component {
                 <p className='fwb tar'>
                   Số tiền bạn phải trả:{' '}
                   <span className='fwb' style={{ color: '#FFA801' }}>
-                    400.000đ
+                    {priceFormat(
+                      this.getTotalPrice(
+                        flightTicketCategories || [],
+                        ticketCategoriesInForm || [],
+                      ),
+                    )}
+                    VNĐ
                   </span>
                 </p>
               </div>

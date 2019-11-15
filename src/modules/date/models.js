@@ -9,6 +9,7 @@ export const ENDPOINTS = {
   updateDate: id => `${DEFAULT_URL}/dates/${id}`,
   addFlightsToDate: id => `${DEFAULT_URL}/dates/${id}/addflights`,
   removeFlightFromDate: id => `${DEFAULT_URL}/dates/${id}/removeflight`,
+  searchFlightFromDate: `${DEFAULT_URL}/searchflights`,
 }
 
 export const LIMIT = 10

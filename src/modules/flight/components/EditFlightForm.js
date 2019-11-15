@@ -289,7 +289,7 @@ class EditFlightForm extends Component {
           </div>
           <div className='row'>
             <div className='col'>
-              <Form.Item hasFeedback label='Trạng thái'>
+              <Form.Item label='Trạng thái'>
                 {getFieldDecorator('status', {
                   rules: [
                     {
