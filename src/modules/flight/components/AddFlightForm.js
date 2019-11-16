@@ -9,6 +9,7 @@ import {
   TimePicker,
   Select,
   InputNumber,
+  message,
 } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import { createFlightAsync } from '../handlers'
@@ -189,6 +190,11 @@ class AddFlightForm extends Component {
     })
   }
 
+  getTCById = id => {
+    const { ticketCategories } = this.state
+    return ticketCategories.find(t => t.id === id)
+  }
+
   handleSubmit = e => {
     e.preventDefault()
     this.setState({ loading: true })
@@ -198,6 +204,22 @@ class AddFlightForm extends Component {
     const flightTicketCategories = Object.values(
       ticketCategoriesOfFlight,
     ).filter(t => t.done)
+
+    // Check required ticketCategories
+    flightTicketCategories.filter(
+      t =>
+        t.ticketCategoryId === 1 ||
+        t.ticketCategoryId === 2 ||
+        t.ticketCategoryId === 3,
+    )
+    if (flightTicketCategories.length !== 3) {
+      this.setState({ loading: false })
+      message.error(
+        `Vui lòng nhập đủ 3 loại vé cơ bản: "${this.getTCById(1).name}", "${
+          this.getTCById(2).name
+        }", "${this.getTCById(3).name}"`,
+      )
+    }
 
     form.validateFieldsAndScroll(
       { scroll: { offsetTop: 50 } },

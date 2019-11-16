@@ -1,9 +1,4 @@
-import {
-  loading,
-  fetch,
-  fetchAuthLoading,
-  fetchLoading,
-} from '../../common/effects'
+import { loading, fetch, fetchAuthLoading } from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setUserInformation, setUserToken, setUsers } from './actions'
 

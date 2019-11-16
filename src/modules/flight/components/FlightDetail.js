@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Icon, Card, notification, Tag, Divider } from 'antd'
-import { getUserRole } from '../../../common/utils/authUtils'
 import { handleError } from '../../../common/utils/handleError'
 import { getFlightAsync } from '../handlers'
 import { minutesToTime } from '../../../common/utils/timeFormater'
@@ -30,7 +29,6 @@ class FlightDetail extends Component {
   }
 
   render() {
-    const authRole = getUserRole()
     const { flight } = this.state
 
     return (

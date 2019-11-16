@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Button, Divider, Tag } from 'antd'
+import { Card, Divider, Tag } from 'antd'
 import point from '../../../assets/images/01-point.png'
 import RcTweenOne from 'rc-tween-one'
 import {
@@ -7,7 +7,8 @@ import {
   minutesToTimeWithType,
 } from '../../../common/utils/timeFormater'
 import { priceFormat } from '../../../common/utils/stringFormater'
-
+import moment from 'moment'
+import { Link } from 'react-router-dom'
 class TicketItem extends Component {
   state = {
     isShowDetails: false,
@@ -21,6 +22,7 @@ class TicketItem extends Component {
     let { ticket } = this.props
     ticket = ticket ? ticket || {} : {}
     const flight = ticket && ticket.flight ? ticket.flight || {} : {}
+    const date = ticket && ticket.date ? ticket.date || {} : {}
 
     return (
       <div style={{ width: '100%', marginBottom: 10 }}>
@@ -52,6 +54,27 @@ class TicketItem extends Component {
               </div>
             </div>
             <div>
+              <p>
+                <b>Mã Chuyến Bay</b>
+              </p>
+              <p className='tac'>
+                <Link to={`/admin/flight/${flight.id}`}>
+                  <Tag
+                    title='Mã Chuyến Bay'
+                    className='tac link'
+                    style={{
+                      fontSize: '0.9em',
+                      padding: '2px 5px',
+                      marginTop: 5,
+                    }}
+                    color='blue'
+                  >
+                    {flight.id}
+                  </Tag>
+                </Link>
+              </p>
+            </div>
+            <div>
               <p className='tac fwb'>{minutesToTime(flight.startTime)}</p>
               <p className='tac'>
                 {flight.airportFromData
@@ -65,7 +88,13 @@ class TicketItem extends Component {
             </div>
             <div>
               <p className='tac fwb'>
-                {minutesToTime(flight.startTime + flight.flightTime)}
+                {moment(
+                  `${date.departureDate}, ${minutesToTime(flight.startTime)}`,
+                  'DD-MM-YYYY, HH:mm',
+                )
+                  .add(flight.flightTime, 'minutes')
+                  .format('HH:mm')
+                  .toString()}
               </p>
               <p className='tac'>
                 {flight.airportToData
@@ -101,7 +130,10 @@ class TicketItem extends Component {
                         ? flight.airportFromData.location
                         : 'No Location Name'}
                     </p>
-                    <p>{minutesToTime(flight.startTime)}, 12/11/2019</p>
+                    <Tag>
+                      {minutesToTime(flight.startTime)},{' '}
+                      {moment(date.departureDate).format('DD-MM-YYYY')}
+                    </Tag>
                     <p>
                       Sân Bay{' '}
                       {flight.airportFromData
@@ -127,10 +159,12 @@ class TicketItem extends Component {
                         ? flight.airportToData.location
                         : 'No Location Name'}
                     </p>
-                    <p>
-                      {minutesToTime(flight.startTime + flight.flightTime)},
-                      12/11/2019
-                    </p>
+                    <Tag>
+                      {moment(date.departureDate)
+                        .add(flight.startTime + flight.flightTime, 'minutes')
+                        .format('HH:mm, DD-MM-YYYY')
+                        .toString()}
+                    </Tag>
                     <p>
                       Sân Bay{' '}
                       {flight.airportToData

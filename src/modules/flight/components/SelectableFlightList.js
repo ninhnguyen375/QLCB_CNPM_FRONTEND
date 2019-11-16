@@ -12,7 +12,10 @@ import {
 } from 'antd'
 import { handleError } from '../../../common/utils/handleError'
 import { STATUS_COLORS, STATUS } from '../models'
-import { minutesToTimeWithType } from '../../../common/utils/timeFormater'
+import {
+  minutesToTimeWithType,
+  minutesToTime,
+} from '../../../common/utils/timeFormater'
 import { getFlightsAsync } from '../handlers'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 
@@ -35,10 +38,10 @@ class SelectableFlightList extends Component {
         <Tag
           title='Mã Chuyến Bay'
           className='tac link'
-          style={{ fontSize: '1em', padding: '5px 10px', width: 130 }}
+          style={{ fontSize: '1em', padding: '5px 10px', width: 100 }}
           color='blue'
         >
-          {record.id}
+          {value}
         </Tag>
       ),
     },
@@ -49,7 +52,7 @@ class SelectableFlightList extends Component {
       sorter: true,
       render: value => (
         <Tag>
-          <Icon type='clock-circle' /> {minutesToTimeWithType(value)}
+          <Icon type='clock-circle' /> {minutesToTime(value)}
         </Tag>
       ),
     },
@@ -68,15 +71,29 @@ class SelectableFlightList extends Component {
       key: 'AirportFrom',
       sorter: true,
       dataIndex: 'airportFromData',
-      title: 'Sân bay đi',
-      render: value => <div className='link'>{value && value.name}</div>,
+      title: 'Điểm đi',
+      render: value => (
+        <div>
+          <div className='link'>Sân bay: {value ? value.name : '--'}</div>
+          <Tag>
+            <Icon type='environment' /> {value ? value.location : '--'}
+          </Tag>
+        </div>
+      ),
     },
     {
       key: 'AirportTo',
       sorter: true,
       dataIndex: 'airportToData',
-      title: 'Sân bay đến',
-      render: value => <div className='link'>{value && value.name}</div>,
+      title: 'Điểm đến',
+      render: value => (
+        <div>
+          <div className='link'>Sân bay: {value ? value.name : '--'}</div>
+          <Tag>
+            <Icon type='environment' /> {value ? value.location : '--'}
+          </Tag>
+        </div>
+      ),
     },
     {
       key: 'SeatsCount',

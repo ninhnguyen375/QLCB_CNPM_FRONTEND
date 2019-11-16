@@ -106,7 +106,6 @@ class SearchFlight extends Component {
         ...searchFlightParams,
         ...values,
       }
-      console.log('Ninh Debug: dataTmp', dataTmp)
       let passengerCount = dataTmp.passengers.length
 
       passengerCount = isNaN(passengerCount) ? 0 : passengerCount
@@ -119,16 +118,17 @@ class SearchFlight extends Component {
         phone: dataTmp.phone,
         ticketCount: ticketCount,
         totalPrice: dataTmp.totalPrice,
-        returnDate: moment(dataTmp.returnDate)
+        returnDateName: moment(dataTmp.returnDate)
           .format('YYYY-MM-DD')
           .toString(),
-        departureDate: moment(dataTmp.departureDate)
+        departureDateName: moment(dataTmp.departureDate)
           .format('YYYY-MM-DD')
           .toString(),
         flightIds: Object.values(dataTmp.selectedFlight),
         passengers: dataTmp.passengers,
       }
-      console.log('Ninh Debug: data', data)
+
+      dataTmp.type !== 1 && delete data.returnDateName
 
       const res = await createOrderAsync(data)
       notification.success({ message: ' Thành công ' })

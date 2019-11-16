@@ -303,7 +303,7 @@ class MenuPage extends React.Component {
 
   render() {
     const { collapsed } = this.state
-    const { children, history, userName, user } = this.props
+    const { children, history, userName } = this.props
     const authRole = getUserRole()
 
     if (FULL_PAGES.includes(history.location.pathname)) {
