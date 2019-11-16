@@ -1,4 +1,4 @@
-import { fetchAuthLoading } from '../../common/effects'
+import { fetchAuthLoading, fetchLoading } from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setOrders } from './actions'
 
@@ -37,7 +37,7 @@ export const updateOrder = async (data, id) => {
 }
 
 export async function createOrderAsync(order = {}) {
-  const res = await fetchAuthLoading({
+  const res = await fetchLoading({
     url: ENDPOINTS.createOrder,
     method: 'POST',
     data: order,

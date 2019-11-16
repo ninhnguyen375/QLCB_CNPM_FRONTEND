@@ -1,5 +1,14 @@
 import React, { Component } from 'react'
-import { Card, Form, Input, Icon, Divider, notification, Tag } from 'antd'
+import {
+  Card,
+  Form,
+  Input,
+  Icon,
+  Divider,
+  notification,
+  Tag,
+  Select,
+} from 'antd'
 import point from '../../../assets/images/01-point.png'
 import { getValueFromObj } from '../../../common/utils/makeupObject'
 import { handleError } from '../../../common/utils/handleError'
@@ -10,6 +19,8 @@ import {
 } from '../../../common/utils/timeFormater'
 import moment from 'moment'
 import { priceFormat } from '../../../common/utils/stringFormater'
+import { getLuggagesAsync } from '../../luggage/handlers'
+import { getCount } from '../../../common/utils/numberUtils'
 
 class InformationCustomer extends Component {
   state = {
@@ -17,35 +28,118 @@ class InformationCustomer extends Component {
     returnFlight: {},
     departureTotalPrice: '',
     returnTotalPrice: '',
+    luggages: [],
+    departureLuggage: null,
+    returnLuggage: null,
+  }
+
+  getLuggages = async () => {
+    try {
+      const res = await getLuggagesAsync(null, 99999)
+      this.setState({ luggages: res.data })
+    } catch (error) {
+      handleError(error, null, notification)
+      return {}
+    }
   }
 
   renderInputPassengersForm(ticketCategories = []) {
-    console.log('Ninh Debug: ticketCategories', ticketCategories)
-    const { getFieldDecorator } = this.props.form
+    const { form, searchFlightParams } = this.props
+    const { type } = searchFlightParams
+    const { getFieldDecorator } = form
+    const { luggages = [] } = this.state
+
     let arr = []
-    for (
-      let i = 0;
-      i < ticketCategories.reduce((a, b) => (a += b.quantity), 0);
-      i++
-    ) {
-      arr.push(
-        <div key={i}>
-          <Form.Item
-            hasFeedback
-            className='text-left'
-            label={`Hành khách ${i + 1}`}
-          >
-            {getFieldDecorator(`passengers[${i}].passengerName`)(
-              <Input
-                prefix={<Icon type='user' />}
-                style={{ width: '100%' }}
-                placeholder='Họ và tên hành khách'
-              ></Input>,
-            )}
-          </Form.Item>
-        </div>,
-      )
-    }
+    let i = 0
+
+    ticketCategories
+      .filter(t => t.quantity > 0)
+      .forEach(item => {
+        const { quantity, id: ticketCategoryId } = item
+
+        for (let j = 0; j < quantity; j++, i++) {
+          arr.push(
+            <div key={i}>
+              <Form.Item
+                hasFeedback
+                className='text-left'
+                label={`Hành khách ${i + 1}:`}
+              >
+                {getFieldDecorator(`passengers[${i}].passengerName`, {
+                  rules: [{ required: true, message: 'Họ và tên là bắt buộc' }],
+                })(
+                  <Input
+                    placeholder='Họ và tên'
+                    addonAfter={getFieldDecorator(
+                      `passengers[${i}].passengerGender`,
+                      {
+                        initialValue: 0,
+                      },
+                    )(
+                      <Select>
+                        <Select.Option value={0}>Nam</Select.Option>
+                        <Select.Option value={1}>Nữ</Select.Option>
+                      </Select>,
+                    )}
+                    style={{ width: '100%' }}
+                    placeholder='Họ và tên hành khách'
+                  ></Input>,
+                )}
+              </Form.Item>
+              <Form.Item
+                hasFeedback
+                className='text-left'
+                label={`Hành lý mang thêm:`}
+              >
+                {getFieldDecorator(`passengers[${i}].luggageids[0]`, {
+                  initialValue: 1,
+                })(
+                  <Select
+                    onChange={this.handleSelectLuggage(
+                      i,
+                      0,
+                      'departureLuggage',
+                    )}
+                  >
+                    {luggages.map(l => (
+                      <Select.Option value={l.id} key={`d${l.id}`}>
+                        {l.luggageWeight}Kg + {l.price}VNĐ
+                      </Select.Option>
+                    ))}
+                  </Select>,
+                )}
+              </Form.Item>
+              {type === 1 ? (
+                <Form.Item
+                  hasFeedback
+                  className='text-left'
+                  label={`Hành lý mang thêm khi về:`}
+                >
+                  {getFieldDecorator(`passengers[${i}].luggageids[1]`, {
+                    initialValue: 1,
+                  })(
+                    <Select
+                      onChange={this.handleSelectLuggage(i, 1, 'returnLuggage')}
+                    >
+                      {luggages.map(l => (
+                        <Select.Option value={l.id} key={`r${l.id}`}>
+                          {l.luggageWeight}Kg + {l.price}VNĐ
+                        </Select.Option>
+                      ))}
+                    </Select>,
+                  )}
+                </Form.Item>
+              ) : (
+                ''
+              )}
+              {getFieldDecorator(`passengers[${i}].ticketCategoryId`, {
+                initialValue: ticketCategoryId,
+              })(<Input hidden={true} />)}
+            </div>,
+          )
+        }
+      })
+
     return arr
   }
 
@@ -91,6 +185,7 @@ class InformationCustomer extends Component {
       this.props,
     )
 
+    this.getLuggages()
     await this.getSelectedFlight(departureFlightId, returnFlightId)
   }
 
@@ -114,6 +209,7 @@ class InformationCustomer extends Component {
     flight = {},
     ticketCategoriesInForm,
     departureDate,
+    departureLuggage,
   ) => {
     const flightTicketCategories = flight
       ? flight.flightTicketCategories || []
@@ -240,13 +336,58 @@ class InformationCustomer extends Component {
               })
             : ''}
         </div>
+
+        <Divider type='vertical' style={{ height: 80 }} />
+        <div>
+          <p>Hành lý mang thêm:</p>
+          <p>
+            {!departureLuggage
+              ? 'Không có'
+              : `+${priceFormat(departureLuggage)}VNĐ`}
+          </p>
+        </div>
       </div>
     )
   }
 
+  getLuggageById = id => {
+    const { luggages } = this.state
+    return luggages.find(l => l.id === id)
+  }
+
+  handleSelectLuggage = (passengerIndex, luggageIndex, stateKey) => id => {
+    const { form } = this.props
+    const { getFieldValue } = form
+    const passengers = [...getFieldValue('passengers')]
+    passengers[passengerIndex].luggageids[luggageIndex] = id
+
+    const total = this.getTotalLuggagePrice(passengers)
+
+    this.setState({ [stateKey]: total })
+  }
+
+  getTotalLuggagePrice = (passengers = []) => {
+    let total = 0
+    passengers.forEach(p => {
+      const { luggageids = [] } = p
+      luggageids.forEach(id => {
+        const luggage = this.getLuggageById(id) || {}
+        const { price } = luggage
+        total += parseFloat(price)
+      })
+    })
+
+    return total
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form
-    const { departureFlight, returnFlight } = this.state
+    const {
+      departureFlight,
+      returnFlight,
+      departureLuggage,
+      returnLuggage,
+    } = this.state
     const { searchFlightParams = {} } = this.props
     let {
       departureDate,
@@ -276,7 +417,12 @@ class InformationCustomer extends Component {
       ticketCategoriesInForm || [],
     )
 
-    const orderTotalPrice = departureTotalPrice + returnTotalPrice
+    const orderTotalPrice = getCount(
+      departureTotalPrice,
+      returnTotalPrice,
+      departureLuggage,
+      returnLuggage,
+    )
 
     return (
       <div className='information-customer'>
@@ -295,6 +441,7 @@ class InformationCustomer extends Component {
                   departureFlight,
                   ticketCategoriesInForm,
                   departureDate,
+                  departureLuggage,
                 )
               : ''}
 
@@ -305,6 +452,7 @@ class InformationCustomer extends Component {
                   returnFlight,
                   ticketCategoriesInForm,
                   returnDate,
+                  returnLuggage,
                 )
               : ''}
 
@@ -315,6 +463,9 @@ class InformationCustomer extends Component {
                 <span className='fwb' style={{ color: '#FFA801' }}>
                   {priceFormat(orderTotalPrice)}VNĐ
                 </span>
+                {getFieldDecorator('totalPrice', {
+                  initialValue: orderTotalPrice,
+                })(<Input hidden />)}
               </p>
             </div>
           </div>

@@ -46,12 +46,11 @@ class UserDetailPage extends Component {
     if (this.props.match.params.id) {
       try {
         let result = await getCustomerAsync(this.props.match.params.id)
-        console.log('Ninh Debug: result', result)
         this.setState({
           user: result.data,
         })
       } catch (error) {
-        console.log(error)
+        handleError(error, null, notification)
       }
     }
   }

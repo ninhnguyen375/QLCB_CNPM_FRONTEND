@@ -111,7 +111,6 @@ export class TicketCategoryList extends Component {
   handleSearch = name => value => {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getTicketCategories()
-      console.log(this.state)
     })
   }
 

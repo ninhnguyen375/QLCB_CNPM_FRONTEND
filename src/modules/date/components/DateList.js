@@ -259,7 +259,6 @@ export class DateList extends Component {
   handleSearch = name => value => {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getDates()
-      console.log(this.state)
     })
   }
 

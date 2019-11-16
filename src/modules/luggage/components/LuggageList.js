@@ -132,7 +132,6 @@ export class LuggageList extends Component {
   handleSearch = name => value => {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getLuggages()
-      console.log(this.state)
     })
   }
 

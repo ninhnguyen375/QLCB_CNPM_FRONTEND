@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Card, notification, Icon, DatePicker } from 'antd'
+import { Form, Button, Card, notification, Icon, DatePicker } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import { createDateAsync } from '../handlers'
 import { handleError } from '../../../common/utils/handleError'
@@ -25,12 +25,12 @@ class AddDateForm extends Component {
           await createDateAsync(values)
           await this.props.getDates()
           notification.success({ message: 'Thành công' })
+          this.setState({ loading: false })
           Modal.hide()
         } catch (err) {
-          console.log('Ninh Debug: err', err)
+          this.setState({ loading: false })
           handleError(err, form, notification)
         }
-        this.setState({ loading: false })
       },
     )
   }

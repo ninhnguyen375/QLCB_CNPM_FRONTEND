@@ -120,7 +120,6 @@ export class AirlineList extends Component {
   handleSearch = name => value => {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getAirlines()
-      console.log(this.state)
     })
   }
 

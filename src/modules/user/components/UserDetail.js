@@ -48,7 +48,7 @@ class UserDetail extends Component {
           user: result.user,
         })
       } catch (error) {
-        console.log(error)
+        handleError(error, null, notification)
       }
     }
   }

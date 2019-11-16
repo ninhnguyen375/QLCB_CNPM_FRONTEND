@@ -107,7 +107,6 @@ export class CustomerList extends Component {
   handleSearch = name => value => {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getCustomers()
-      console.log(this.state)
     })
   }
 
