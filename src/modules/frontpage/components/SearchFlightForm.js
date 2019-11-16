@@ -230,7 +230,8 @@ class SearchFlightForm extends Component {
               <Form.Item label='Ngày đi'>
                 {getFieldDecorator('departureDate', {
                   rules: [{ required: true, message: 'Vui lòng chọn ngày đi' }],
-                  initialValue: moment(nowDate),
+                  initialValue:
+                    moment(searchFlightParams.departureDate) || moment(nowDate),
                 })(
                   <DatePicker
                     disabledDate={this.disabledDate}
@@ -247,7 +248,8 @@ class SearchFlightForm extends Component {
                     rules: [
                       { required: true, message: 'Vui lòng chọn ngày về' },
                     ],
-                    initialValue: moment(nowDate),
+                    initialValue:
+                      moment(searchFlightParams.returnDate) || moment(nowDate),
                   })(
                     <DatePicker
                       disabledDate={this.disabledDate}

@@ -135,7 +135,6 @@ class SelectableFlightList extends Component {
   handleSearch = name => value => {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getFlights()
-      console.log(this.state)
     })
   }
 

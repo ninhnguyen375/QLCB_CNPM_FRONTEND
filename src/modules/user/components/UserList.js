@@ -171,7 +171,6 @@ export class UserList extends Component {
   handleSearch = name => value => {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getUsers()
-      console.log(this.state)
     })
   }
 

@@ -225,7 +225,6 @@ export class OrderList extends Component {
   handleSearch = name => value => {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getOrders()
-      console.log(this.state)
     })
   }
 

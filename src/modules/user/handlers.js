@@ -105,7 +105,6 @@ export default (dispatch, props) => ({
               ...result.data.user,
             }),
           )
-          console.log('Ninh Debug: result', result)
         }
         return result.data
       })

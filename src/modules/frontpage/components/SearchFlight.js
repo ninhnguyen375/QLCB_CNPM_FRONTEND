@@ -3,11 +3,13 @@ import { Steps, Button, message, Card, Form, Icon, notification } from 'antd'
 import SearchFlightResult from './SearchFlightResult'
 import InformationCustomer from './InformationCustomer'
 import FinishStepRegister from './FinishStepRegister'
-import Payment from './Payment'
 import Nav0 from '../containers/Nav0'
 import Footer from './Footer1'
 import './less/searchFlight.less'
 import { Link } from 'react-router-dom'
+import { handleError } from '../../../common/utils/handleError'
+import { createOrderAsync } from '../../order/handlers'
+import moment from 'moment'
 
 const { Step } = Steps
 const steps = [
@@ -45,10 +47,13 @@ class SearchFlight extends Component {
     switch (current) {
       case 1:
         validateFields((errors, values) => {
-          if (errors) return
+          if (errors) {
+            message.error('Vui lòng điền đầy đủ thông tin')
+            return
+          }
 
           this.props.setSearchFlightParams(values)
-          this.handleCompleteOrder()
+          this.handleCompleteOrder(values)
         })
         break
       default:
@@ -93,14 +98,46 @@ class SearchFlight extends Component {
     }
   }
 
-  handleCompleteOrder = async () => {
-    this.setState({ onCreateOrder: true })
-    const { searchFlightParams } = this.props
-    console.log('DEBUGER: searchFlightParams', searchFlightParams)
-    await setTimeout(() => {
+  handleCompleteOrder = async values => {
+    try {
+      this.setState({ onCreateOrder: true })
+      const { searchFlightParams } = this.props
+      const dataTmp = {
+        ...searchFlightParams,
+        ...values,
+      }
+      console.log('Ninh Debug: dataTmp', dataTmp)
+      let passengerCount = dataTmp.passengers.length
+
+      passengerCount = isNaN(passengerCount) ? 0 : passengerCount
+      const ticketCount =
+        dataTmp.type === 1 ? passengerCount * 2 : passengerCount
+
+      const data = {
+        customerId: dataTmp.customerId,
+        fullName: dataTmp.fullName,
+        phone: dataTmp.phone,
+        ticketCount: ticketCount,
+        totalPrice: dataTmp.totalPrice,
+        returnDate: moment(dataTmp.returnDate)
+          .format('YYYY-MM-DD')
+          .toString(),
+        departureDate: moment(dataTmp.departureDate)
+          .format('YYYY-MM-DD')
+          .toString(),
+        flightIds: Object.values(dataTmp.selectedFlight),
+        passengers: dataTmp.passengers,
+      }
+      console.log('Ninh Debug: data', data)
+
+      const res = await createOrderAsync(data)
       notification.success({ message: ' Thành công ' })
+      const { orderId } = res.data[0]
+      this.props.setSearchFlightParams({ ...data, orderId })
       this.setState({ onCreateOrder: false, current: 2 })
-    }, 1000)
+    } catch (err) {
+      handleError(err, null, notification)
+    }
   }
 
   render() {

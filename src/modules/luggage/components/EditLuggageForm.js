@@ -35,7 +35,6 @@ class EditLuggageForm extends Component {
           notification.success({ message: 'Thành công' })
           Modal.hide()
         } catch (err) {
-          console.log('Ninh Debug: err', err)
           handleError(err, form, notification)
         }
       },

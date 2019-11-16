@@ -92,6 +92,17 @@ export class SearchFlightResult extends Component {
     const { searchFlightResult = {} } = this.state
     const { departureFlights, returnFlights } = searchFlightResult
 
+    if (!Array.isArray(departureFlights) || departureFlights.length === 0) {
+      return <h1 className='tac'>Không tìm thấy chuyến bay phù hợp</h1>
+    }
+
+    if (
+      type === 1 &&
+      (!Array.isArray(returnFlights) || returnFlights.length === 0)
+    ) {
+      return <h1 className='tac'>Không tìm thấy chuyến bay phù hợp</h1>
+    }
+
     return (
       <div className='search-flight-result'>
         <p className='title'>

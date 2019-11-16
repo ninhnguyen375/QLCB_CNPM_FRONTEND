@@ -37,7 +37,6 @@ class MenuPage extends React.Component {
   }
 
   setMenus(mode, type) {
-    console.log('Ninh Debug: mode', mode)
     switch (mode) {
       case ROLE.ADMIN:
         this.MENUS = [
@@ -409,7 +408,6 @@ class MenuPage extends React.Component {
                   <Menu.Divider></Menu.Divider>
                   {authRole === ROLE.STAFF && (
                     <Menu.Item onClick={() => history.push(`/admin/profile`)}>
-                      {console.log(user, 'curr')}
                       <Icon type='user' /> Thông tin cá nhân
                     </Menu.Item>
                   )}

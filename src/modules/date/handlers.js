@@ -21,23 +21,29 @@ export async function getDatesAsync(
 }
 
 export async function searchFlightFromDate(data = {}) {
-  const result = { ...data }
-  // delete useless params
-  delete result.ticketCategoriesInForm
-  delete result.type
+  const params = {
+    airportFrom: data.airportFrom,
+    airportTo: data.airportTo,
+    departureDate: data.departureDate,
+    returnDate: data.returnDate,
+    ticketCategories: data.ticketCategories,
+  }
 
   // format to valid Date
-  result.departureDate = moment(result.departureDate)
+  params.departureDate = moment(params.departureDate)
     .format('YYYY-MM-DD')
     .toString()
-  result.returnDate = moment(result.returnDate)
-    .format('YYYY-MM-DD')
-    .toString()
+
+  params.returnDate
+    ? (params.returnDate = params.returnDate = moment(params.returnDate)
+        .format('YYYY-MM-DD')
+        .toString())
+    : delete params.returnDate
 
   const res = await fetchLoading({
     url: ENDPOINTS.searchFlightFromDate,
     method: 'GET',
-    params: result,
+    params: params,
   })
   return res.data
 }
@@ -59,12 +65,14 @@ export const updateDate = async (data, id) => {
   return result.data
 }
 
-export async function createDateAsync(date = {}) {
+export async function createDateAsync(date) {
   const res = await fetchAuthLoading({
     url: ENDPOINTS.createDate,
     method: 'POST',
     data: {
-      departureDate: moment(date).format('YYYY-MM-DD'),
+      departureDate: moment(date.departureDate)
+        .format('YYYY-MM-DD')
+        .toString(),
     },
   })
   return res.data

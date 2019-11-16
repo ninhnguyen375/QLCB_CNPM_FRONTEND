@@ -91,7 +91,13 @@ export class FlightItem extends Component {
             </div>
             <div>
               <p className='tac fwb'>
-                {minutesToTime(flight.startTime + flight.flightTime)}
+                {moment(
+                  `${departureDate}, ${minutesToTime(flight.startTime)}`,
+                  'DD-MM-YYYY, HH:mm',
+                )
+                  .add(flight.flightTime, 'minutes')
+                  .format('HH:mm')
+                  .toString()}
               </p>
               <p className='tac'>
                 {flight.airportToData
@@ -265,6 +271,7 @@ export class FlightItem extends Component {
                         const ticketCategoryPrice = ftc
                           ? ftc.price || 99999999
                           : 99999999
+                        if (quantity === 0) return ''
                         return (
                           <p
                             className='tac'

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Row, Col, Card, Divider } from 'antd'
 import Lottie from '../../../libraries/Lottie'
+import { priceFormat } from '../../../common/utils/stringFormater'
 
 export class FinishStepRegister extends Component {
   render() {
@@ -26,14 +27,16 @@ export class FinishStepRegister extends Component {
           <Col className='tal border' sm={24} lg={12}>
             <Card style={{ height: '100%' }}>
               <div className='p10'>
-                <span className='fwb'>Khách hàng: </span>
-                <span>{searchFlightParams.customerId || 'Nguyễn Văn Tèo'}</span>
+                <span className='fwb'>Mã hóa đơn: </span>
+                <span>{searchFlightParams.orderId || '--'}</span>
               </div>
               <div className='p10'>
-                <span className='fwb'>Email: </span>
-                <span>
-                  {searchFlightParams.fullName || 'teonguyen@gmail.com'}
-                </span>
+                <span className='fwb'>Khách hàng: </span>
+                <span>{searchFlightParams.fullName || '--'}</span>
+              </div>
+              <div className='p10'>
+                <span className='fwb'>CMND: </span>
+                <span>{searchFlightParams.customerId || '--'}</span>
               </div>
               <div className='p10'>
                 <span className='fwb'>Số điện thoại: </span>
@@ -42,7 +45,7 @@ export class FinishStepRegister extends Component {
               <div className='p10'>
                 <span className='fwb'>Thành tiền: </span>
                 <span className='fwb' style={{ color: '#FFA801' }}>
-                  400.000đ
+                  {priceFormat(searchFlightParams.totalPrice)}VNĐ
                 </span>
               </div>
               <Divider />

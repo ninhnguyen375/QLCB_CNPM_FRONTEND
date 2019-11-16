@@ -1,4 +1,4 @@
-import { fetchAuthLoading } from '../../common/effects'
+import { fetchAuthLoading, fetchLoading } from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setLuggages } from './actions'
 
@@ -7,7 +7,7 @@ export async function getLuggagesAsync(
   pageSize = LIMIT,
   params = {},
 ) {
-  const res = await fetchAuthLoading({
+  const res = await fetchLoading({
     url: ENDPOINTS.getLuggages,
     method: 'GET',
     params: {

@@ -38,7 +38,6 @@ class OrderDetail extends Component {
 
   render() {
     const { order } = this.state
-    console.log('Ninh Debug: order', order)
     const tickets = order ? order.tickets || [] : []
     const customer = order ? order.customer || {} : {}
 
