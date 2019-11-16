@@ -5,14 +5,12 @@ import {
   Button,
   Row,
   Col,
-  Input,
   Icon,
   notification,
   Tag,
   Drawer,
   Divider,
   Popconfirm,
-  DatePicker,
 } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import AddDateForm from './AddDateForm'
@@ -23,6 +21,7 @@ import SelectableFlightList from '../../flight/components/SelectableFlightList'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 import { Link } from 'react-router-dom'
 import { STATUS, STATUS_COLOR } from '../models'
+import { withRouter } from 'react-router-dom'
 
 export class DateList extends Component {
   state = {
@@ -198,6 +197,7 @@ export class DateList extends Component {
         : []
     Modal.show(
       <SelectableFlightList
+        history={this.props.history}
         filters={{ status: 1 }}
         onCancel={() => Modal.hide()}
         ignoreIds={[...dateFlights]}
@@ -272,12 +272,7 @@ export class DateList extends Component {
   }
 
   render() {
-    const {
-      pagination,
-      search = {},
-      isShowDateDetail,
-      currentDateDetail,
-    } = this.state
+    const { pagination, isShowDateDetail, currentDateDetail } = this.state
 
     let { dates } = this.props
     dates = Array.isArray(dates) ? dates : []
@@ -361,4 +356,4 @@ export class DateList extends Component {
   }
 }
 
-export default DateList
+export default withRouter(DateList)

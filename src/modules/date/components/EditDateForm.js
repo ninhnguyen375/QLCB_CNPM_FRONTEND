@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Card, notification, Icon, DatePicker } from 'antd'
+import { Form, Button, Card, notification, Icon, DatePicker } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import { handleError } from '../../../common/utils/handleError'
 import { updateDate } from '../handlers'

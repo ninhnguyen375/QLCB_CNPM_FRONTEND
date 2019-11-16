@@ -69,7 +69,6 @@ class InformationCustomer extends Component {
                   rules: [{ required: true, message: 'Họ và tên là bắt buộc' }],
                 })(
                   <Input
-                    placeholder='Họ và tên'
                     addonAfter={getFieldDecorator(
                       `passengers[${i}].passengerGender`,
                       {
@@ -103,7 +102,7 @@ class InformationCustomer extends Component {
                   >
                     {luggages.map(l => (
                       <Select.Option value={l.id} key={`d${l.id}`}>
-                        {l.luggageWeight}Kg + {l.price}VNĐ
+                        {l.luggageWeight}Kg + {priceFormat(l.price)}VNĐ
                       </Select.Option>
                     ))}
                   </Select>,

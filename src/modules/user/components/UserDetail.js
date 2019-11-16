@@ -14,7 +14,6 @@ import {
   Typography,
 } from 'antd'
 import { STATUS_COLORS, STATUS } from '../models'
-import { getUserRole } from '../../../common/utils/authUtils'
 import { getUserAsync, updateUser } from '../handlers'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 import { handleError } from '../../../common/utils/handleError'
@@ -112,7 +111,6 @@ class UserDetail extends Component {
   render() {
     const { user, isEditing } = this.state
     const { getFieldDecorator } = this.props.form
-    const authRole = getUserRole()
 
     return (
       <Row style={{ display: 'flex' }} gutter={5}>

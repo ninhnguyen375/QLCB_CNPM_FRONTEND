@@ -8,19 +8,15 @@ import {
   Descriptions,
   Icon,
   Form,
-  Input,
   Button,
   notification,
-  Tag,
 } from 'antd'
 import { getCustomerAsync, updateCustomer } from '../modules/customer/handlers'
 import removeNullObject from '../common/utils/removeObjectNull'
-import { emptyString, STATUS, STATUS_COLORS } from '../modules/user/models'
 import CustomBreadcrumb from '../common/components/widgets/CustomBreadcrumb'
 import MainLayout from '../common/hocs/MainLayout'
 import { handleError } from '../common/utils/handleError'
 import { withRouter } from 'react-router-dom'
-import { getUserRole } from '../common/utils/authUtils'
 
 class UserDetailPage extends Component {
   constructor(props) {
@@ -113,9 +109,7 @@ class UserDetailPage extends Component {
   }
 
   render() {
-    const { user, isEditing } = this.state
-    const { getFieldDecorator } = this.props.form
-    const authRole = getUserRole()
+    const { user } = this.state
 
     return (
       <MainLayout mode={this.props.mode}>

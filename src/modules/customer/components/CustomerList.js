@@ -10,7 +10,6 @@ import {
   notification,
   Tag,
 } from 'antd'
-import Modal from '../../../common/components/widgets/Modal'
 import { handleError } from '../../../common/utils/handleError'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 import { Link } from 'react-router-dom'

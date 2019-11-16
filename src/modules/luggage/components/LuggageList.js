@@ -1,15 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Table,
-  Card,
-  Button,
-  Row,
-  Col,
-  Input,
-  Icon,
-  notification,
-  Tag,
-} from 'antd'
+import { Table, Card, Button, Row, Col, Icon, notification, Tag } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import AddLuggageForm from './AddLuggageForm'
 import { handleError } from '../../../common/utils/handleError'
@@ -145,7 +135,7 @@ export class LuggageList extends Component {
   }
 
   render() {
-    const { pagination, search = {} } = this.state
+    const { pagination } = this.state
 
     let { luggages } = this.props
     luggages = luggages || []

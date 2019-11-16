@@ -5,73 +5,78 @@ class ProgressLoading extends Component {
   static defaultProps = {
     cls: '',
     style: {},
-    thumbStyle: {}
+    thumbStyle: {},
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       state: 'hidden',
-      options: {}
+      options: {},
     }
     this.count = 0
     this.runningTimerId = null
     this.hidingTimerId = null
   }
 
-  initElement = (el) => {
+  initElement = el => {
     this.element = el
   }
 
-  render () {
+  render() {
     const { options } = this.state
     let { cls, thumbStyle } = this.props
     let className = `loader-60devs ${cls}`
     return (
-      <div className={className} style={options.style || {}} data-state={this.state.state} ref={this.initElement}>
+      <div
+        className={className}
+        style={options.style || {}}
+        data-state={this.state.state}
+        ref={this.initElement}
+      >
         <div className='loader-60devs-progress' style={thumbStyle} />
       </div>
     )
   }
 
-  show (options = {}) {
+  show(options = {}) {
     try {
       const { element } = this
 
       if (++this.count > 1 || !element) {
         return false
       }
-      
+
       clearTimeout(this.hidingTimerId)
-      let progressEl = element.querySelector('.loader-60devs-progress')
-  
+      // let progressEl = element.querySelector('.loader-60devs-progress')
+
       element.setAttribute('data-state', 'hidden')
       // the only working way to restart a transition on firefox
-      progressEl.outerHTML = progressEl.outerHTML
-      let offset = element.offsetHeight
+      // progressEl.outerHTML = progressEl.outerHTML
+      // let offset = element.offsetHeight
       element.setAttribute('data-state', '')
-      offset = element.offsetHeight
+      // offset = element.offsetHeight
       element.setAttribute('data-state', 'running')
       this.setState({
-        options
+        options,
       })
     } catch (err) {
       console.log('err', err)
     }
   }
 
-  hide () {
+  hide() {
     if (--this.count > 0) {
       return
     }
     this.element.setAttribute('data-state', 'finishing')
     this.hidingTimerId = setTimeout(this.toHiddenState, 500)
     this.setState({
-      options: {}
+      options: {},
     })
   }
 
-  hideAll () {
+  hideAll() {
     this.count = 1
     this.hide()
   }
@@ -80,33 +85,33 @@ class ProgressLoading extends Component {
     this.element.setAttribute('data-state', 'hidden')
   }
 
-  UNSAFE_componentWillMount () {
+  UNSAFE_componentWillMount() {
     instanceProgressLoading = this
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearTimeout(this.hidingTimerId)
     // delete instanceProgressLoading
     instanceProgressLoading = null
   }
 
-  isVisible () {
+  isVisible() {
     return this.element.getAttribute('data-state') !== 'hidden'
   }
 }
 
 export default {
   Component: ProgressLoading,
-  show (options = {}) {
+  show(options = {}) {
     instanceProgressLoading && instanceProgressLoading.show(options)
   },
-  hide () {
+  hide() {
     instanceProgressLoading && instanceProgressLoading.hide()
   },
-  hideAll () {
+  hideAll() {
     instanceProgressLoading && instanceProgressLoading.hideAll()
   },
-  isVisible () {
+  isVisible() {
     return instanceProgressLoading && instanceProgressLoading.isVisible()
-  }
+  },
 }
