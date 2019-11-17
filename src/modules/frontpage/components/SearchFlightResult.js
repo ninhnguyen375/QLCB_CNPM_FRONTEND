@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Card, Select, notification, message } from 'antd'
+import { Card, Select, message, Button, Icon } from 'antd'
 import FlightItem from './FlightItem'
-import { handleError } from '../../../common/utils/handleError'
 import { searchFlightFromDate } from '../../date/handlers'
 import { getValueFromObj } from '../../../common/utils/makeupObject'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 
 export class SearchFlightResult extends Component {
   state = {
@@ -43,7 +43,7 @@ export class SearchFlightResult extends Component {
       const res = await searchFlightFromDate(searchFlightParams)
       this.setState({ searchFlightResult: res })
     } catch (err) {
-      handleError(err, null, notification)
+      // handleError(err, null, notification)
     }
   }
 
@@ -93,14 +93,40 @@ export class SearchFlightResult extends Component {
     const { departureFlights, returnFlights } = searchFlightResult
 
     if (!Array.isArray(departureFlights) || departureFlights.length === 0) {
-      return <h1 className='tac'>Không tìm thấy chuyến bay phù hợp</h1>
+      return (
+        <h1 style={{ padding: 50 }} className='tac'>
+          Không tìm thấy chuyến bay phù hợp
+          <br />
+          <div>
+            <Link to='/'>
+              <Button size='large' type='primary'>
+                <Icon type='home' />
+                Quay lại trang chủ
+              </Button>
+            </Link>
+          </div>
+        </h1>
+      )
     }
 
     if (
       type === 1 &&
       (!Array.isArray(returnFlights) || returnFlights.length === 0)
     ) {
-      return <h1 className='tac'>Không tìm thấy chuyến bay phù hợp</h1>
+      return (
+        <h1 style={{ padding: 50 }} className='tac'>
+          Không tìm thấy chuyến bay phù hợp
+          <br />
+          <div>
+            <Link to='/'>
+              <Button size='large' type='primary'>
+                <Icon type='home' />
+                Quay lại trang chủ
+              </Button>
+            </Link>
+          </div>
+        </h1>
+      )
     }
 
     return (
