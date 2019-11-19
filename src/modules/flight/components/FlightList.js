@@ -9,6 +9,7 @@ import {
   Icon,
   notification,
   Tag,
+  Popconfirm,
 } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import AddFlightForm from './AddFlightForm'
@@ -125,14 +126,33 @@ export class FlightList extends Component {
             >
               Sửa
             </Button>
-            <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
-              Xóa
-            </Button>
+            <Popconfirm
+              okText='Có'
+              cancelText='Không'
+              title='Bạn có muốn xóa chuyến bay này?'
+              onConfirm={() => this.handleDeleteFlight(r.id)}
+            >
+              <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
+                Xóa
+              </Button>
+            </Popconfirm>
           </div>
         )
       },
     },
   ]
+
+  handleDeleteFlight = async id => {
+    const { deleteFlight } = this.props
+
+    try {
+      await deleteFlight(id)
+      await this.getFlights()
+      notification.success({ message: 'Thành công' })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
+  }
 
   handleChangeTable = async ({ current }, filter, sorter) => {
     const { columnKey, order } = sorter

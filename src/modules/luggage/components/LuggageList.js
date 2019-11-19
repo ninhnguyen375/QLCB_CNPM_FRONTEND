@@ -1,5 +1,15 @@
 import React, { Component } from 'react'
-import { Table, Card, Button, Row, Col, Icon, notification, Tag } from 'antd'
+import {
+  Table,
+  Card,
+  Button,
+  Row,
+  Col,
+  Icon,
+  notification,
+  Tag,
+  Popconfirm,
+} from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import AddLuggageForm from './AddLuggageForm'
 import { handleError } from '../../../common/utils/handleError'
@@ -66,9 +76,16 @@ export class LuggageList extends Component {
             >
               Sửa
             </Button>
-            <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
-              Xóa
-            </Button>
+            <Popconfirm
+              okText='Có'
+              cancelText='Không'
+              title='Bạn có muốn xóa loại hành lý này?'
+              onConfirm={() => this.handleDeleteLuggage(r.id)}
+            >
+              <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
+                Xóa
+              </Button>
+            </Popconfirm>
           </div>
         )
       },
@@ -132,6 +149,18 @@ export class LuggageList extends Component {
 
   handleReset = () => {
     this.setState({ search: {} }, () => this.getLuggages())
+  }
+
+  handleDeleteLuggage = async id => {
+    const { deleteLuggage } = this.props
+
+    try {
+      await deleteLuggage(id)
+      await this.getLuggages()
+      notification.success({ message: 'Thành công' })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
   }
 
   render() {

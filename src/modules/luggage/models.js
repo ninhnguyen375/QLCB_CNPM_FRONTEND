@@ -7,6 +7,7 @@ export const ENDPOINTS = {
   createLuggage: `${DEFAULT_URL}/luggages`,
   getLuggage: id => `${DEFAULT_URL}/luggages/${id}`,
   updateLuggage: id => `${DEFAULT_URL}/luggages/${id}`,
+  deleteLuggage: id => `${DEFAULT_URL}/luggages/${id}`,
 }
 
 export const LIMIT = 10

@@ -9,6 +9,7 @@ import {
   Icon,
   notification,
   Tag,
+  Popconfirm,
 } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import AddAirportForm from './AddAirportForm'
@@ -65,9 +66,16 @@ export class AirportList extends Component {
             >
               Sửa
             </Button>
-            <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
-              Xóa
-            </Button>
+            <Popconfirm
+              okText='Có'
+              cancelText='Không'
+              title='Bạn có muốn xóa sân bay này?'
+              onConfirm={() => this.handleDeleteAirport(r.id)}
+            >
+              <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
+                Xóa
+              </Button>
+            </Popconfirm>
           </div>
         )
       },
@@ -122,6 +130,18 @@ export class AirportList extends Component {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getAirports()
     })
+  }
+
+  handleDeleteAirport = async id => {
+    const { deleteAirport } = this.props
+
+    try {
+      await deleteAirport(id)
+      await this.getAirports()
+      notification.success({ message: 'Thành công' })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
   }
 
   hanleChangeSearch = e => {

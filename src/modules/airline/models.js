@@ -7,6 +7,7 @@ export const ENDPOINTS = {
   createAirline: `${DEFAULT_URL}/airlines`,
   getAirline: id => `${DEFAULT_URL}/airlines/${id}`,
   updateAirline: id => `${DEFAULT_URL}/airlines/${id}`,
+  deleteAirline: id => `${DEFAULT_URL}/airlines/${id}`,
 }
 
 export const LIMIT = 10

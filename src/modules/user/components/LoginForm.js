@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card, Form, Icon, Input, Button, Checkbox, notification } from 'antd'
+import { Link } from 'react-router-dom'
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -29,13 +30,13 @@ class LoginForm extends React.Component {
     return (
       <Card
         title={
-          <a href='/'>
+          <Link to='/'>
             <img
               alt='logo'
               src={require('../../../assets/images/logo.png')}
               height={45}
             />
-          </a>
+          </Link>
         }
       >
         <Form onSubmit={this.handleSubmit}>
@@ -78,9 +79,9 @@ class LoginForm extends React.Component {
               valuePropName: 'checked',
               initialValue: true,
             })(<Checkbox>Remember me</Checkbox>)}
-            <a href='/' style={{ float: 'right' }}>
+            <div className='link' style={{ float: 'right' }}>
               Forgot password
-            </a>
+            </div>
           </Form.Item>
           <Button type='primary' htmlType='submit' style={{ width: '100%' }}>
             Log in

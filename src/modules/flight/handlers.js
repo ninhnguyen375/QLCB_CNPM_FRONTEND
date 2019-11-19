@@ -37,6 +37,7 @@ export const updateFlight = async (data, id) => {
     ...data,
     startTime: startTime.hour() * 60 + startTime.minute(),
     flightTime: flightTime.hour() * 60 + flightTime.minute(),
+    id: id,
   }
   const result = await fetchAuthLoading({
     url: ENDPOINTS.updateFlight(id),
@@ -84,5 +85,12 @@ export default (dispatch, props) => ({
       dispatch(setFlights({}))
       return { ...err, success: false }
     }
+  },
+  deleteFlight: async id => {
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.deleteFlight(id),
+      method: 'DELETE',
+    })
+    return res.data
   },
 })
