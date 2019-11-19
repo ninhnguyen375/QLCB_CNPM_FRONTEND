@@ -56,4 +56,11 @@ export default (dispatch, props) => ({
       return { ...err, success: false }
     }
   },
+  deleteTicketCategory: async id => {
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.deleteTicketCategory(id),
+      method: 'DELETE',
+    })
+    return res.data
+  },
 })

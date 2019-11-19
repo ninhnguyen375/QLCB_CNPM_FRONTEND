@@ -7,6 +7,7 @@ export const ENDPOINTS = {
   createDate: `${DEFAULT_URL}/dates`,
   getDate: id => `${DEFAULT_URL}/dates/${id}`,
   updateDate: id => `${DEFAULT_URL}/dates/${id}`,
+  deleteDate: id => `${DEFAULT_URL}/dates/${id}`,
   addFlightsToDate: id => `${DEFAULT_URL}/dates/${id}/addflights`,
   removeFlightFromDate: id => `${DEFAULT_URL}/dates/${id}/removeflight`,
   searchFlightFromDate: `${DEFAULT_URL}/searchflights`,

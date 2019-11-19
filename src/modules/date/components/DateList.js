@@ -86,9 +86,16 @@ export class DateList extends Component {
             >
               Sửa
             </Button>
-            <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
-              Xóa
-            </Button>
+            <Popconfirm
+              okText='Có'
+              cancelText='Không'
+              title='Bạn có muốn xóa ngày bay này?'
+              onConfirm={() => this.handleDeleteDate(r.id)}
+            >
+              <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
+                Xóa
+              </Button>
+            </Popconfirm>
           </div>
         )
       },
@@ -260,6 +267,18 @@ export class DateList extends Component {
     this.setState({ search: { ...this.state.search, [name]: value } }, () => {
       this.getDates()
     })
+  }
+
+  handleDeleteDate = async id => {
+    const { deleteDate } = this.props
+
+    try {
+      await deleteDate(id)
+      await this.getDates()
+      notification.success({ message: 'Thành công' })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
   }
 
   hanleChangeSearch = e => {

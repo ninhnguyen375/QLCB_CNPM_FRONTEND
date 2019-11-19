@@ -101,14 +101,33 @@ export class UserList extends Component {
             ) : (
               ''
             )}
-            <Button icon='delete' type='danger'>
-              Xóa
-            </Button>
+            <Popconfirm
+              okText='Có'
+              cancelText='Không'
+              title='Bạn có muốn xóa sân bay này?'
+              onConfirm={() => this.handleDeleteUser(r.id)}
+            >
+              <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
+                Xóa
+              </Button>
+            </Popconfirm>
           </div>
         )
       },
     },
   ]
+
+  handleDeleteUser = async id => {
+    const { deleteUser } = this.props
+
+    try {
+      await deleteUser(id)
+      await this.getUsers()
+      notification.success({ message: 'Thành công' })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
+  }
 
   handleBlockUser = async id => {
     const { blockUser } = this.props

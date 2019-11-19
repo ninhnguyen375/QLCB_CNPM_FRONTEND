@@ -198,6 +198,11 @@ class EditFlightForm extends Component {
                       ? airports.map(airport => (
                           <Select.Option value={airport.id} key={airport.id}>
                             {airport ? airport.name || '' : ''}
+                            <br />
+                            <Tag>
+                              <Icon type='environment' />{' '}
+                              {airport ? airport.location || '' : ''}
+                            </Tag>
                           </Select.Option>
                         ))
                       : ''}
@@ -227,6 +232,11 @@ class EditFlightForm extends Component {
                       ? airports.map(airport => (
                           <Select.Option value={airport.id} key={airport.id}>
                             {airport ? airport.name || '' : ''}
+                            <br />
+                            <Tag>
+                              <Icon type='environment' />{' '}
+                              {airport ? airport.location || '' : ''}
+                            </Tag>
                           </Select.Option>
                         ))
                       : ''}

@@ -56,4 +56,11 @@ export default (dispatch, props) => ({
       return { ...err, success: false }
     }
   },
+  deleteLuggage: async id => {
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.deleteLuggage(id),
+      method: 'DELETE',
+    })
+    return res.data
+  },
 })

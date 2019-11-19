@@ -56,4 +56,11 @@ export default (dispatch, props) => ({
       return { ...err, success: false }
     }
   },
+  deleteAirport: async id => {
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.deleteAirport(id),
+      method: 'DELETE',
+    })
+    return res.data
+  },
 })

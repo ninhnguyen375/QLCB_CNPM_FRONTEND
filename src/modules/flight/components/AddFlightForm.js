@@ -10,6 +10,8 @@ import {
   Select,
   InputNumber,
   message,
+  Tag,
+  Divider,
 } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import { createFlightAsync } from '../handlers'
@@ -350,6 +352,11 @@ class AddFlightForm extends Component {
                       ? airports.map(airport => (
                           <Select.Option value={airport.id} key={airport.id}>
                             {airport ? airport.name || '' : ''}
+                            <br />
+                            <Tag>
+                              <Icon type='environment' />{' '}
+                              {airport ? airport.location || '' : ''}
+                            </Tag>
                           </Select.Option>
                         ))
                       : ''}
@@ -378,6 +385,11 @@ class AddFlightForm extends Component {
                       ? airports.map(airport => (
                           <Select.Option value={airport.id} key={airport.id}>
                             {airport ? airport.name || '' : ''}
+                            <br />
+                            <Tag>
+                              <Icon type='environment' />{' '}
+                              {airport ? airport.location || '' : ''}
+                            </Tag>
                           </Select.Option>
                         ))
                       : ''}

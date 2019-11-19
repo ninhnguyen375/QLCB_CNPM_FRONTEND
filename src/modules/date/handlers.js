@@ -115,4 +115,11 @@ export default (dispatch, props) => ({
     })
     return res.data
   },
+  deleteDate: async id => {
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.deleteDate(id),
+      method: 'DELETE',
+    })
+    return res.data
+  },
 })

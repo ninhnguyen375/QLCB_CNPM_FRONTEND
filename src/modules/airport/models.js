@@ -7,6 +7,7 @@ export const ENDPOINTS = {
   createAirport: `${DEFAULT_URL}/airports`,
   getAirport: id => `${DEFAULT_URL}/airports/${id}`,
   updateAirport: id => `${DEFAULT_URL}/airports/${id}`,
+  deleteAirport: id => `${DEFAULT_URL}/airports/${id}`,
 }
 
 export const LIMIT = 10

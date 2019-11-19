@@ -126,4 +126,11 @@ export default (dispatch, props) => ({
     })
     return result.data
   },
+  deleteUser: async id => {
+    const res = await fetchAuthLoading({
+      url: ENDPOINTS.deleteUser(id),
+      method: 'DELETE',
+    })
+    return res.data
+  },
 })

@@ -1,5 +1,15 @@
 import React, { Component } from 'react'
-import { Table, Card, Button, Row, Col, Input, Icon, notification } from 'antd'
+import {
+  Table,
+  Card,
+  Button,
+  Row,
+  Col,
+  Input,
+  Icon,
+  notification,
+  Popconfirm,
+} from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import AddTicketCategoryForm from './AddTicketCategoryForm'
 import { handleError } from '../../../common/utils/handleError'
@@ -46,9 +56,16 @@ export class TicketCategoryList extends Component {
             >
               Sửa
             </Button>
-            <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
-              Xóa
-            </Button>
+            <Popconfirm
+              okText='Có'
+              cancelText='Không'
+              title='Bạn có muốn xóa loại vé này?'
+              onConfirm={() => this.handleDeleteTicketCategory(r.id)}
+            >
+              <Button style={{ marginRight: 5 }} icon='delete' type='danger'>
+                Xóa
+              </Button>
+            </Popconfirm>
           </div>
         )
       },
@@ -63,6 +80,18 @@ export class TicketCategoryList extends Component {
     columnKey
       ? await this.getTicketCategories(current, null, sortParam)
       : await this.getTicketCategories(current)
+  }
+
+  handleDeleteTicketCategory = async id => {
+    const { deleteTicketCategory } = this.props
+
+    try {
+      await deleteTicketCategory(id)
+      await this.getTicketCategories()
+      notification.success({ message: 'Thành công' })
+    } catch (err) {
+      handleError(err, null, notification)
+    }
   }
 
   getTicketCategories = async (current, pageSize, params) => {

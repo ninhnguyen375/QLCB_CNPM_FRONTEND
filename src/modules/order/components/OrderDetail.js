@@ -42,7 +42,7 @@ class OrderDetail extends Component {
     const customer = order ? order.customer || {} : {}
 
     return (
-      <Card title={<b>CHI TIẾT HÓA ĐƠN</b>}>
+      <Card title={<b>CHI TIẾT HÓA ĐƠN - {order ? order.id : ''}</b>}>
         <div className='container'>
           <div className='d-flex flex-wrap justify-content-between'>
             <div>

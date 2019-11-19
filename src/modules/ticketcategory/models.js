@@ -7,6 +7,7 @@ export const ENDPOINTS = {
   createTicketCategory: `${DEFAULT_URL}/ticketCategories`,
   getTicketCategory: id => `${DEFAULT_URL}/ticketCategories/${id}`,
   updateTicketCategory: id => `${DEFAULT_URL}/ticketCategories/${id}`,
+  deleteTicketCategory: id => `${DEFAULT_URL}/ticketCategories/${id}`,
 }
 
 export const LIMIT = 10
