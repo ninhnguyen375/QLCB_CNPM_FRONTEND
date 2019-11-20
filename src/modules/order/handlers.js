@@ -31,7 +31,7 @@ export const updateOrder = async (data, id) => {
   const result = await fetchAuthLoading({
     url: ENDPOINTS.updateOrder(id),
     method: 'PUT',
-    data,
+    data: { id, ...data },
   })
   return result.data
 }

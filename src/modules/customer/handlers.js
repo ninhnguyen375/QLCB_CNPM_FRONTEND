@@ -31,7 +31,7 @@ export const updateCustomer = async (data, id) => {
   const result = await fetchAuthLoading({
     url: ENDPOINTS.updateCustomer(id),
     method: 'PUT',
-    data,
+    data: { id, ...data },
   })
   return result.data
 }

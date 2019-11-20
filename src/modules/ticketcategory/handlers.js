@@ -31,7 +31,7 @@ export const updateTicketCategory = async (data, id) => {
   const result = await fetchAuthLoading({
     url: ENDPOINTS.updateTicketCategory(id),
     method: 'PUT',
-    data,
+    data: { id, ...data },
   })
   return result.data
 }

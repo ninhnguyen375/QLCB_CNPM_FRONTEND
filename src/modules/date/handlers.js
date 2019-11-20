@@ -60,7 +60,12 @@ export const updateDate = async (data, id) => {
   const result = await fetchAuthLoading({
     url: ENDPOINTS.updateDate(id),
     method: 'PUT',
-    data,
+    data: {
+      id,
+      departureDate: moment(data.departureDate)
+        .format('YYYY-MM-DD')
+        .toString(),
+    },
   })
   return result.data
 }

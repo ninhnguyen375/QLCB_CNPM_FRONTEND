@@ -10,6 +10,7 @@ import {
   Select,
   Radio,
   Tag,
+  Input,
 } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import { handleError } from '../../../common/utils/handleError'
@@ -25,6 +26,7 @@ class EditFlightForm extends Component {
   state = {
     loading: false,
     airports: [],
+    flightTicketCategories: [],
   }
 
   getAirports = async (search = {}) => {
@@ -47,6 +49,7 @@ class EditFlightForm extends Component {
     e.preventDefault()
 
     const { form, flight } = this.props
+    const { flightTicketCategories } = this.state
 
     if (!flight && !flight.id) {
       this.setState({ loading: false })
@@ -63,7 +66,11 @@ class EditFlightForm extends Component {
         }
 
         try {
-          await updateFlight(values, flight.id)
+          // flightTicketCategories.forEach(f => {
+          //   delete f.ticketCategory
+          // })
+
+          await updateFlight({ ...values, flightTicketCategories }, flight.id)
           await this.props.getFlights()
           notification.success({ message: 'Thành công' })
           Modal.hide()
@@ -104,12 +111,23 @@ class EditFlightForm extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout(this.searchAirportTimeoutĐiện)
+    clearTimeout(this.searchAirportTimeout)
+  }
+
+  handleChangeTicketcategoryPrice = (
+    flightTicketCategories,
+    index,
+  ) => value => {
+    let editing = [...flightTicketCategories]
+    editing[index] = { ...editing[index], price: value }
+
+    this.setState({ flightTicketCategories: editing })
   }
 
   render() {
     const { form, flight } = this.props
     const { airports, airlines } = this.state
+    const { flightTicketCategories = [] } = flight
 
     const { getFieldDecorator } = form
 
@@ -295,9 +313,7 @@ class EditFlightForm extends Component {
                 )}
               </Form.Item>
             </div>
-          </div>
-          <div className='row'>
-            <div className='col'>
+            <div className='col-lg-4'>
               <Form.Item label='Trạng thái'>
                 {getFieldDecorator('status', {
                   rules: [
@@ -309,7 +325,7 @@ class EditFlightForm extends Component {
                   initialValue: flight.status,
                 })(
                   <Radio.Group
-                    style={{ display: 'flex' }}
+                    style={{ display: 'flex', marginTop: 10 }}
                     onChange={this.handleOnChange}
                   >
                     <Radio key={0} value={0}>
@@ -321,6 +337,39 @@ class EditFlightForm extends Component {
                   </Radio.Group>,
                 )}
               </Form.Item>
+            </div>
+          </div>
+
+          <div className='container'>
+            <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>
+              II. Giá từng loại vé:
+            </div>
+            <br />
+            <div>
+              {flightTicketCategories && Array.isArray(flightTicketCategories)
+                ? flightTicketCategories.map((item, i) => (
+                    <div style={{ marginBottom: 10 }} key={i}>
+                      <Input
+                        disabled
+                        style={{ width: 200, marginRight: 10 }}
+                        placeholder='Loại vé'
+                        value={item.ticketCategory.name}
+                      />
+                      <InputNumber
+                        style={{ width: 150, marginRight: 10 }}
+                        placeholder='Giá vé'
+                        min={1}
+                        disabled
+                        defaultValue={item.price}
+                        onChange={this.handleChangeTicketcategoryPrice(
+                          flightTicketCategories,
+                          i,
+                        )}
+                      />
+                      <b style={{ marginRight: 10 }}>VNĐ</b>
+                    </div>
+                  ))
+                : ''}
             </div>
           </div>
 

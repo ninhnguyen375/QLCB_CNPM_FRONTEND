@@ -20,8 +20,8 @@ export const handleError = (err, form, noti) => {
         },
       })
     }
-    // noti.error({
-    //   message: Array.isArray(errors[key]) ? errors[key][0] : errors[key],
-    // })
+    noti.error({
+      message: Array.isArray(errors[key]) ? errors[key][0] : errors[key],
+    })
   })
 }
