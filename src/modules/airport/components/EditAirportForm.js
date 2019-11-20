@@ -65,7 +65,7 @@ class EditAirportForm extends Component {
               rules: [
                 {
                   required: true,
-                  message: 'Địa Điểm',
+                  message: 'Địa Điểm là bắt buộc',
                 },
               ],
               initialValue: airport ? airport.location || '' : '',
