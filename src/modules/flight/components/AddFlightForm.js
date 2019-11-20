@@ -11,7 +11,6 @@ import {
   InputNumber,
   message,
   Tag,
-  Divider,
 } from 'antd'
 import Modal from '../../../common/components/widgets/Modal'
 import { createFlightAsync } from '../handlers'
@@ -263,7 +262,7 @@ class AddFlightForm extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout(this.searchAirportTimeoutĐiện)
+    clearTimeout(this.searchAirportTimeout)
     clearTimeout(this.searchAirlineTimeout)
   }
 

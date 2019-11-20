@@ -31,7 +31,7 @@ export const updateLuggage = async (data, id) => {
   const result = await fetchAuthLoading({
     url: ENDPOINTS.updateLuggage(id),
     method: 'PUT',
-    data,
+    data: { id, ...data },
   })
   return result.data
 }

@@ -40,6 +40,7 @@ class OrderDetail extends Component {
     const { order } = this.state
     const tickets = order ? order.tickets || [] : []
     const customer = order ? order.customer || {} : {}
+    const user = order ? order.user || undefined : undefined
 
     return (
       <Card title={<b>CHI TIẾT HÓA ĐƠN - {order ? order.id : ''}</b>}>
@@ -87,6 +88,7 @@ class OrderDetail extends Component {
                 </div>
               </div>
             </div>
+            <Divider type='vertical' style={{ height: '6.9em' }} />
             <div
               className='d-flex justify-content-between'
               style={{
@@ -117,6 +119,41 @@ class OrderDetail extends Component {
                 </span>
               </div>
             </div>
+
+            {user ? (
+              <>
+                <Divider type='vertical' style={{ height: '6.9em' }} />
+
+                <div
+                  className='d-flex justify-content-between'
+                  style={{
+                    flexDirection: 'column',
+                  }}
+                >
+                  <div>
+                    <b>Được thực hiện bởi nhân viên: </b>
+                    {user.fullName || '--'}
+                  </div>
+
+                  <div>
+                    <b>SĐT: </b>
+                    {user.phone || '--'}
+                  </div>
+
+                  <div>
+                    <b>CMND: </b>
+                    {user.identifier || '--'}
+                  </div>
+
+                  <div>
+                    <b>Email: </b>
+                    {user.email || '--'}
+                  </div>
+                </div>
+              </>
+            ) : (
+              ''
+            )}
           </div>
 
           <div style={{ marginTop: 30 }}></div>

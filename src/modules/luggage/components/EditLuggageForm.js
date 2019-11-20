@@ -49,6 +49,17 @@ class EditLuggageForm extends Component {
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
+          <Form.Item hasFeedback label='Khối lượng hành lý'>
+            {getFieldDecorator('luggageWeight', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Khối lượng hành lý là bắt buộc',
+                },
+              ],
+              initialValue: luggage ? luggage.luggageWeight || 0 : 0,
+            })(<Input placeholder='Khối lượng hành lý' disabled />)}
+          </Form.Item>
           <Form.Item hasFeedback label='Giá tiền'>
             {getFieldDecorator('price', {
               rules: [

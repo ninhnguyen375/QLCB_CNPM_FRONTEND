@@ -31,7 +31,7 @@ export const updateAirport = async (data, id) => {
   const result = await fetchAuthLoading({
     url: ENDPOINTS.updateAirport(id),
     method: 'PUT',
-    data,
+    data: { id, ...data },
   })
   return result.data
 }
