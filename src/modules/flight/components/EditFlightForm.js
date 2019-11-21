@@ -359,7 +359,6 @@ class EditFlightForm extends Component {
                         style={{ width: 150, marginRight: 10 }}
                         placeholder='Giá vé'
                         min={1}
-                        disabled
                         defaultValue={item.price}
                         onChange={this.handleChangeTicketcategoryPrice(
                           flightTicketCategories,
