@@ -16,7 +16,7 @@ class Content extends React.PureComponent {
           name: 'title',
           children: (
             <>
-              <p>WHY CHOOSED?</p>
+              <p>TẠI SAO LẠI LỰA CHỌN FLYNOW?</p>
             </>
           ),
         },
@@ -44,7 +44,7 @@ class Content extends React.PureComponent {
                 className: 'content0-block-title',
                 children: (
                   <>
-                    <p>Quick and convenience payment</p>
+                    <p>Thanh toán nhanh chóng và tiện lợi</p>
                   </>
                 ),
               },
@@ -52,7 +52,7 @@ class Content extends React.PureComponent {
                 name: 'content',
                 children: (
                   <>
-                    <p>Easy and trust.</p>
+                    <p>Dễ dàng và đáng tin cậy.</p>
                   </>
                 ),
               },
@@ -78,7 +78,7 @@ class Content extends React.PureComponent {
                 className: 'content0-block-title',
                 children: (
                   <>
-                    <p>Quality</p>
+                    <p>Chất lượng</p>
                   </>
                 ),
               },
@@ -86,7 +86,7 @@ class Content extends React.PureComponent {
                 name: 'content',
                 children: (
                   <>
-                    <p>Leading the world in quality.</p>
+                    <p>Dẫn đầu thế giới về chất lượng.</p>
                   </>
                 ),
               },
@@ -112,7 +112,7 @@ class Content extends React.PureComponent {
                 className: 'content0-block-title',
                 children: (
                   <>
-                    <p>Customer</p>
+                    <p>Khách hàng</p>
                   </>
                 ),
               },
@@ -120,9 +120,7 @@ class Content extends React.PureComponent {
                 name: 'content',
                 children: (
                   <>
-                    <p>
-                      The rate of customers using the service increased rapidly.
-                    </p>
+                    <p>Tỷ lệ khách hàng sử dụng dịch vụ tăng nhanh.</p>
                   </>
                 ),
               },

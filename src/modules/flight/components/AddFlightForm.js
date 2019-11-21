@@ -19,6 +19,7 @@ import { getAirportsAsync } from '../../airport/handlers'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 import { getTicketCategoriesAsync } from '../../ticketcategory/handlers'
 import { getAirlinesAsync } from '../../airline/handlers'
+import { loading } from '../../../common/effects'
 
 class AddFlightForm extends Component {
   state = {
@@ -68,9 +69,13 @@ class AddFlightForm extends Component {
   }
 
   componentDidMount() {
-    this.getAirports()
-    this.getTicketCategories()
-    this.getAirlines()
+    loading(async () => {
+      await Promise.all([
+        this.getAirports(),
+        this.getTicketCategories(),
+        this.getAirlines(),
+      ])
+    })
   }
 
   renderTicketAddTicketInput = count => {

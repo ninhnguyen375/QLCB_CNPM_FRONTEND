@@ -134,15 +134,15 @@ export default class Routes extends Component {
             <Route key='order-detail' path='/admin/order/:id' exact>
               <OrderDetailPage mode={user.user.role} />
             </Route>
-            <Route key='airport' path='/admin/airport' exact>
+            {/* <Route key='airport' path='/admin/airport' exact>
               <AirportListPage mode={user.user.role} />
-            </Route>
-            <Route key='airline' path='/admin/airline' exact>
+            </Route> */}
+            {/* <Route key='airline' path='/admin/airline' exact>
               <AirlineListPage mode={user.user.role} />
-            </Route>
-            <Route key='luggage' path='/admin/luggage' exact>
+            </Route> */}
+            {/* <Route key='luggage' path='/admin/luggage' exact>
               <LuggageListPage mode={user.user.role} />
-            </Route>
+            </Route> */}
             <Route key='ticket-category' path='/admin/ticket-category' exact>
               <TicketCategoryListPage mode={user.user.role} />
             </Route>

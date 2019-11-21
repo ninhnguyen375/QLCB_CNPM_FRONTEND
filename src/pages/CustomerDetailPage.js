@@ -17,6 +17,7 @@ import CustomBreadcrumb from '../common/components/widgets/CustomBreadcrumb'
 import MainLayout from '../common/hocs/MainLayout'
 import { handleError } from '../common/utils/handleError'
 import { withRouter } from 'react-router-dom'
+import OrderList from '../modules/order/components/OrderList'
 
 class UserDetailPage extends Component {
   constructor(props) {
@@ -69,30 +70,33 @@ class UserDetailPage extends Component {
   handleSubmit(e) {
     e.preventDefault()
     const { form } = this.props
-    form.validateFields(async (errors, values) => {
-      if (errors) return
-      try {
-        values = removeNullObject(values)
-        await updateCustomer(values, this.props.match.params.id)
-        notification.success({
-          message: 'Cập nhật thành công',
-        })
+    form.validateFieldsAndScroll(
+      { scroll: { offsetTop: 50 } },
+      async (errors, values) => {
+        if (errors) return
+        try {
+          values = removeNullObject(values)
+          await updateCustomer(values, this.props.match.params.id)
+          notification.success({
+            message: 'Cập nhật thành công',
+          })
 
-        this.setState({
-          isShowHandleEditButtons: false,
-          isEditing: {
-            name: false,
-            identifier: false,
-            phone: false,
-            email: false,
-            birthday: false,
-          },
-        })
-        await this.getUser()
-      } catch (err) {
-        handleError(err, form, notification)
-      }
-    })
+          this.setState({
+            isShowHandleEditButtons: false,
+            isEditing: {
+              name: false,
+              identifier: false,
+              phone: false,
+              email: false,
+              birthday: false,
+            },
+          })
+          await this.getUser()
+        } catch (err) {
+          handleError(err, form, notification)
+        }
+      },
+    )
   }
 
   handleReset() {
@@ -213,6 +217,8 @@ class UserDetailPage extends Component {
             </Card>
           </Col>
         </Row>
+        <div style={{ marginTop: 5 }}></div>
+        <OrderList orders={user ? user.orders || [] : []} minimalList />
       </MainLayout>
     )
   }

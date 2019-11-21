@@ -21,6 +21,7 @@ import moment from 'moment'
 import { minutesToTime } from '../../../common/utils/timeFormater'
 import { STATUS, STATUS_COLORS } from '../models'
 import { getAirlinesAsync } from '../../airline/handlers'
+import { loading } from '../../../common/effects'
 
 class EditFlightForm extends Component {
   state = {
@@ -39,9 +40,10 @@ class EditFlightForm extends Component {
     }
   }
 
-  async componentDidMount() {
-    await this.getAirlines()
-    await this.getAirports()
+  componentDidMount() {
+    loading(async () => {
+      await Promise.all([this.getAirlines(), this.getAirports()])
+    })
   }
 
   handleSubmit = e => {

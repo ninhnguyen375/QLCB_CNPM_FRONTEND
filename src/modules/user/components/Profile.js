@@ -15,7 +15,6 @@ import {
 } from 'antd'
 import { STATUS_COLORS, STATUS } from '../models'
 import { updateUser } from '../handlers'
-import removeNullObject from '../../../common/utils/removeObjectNull'
 import { handleError } from '../../../common/utils/handleError'
 import { withRouter } from 'react-router-dom'
 
@@ -54,30 +53,32 @@ class UserDetail extends Component {
     const { form } = this.props
     const { user, getMe } = this.props
 
-    form.validateFields(async (errors, values) => {
-      if (errors) return
-      try {
-        values = removeNullObject(values)
-        await updateUser(values, user.id)
-        notification.success({
-          message: 'Cập nhật thành công',
-        })
+    form.validateFieldsAndScroll(
+      { scroll: { offsetTop: 50 } },
+      async (errors, values) => {
+        if (errors) return
+        try {
+          await updateUser({ ...user, ...values }, user.id)
+          notification.success({
+            message: 'Cập nhật thành công',
+          })
 
-        this.setState({
-          isShowHandleEditButtons: false,
-          isEditing: {
-            name: false,
-            identifier: false,
-            phone: false,
-            email: false,
-            birthday: false,
-          },
-        })
-        await getMe()
-      } catch (err) {
-        handleError(err, form, notification)
-      }
-    })
+          this.setState({
+            isShowHandleEditButtons: false,
+            isEditing: {
+              name: false,
+              identifier: false,
+              phone: false,
+              email: false,
+              birthday: false,
+            },
+          })
+          await getMe()
+        } catch (err) {
+          handleError(err, form, notification)
+        }
+      },
+    )
   }
 
   handleReset() {

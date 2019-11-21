@@ -1,23 +1,25 @@
 import axios from 'axios'
 import { TIMEOUT } from './models'
-import { loadEnd } from './actions/session'
 import { clearAll } from './actions/common'
 import storeAccessible from './utils/storeAccessible'
 import { MODULE_NAME as MODULE_USER } from '../modules/user/models'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
+import PageLoading from './components/widgets/PageLoading'
 
 export async function loading(fetchingProcess, done = undefined) {
   nprogress.start()
+  PageLoading.show()
   try {
     const ret = await fetchingProcess()
-    storeAccessible.dispatch(loadEnd({ config: { key: 'loading' } }))
     if (done) {
       await done()
     }
+    PageLoading.hide()
     nprogress.done()
     return ret
   } catch (error) {
+    PageLoading.hide()
     nprogress.done()
     console.error('ERROR', error)
     throw error

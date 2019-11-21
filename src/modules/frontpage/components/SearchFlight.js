@@ -42,19 +42,22 @@ class SearchFlight extends Component {
 
   next() {
     const current = this.state.current
-    const { validateFields } = this.props.form
+    const { validateFieldsAndScroll } = this.props.form
 
     switch (current) {
       case 1:
-        validateFields((errors, values) => {
-          if (errors) {
-            message.error('Vui lòng điền đầy đủ thông tin')
-            return
-          }
+        validateFieldsAndScroll(
+          { scroll: { offsetTop: 50 } },
+          (errors, values) => {
+            if (errors) {
+              message.error('Vui lòng điền đầy đủ thông tin')
+              return
+            }
 
-          this.props.setSearchFlightParams(values)
-          this.handleCompleteOrder(values)
-        })
+            this.props.setSearchFlightParams(values)
+            this.handleCompleteOrder(values)
+          },
+        )
         break
       default:
         return this.setState({ current: current + 1 })

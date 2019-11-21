@@ -219,7 +219,11 @@ export class OrderList extends Component {
   }
 
   async componentDidMount() {
-    await this.getOrders()
+    const { minimalList } = this.props
+    !minimalList && (await this.getOrders())
+    this.columns = !!minimalList
+      ? this.columns.filter(c => c.key !== 'action' && c.key !== 'CustomerId')
+      : this.columns
   }
 
   handleSearch = name => value => {
@@ -240,38 +244,41 @@ export class OrderList extends Component {
   render() {
     const { pagination, search = {} } = this.state
 
-    let { orders } = this.props
+    let { orders, minimalList } = this.props
     orders = orders || []
+    const toolBar = (
+      <Row type='flex' justify='space-between'>
+        <Col>
+          <div className='d-flex flex-wrap'>
+            <Input.Search
+              value={search.id}
+              style={{ marginRight: 10, width: 250 }}
+              name='id'
+              onSearch={this.handleSearch('id')}
+              placeholder='Tìm theo Mã đơn hàng'
+              onChange={this.hanleChangeSearch}
+            ></Input.Search>
+            <Input.Search
+              value={search.customerId}
+              style={{ marginRight: 5, width: 250 }}
+              name='customerId'
+              onSearch={this.handleSearch('customerId')}
+              placeholder='Tìm theo CMND khách hàng'
+              onChange={this.hanleChangeSearch}
+            ></Input.Search>
+          </div>
+        </Col>
+        <Col>
+          <Button onClick={this.handleReset} icon='sync'>
+            Làm mới
+          </Button>
+        </Col>
+      </Row>
+    )
 
     return (
       <Card title={<b>ĐƠN HÀNG</b>}>
-        <Row type='flex' justify='space-between'>
-          <Col>
-            <div className='d-flex flex-wrap'>
-              <Input.Search
-                value={search.id}
-                style={{ marginRight: 10, width: 250 }}
-                name='id'
-                onSearch={this.handleSearch('id')}
-                placeholder='Tìm theo Mã đơn hàng'
-                onChange={this.hanleChangeSearch}
-              ></Input.Search>
-              <Input.Search
-                value={search.customerId}
-                style={{ marginRight: 5, width: 250 }}
-                name='customerId'
-                onSearch={this.handleSearch('customerId')}
-                placeholder='Tìm theo CMND khách hàng'
-                onChange={this.hanleChangeSearch}
-              ></Input.Search>
-            </div>
-          </Col>
-          <Col>
-            <Button onClick={this.handleReset} icon='sync'>
-              Làm mới
-            </Button>
-          </Col>
-        </Row>
+        {!minimalList ? toolBar : ''}
         <br />
 
         <Table

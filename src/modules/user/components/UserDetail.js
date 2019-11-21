@@ -15,7 +15,6 @@ import {
 } from 'antd'
 import { STATUS_COLORS, STATUS } from '../models'
 import { getUserAsync, updateUser } from '../handlers'
-import removeNullObject from '../../../common/utils/removeObjectNull'
 import { handleError } from '../../../common/utils/handleError'
 import { withRouter } from 'react-router-dom'
 
@@ -44,7 +43,7 @@ class UserDetail extends Component {
       try {
         let result = await getUserAsync(this.props.match.params.id)
         this.setState({
-          user: result.user,
+          user: result.data,
         })
       } catch (error) {
         handleError(error, null, notification)
@@ -70,30 +69,34 @@ class UserDetail extends Component {
   handleSubmit(e) {
     e.preventDefault()
     const { form } = this.props
-    form.validateFields(async (errors, values) => {
-      if (errors) return
-      try {
-        values = removeNullObject(values)
-        await updateUser(values, this.props.match.params.id)
-        notification.success({
-          message: 'Cập nhật thành công',
-        })
+    const { user } = this.state
 
-        this.setState({
-          isShowHandleEditButtons: false,
-          isEditing: {
-            name: false,
-            identifier: false,
-            phone: false,
-            email: false,
-            birthday: false,
-          },
-        })
-        await this.getUser()
-      } catch (err) {
-        handleError(err, form, notification)
-      }
-    })
+    form.validateFieldsAndScroll(
+      { scroll: { offsetTop: 50 } },
+      async (errors, values) => {
+        if (errors) return
+        try {
+          await updateUser({ ...user, ...values }, this.props.match.params.id)
+          notification.success({
+            message: 'Cập nhật thành công',
+          })
+
+          this.setState({
+            isShowHandleEditButtons: false,
+            isEditing: {
+              name: false,
+              identifier: false,
+              phone: false,
+              email: false,
+              birthday: false,
+            },
+          })
+          await this.getUser()
+        } catch (err) {
+          handleError(err, form, notification)
+        }
+      },
+    )
   }
 
   handleReset() {

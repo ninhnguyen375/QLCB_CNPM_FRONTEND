@@ -51,21 +51,18 @@ class Banner extends React.PureComponent {
                     alt='img'
                     src={require('../../../assets/images/banner1.jpg')}
                   />
-                  <p className='legend'>Legend 1</p>
                 </div>
                 <div>
                   <img
                     alt='img'
-                    src={require('../../../assets/images/banner1.jpg')}
+                    src={require('../../../assets/images/banner2.jpg')}
                   />
-                  <p className='legend'>Legend 2</p>
                 </div>
                 <div>
                   <img
                     alt='img'
-                    src={require('../../../assets/images/banner1.jpg')}
+                    src={require('../../../assets/images/banner3.jpg')}
                   />
-                  <p className='legend'>Legend 3</p>
                 </div>
               </Carousel>
             </Card>

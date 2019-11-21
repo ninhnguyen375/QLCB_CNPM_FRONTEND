@@ -5,12 +5,12 @@ import {
   Row,
   Col,
   DatePicker,
-  InputNumber,
   Button,
   Icon,
   Card,
   Select,
   notification,
+  Skeleton,
 } from 'antd'
 import moment from 'moment'
 import removeNullObject from '../../../common/utils/removeObjectNull'
@@ -19,7 +19,8 @@ import { handleError } from '../../../common/utils/handleError'
 import { getTicketCategoriesAsync } from '../../ticketcategory/handlers'
 
 const nowDate = new Date()
-
+const oneToNine = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+const zeroToNine = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 class SearchFlightForm extends Component {
   state = {
     airports: [],
@@ -46,22 +47,25 @@ class SearchFlightForm extends Component {
     e.preventDefault()
     const { form, setSearchFlightParams, history } = this.props
 
-    form.validateFields((errors, values) => {
-      if (errors) return
+    form.validateFieldsAndScroll(
+      { scroll: { offsetTop: 50 } },
+      (errors, values) => {
+        if (errors) return
 
-      // Mapping ticketCategories
-      const ticketCategories = []
-      Array.isArray(values.ticketCategoriesInForm) &&
-        values.ticketCategoriesInForm.forEach((t, i) => {
-          ticketCategories.push({
-            id: i,
-            ...t,
+        // Mapping ticketCategories
+        const ticketCategories = []
+        Array.isArray(values.ticketCategoriesInForm) &&
+          values.ticketCategoriesInForm.forEach((t, i) => {
+            ticketCategories.push({
+              id: i,
+              ...t,
+            })
           })
-        })
 
-      setSearchFlightParams({ ...values, ticketCategories })
-      history.push('/search-flight')
-    })
+        setSearchFlightParams({ ...values, ticketCategories })
+        history.push('/search-flight')
+      },
+    )
   }
 
   handleChangeType = () => {
@@ -72,6 +76,10 @@ class SearchFlightForm extends Component {
 
   disabledDate = current => {
     return current && current < moment().startOf('day')
+  }
+
+  disabledReturnDate = date => current => {
+    return current && current < date
   }
 
   getAirports = async (search = {}) => {
@@ -113,7 +121,7 @@ class SearchFlightForm extends Component {
     const { searchFlightParams, form } = this.props
     const { getFieldDecorator } = form
 
-    return ticketCategories.map(t => (
+    return ticketCategories.map((t, index) => (
       <Form.Item key={t.id} label={t ? t.name : '--'} style={{ width: '30%' }}>
         {getFieldDecorator(`ticketCategoriesInForm[${t.id}].quantity`, {
           initialValue:
@@ -121,22 +129,24 @@ class SearchFlightForm extends Component {
             searchFlightParams.ticketCategoriesInForm &&
             searchFlightParams.ticketCategoriesInForm[t.id]
               ? searchFlightParams.ticketCategoriesInForm[t.id].quantity
-              : 1,
+              : index === 0
+              ? 1
+              : 0,
         })(
-          <InputNumber
-            min={0}
-            max={9}
-            prefix={<Icon type='user' />}
-            style={{ width: '100%' }}
-            size={'large'}
-          ></InputNumber>,
+          <Select size='large'>
+            {(index === 0 ? oneToNine : zeroToNine).map(i => (
+              <Select.Option key={i} value={i}>
+                {i} {t.name}
+              </Select.Option>
+            ))}
+          </Select>,
         )}
       </Form.Item>
     ))
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form
+    const { getFieldDecorator, getFieldValue } = this.props.form
     const { searchFlightParams } = this.props
     const { airports, ticketCategories, type } = this.state
 
@@ -248,11 +258,12 @@ class SearchFlightForm extends Component {
                     rules: [
                       { required: true, message: 'Vui lòng chọn ngày về' },
                     ],
-                    initialValue:
-                      moment(searchFlightParams.returnDate) || moment(nowDate),
+                    initialValue: getFieldValue('departureDate'),
                   })(
                     <DatePicker
-                      disabledDate={this.disabledDate}
+                      disabledDate={this.disabledReturnDate(
+                        getFieldValue('departureDate'),
+                      )}
                       style={{ width: '100%' }}
                       size={'large'}
                     ></DatePicker>,
@@ -263,7 +274,6 @@ class SearchFlightForm extends Component {
               ''
             )}
           </Row>
-
           <div className='d-flex justify-content-between flex-wrap'>
             {this.renderTicketCategories(ticketCategories || [])}
           </div>
