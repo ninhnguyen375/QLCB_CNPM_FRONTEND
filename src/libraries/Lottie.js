@@ -2,23 +2,20 @@ import React from 'react'
 import lottie from 'lottie-web'
 
 export default class Lottie extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.handleClickToPause = this.handleClickToPause.bind(this)
   }
 
-  componentDidMount () {
-    const {
-      options,
-      eventListeners
-    } = this.props
+  componentDidMount() {
+    const { options, eventListeners } = this.props
 
     const {
       loop,
       autoplay,
       animationData,
       rendererSettings,
-      segments
+      segments,
     } = options
 
     this.options = {
@@ -28,7 +25,7 @@ export default class Lottie extends React.Component {
       autoplay: autoplay !== false,
       segments: segments !== false,
       animationData,
-      rendererSettings
+      rendererSettings,
     }
 
     this.options = { ...this.options, ...options }
@@ -37,7 +34,7 @@ export default class Lottie extends React.Component {
     this.registerEvents(eventListeners)
   }
 
-  UNSAFE_componentWillUpdate (nextProps /* , nextState */) {
+  UNSAFE_componentWillUpdate(nextProps /* , nextState */) {
     /* Recreate the animation handle if the data is changed */
     if (this.options.animationData !== nextProps.options.animationData) {
       this.deRegisterEvents(this.props.eventListeners)
@@ -48,7 +45,7 @@ export default class Lottie extends React.Component {
     }
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     if (this.props.isStopped) {
       this.stop()
     } else if (this.props.segments) {
@@ -62,34 +59,34 @@ export default class Lottie extends React.Component {
     this.setDirection()
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.deRegisterEvents(this.props.eventListeners)
     this.destroy()
     this.options.animationData = null
     this.anim = null
   }
 
-  setSpeed () {
+  setSpeed() {
     this.anim.setSpeed(this.props.speed)
   }
 
-  setDirection () {
+  setDirection() {
     this.anim.setDirection(this.props.direction)
   }
 
-  play () {
+  play() {
     this.anim.play()
   }
 
-  playSegments () {
+  playSegments() {
     this.anim.playSegments(this.props.segments)
   }
 
-  stop () {
+  stop() {
     this.anim.stop()
   }
 
-  pause () {
+  pause() {
     if (this.props.isPaused && !this.anim.isPaused) {
       this.anim.pause()
     } else if (!this.props.isPaused && this.anim.isPaused) {
@@ -97,23 +94,29 @@ export default class Lottie extends React.Component {
     }
   }
 
-  destroy () {
+  destroy() {
     this.anim.destroy()
   }
 
-  registerEvents (eventListeners) {
-    eventListeners.forEach((eventListener) => {
-      this.anim.addEventListener(eventListener.eventName, eventListener.callback)
+  registerEvents(eventListeners) {
+    eventListeners.forEach(eventListener => {
+      this.anim.addEventListener(
+        eventListener.eventName,
+        eventListener.callback,
+      )
     })
   }
 
-  deRegisterEvents (eventListeners) {
-    eventListeners.forEach((eventListener) => {
-      this.anim.removeEventListener(eventListener.eventName, eventListener.callback)
+  deRegisterEvents(eventListeners) {
+    eventListeners.forEach(eventListener => {
+      this.anim.removeEventListener(
+        eventListener.eventName,
+        eventListener.callback,
+      )
     })
   }
 
-  handleClickToPause () {
+  handleClickToPause() {
     // The pause() method is for handling pausing by passing a prop isPaused
     // This method is for handling the ability to pause by clicking on the animation
     if (this.anim.isPaused) {
@@ -123,17 +126,17 @@ export default class Lottie extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const {
       width,
       height,
       ariaRole,
       ariaLabel,
       isClickToPauseDisabled,
-      title
+      title,
     } = this.props
 
-    const getSize = (initial) => {
+    const getSize = initial => {
       let size
 
       if (typeof initial === 'number') {
@@ -151,14 +154,16 @@ export default class Lottie extends React.Component {
       overflow: 'hidden',
       margin: '0 auto',
       outline: 'none',
-      ...this.props.style
+      ...this.props.style,
     }
 
-    const onClickHandler = isClickToPauseDisabled ? () => null : this.handleClickToPause
+    const onClickHandler = isClickToPauseDisabled
+      ? () => null
+      : this.handleClickToPause
 
     return (
       <div
-        ref={(c) => {
+        ref={c => {
           this.el = c
         }}
         style={lottieStyles}
@@ -180,5 +185,6 @@ Lottie.defaultProps = {
   ariaRole: 'button',
   ariaLabel: 'animation',
   isClickToPauseDisabled: false,
-  title: ''
+  title: '',
+  options: {},
 }

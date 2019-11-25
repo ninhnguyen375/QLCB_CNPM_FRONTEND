@@ -5,6 +5,7 @@ import { searchFlightFromDate } from '../../date/handlers'
 import { getValueFromObj } from '../../../common/utils/makeupObject'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
+import Lottie from '../../../libraries/Lottie'
 
 export class SearchFlightResult extends Component {
   state = {
@@ -94,18 +95,20 @@ export class SearchFlightResult extends Component {
 
     if (!Array.isArray(departureFlights) || departureFlights.length === 0) {
       return (
-        <h1 style={{ padding: 50 }} className='tac'>
-          Không tìm thấy chuyến bay phù hợp
+        <h2 className='tac'>
           <br />
           <div>
-            <Link to='/'>
-              <Button size='large' type='primary'>
-                <Icon type='home' />
-                Quay lại trang chủ
-              </Button>
-            </Link>
+            Rất tiếc, hiện tại không tìm thấy chuyến bay phù hợp. <br />
+            Mong quý khách vui lòng quay lại sau!{' '}
+            <Link to='/'>Quay lại trang chủ.</Link>
           </div>
-        </h1>
+          <Lottie
+            options={{
+              animationData: require('../../../assets/animations/5451-search-file.json'),
+            }}
+            width='30%'
+          />
+        </h2>
       )
     }
 
