@@ -27,6 +27,12 @@ class TicketItem extends Component {
     return (
       <div style={{ width: '100%', marginBottom: 10 }}>
         <Card style={{ borderRadius: 5 }}>
+          <div>
+            <b>Hành khách:</b> {ticket.passengerName} - <b>Giới tính:</b>{' '}
+            {ticket.passengerGender === 1 ? 'Nam' : 'Nữ'}
+          </div>
+          <Divider />
+
           <div
             style={{ color: '#6A6A6A' }}
             className='d-flex flex-wrap justify-content-between'
