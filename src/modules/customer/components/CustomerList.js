@@ -137,6 +137,14 @@ export class CustomerList extends Component {
                 placeholder='Tìm theo Tên khách hàng'
                 onChange={this.hanleChangeSearch}
               ></Input.Search>
+              <Input.Search
+                value={search.phone}
+                style={{ marginRight: 5, width: 250 }}
+                name='phone'
+                onSearch={this.handleSearch('phone')}
+                placeholder='Tìm theo SĐT khách hàng'
+                onChange={this.hanleChangeSearch}
+              ></Input.Search>
             </div>
           </Col>
           <Col>
