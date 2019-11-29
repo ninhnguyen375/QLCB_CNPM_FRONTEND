@@ -31,9 +31,21 @@ class EditFlightForm extends Component {
   }
 
   getAirports = async (search = {}) => {
+    const { flight = {} } = this.props
+    const { airportFromData = {}, airportToData = {} } = flight
+
     try {
       const values = removeNullObject(search)
       const res = await getAirportsAsync(undefined, undefined, values)
+      const airports = res.data || []
+
+      if (!airports.find(airport => airport.id === airportFromData.id)) {
+        airports.push(airportFromData)
+      }
+      if (!airports.find(airport => airport.id === airportToData.id)) {
+        airports.push(airportToData)
+      }
+
       this.setState({ airports: res.data })
     } catch (err) {
       handleError(err, null, notification)

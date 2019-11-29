@@ -7,6 +7,9 @@ import PageLoading from '../components/widgets/PageLoading'
 import ProgressLoading from '../components/widgets/ProgressLoading'
 import Loading from '../components/widgets/Loading'
 import userHandlers from '../../modules/user/handlers'
+import { handleError } from '../utils/handleError'
+import { notification } from 'antd'
+import { logout } from '../effects'
 
 class MainPage extends Component {
   constructor(props) {
@@ -21,15 +24,13 @@ class MainPage extends Component {
     if (user && user.id) {
       try {
         await getMe()
-        this.setState(
-          {
-            loading: false,
-          },
-          () => {
-            this.forceUpdate()
-          },
-        )
-      } catch (err) {}
+        this.setState({ loading: false }, () => {
+          this.forceUpdate()
+        })
+      } catch (err) {
+        handleError(err, null, notification)
+        logout()
+      }
     }
   }
 
@@ -37,7 +38,8 @@ class MainPage extends Component {
     const { user } = this.props
     if (
       (!user && nextProps.user) ||
-      (nextProps.user && user.id !== nextProps.user.id)
+      (nextProps.user && user.id !== nextProps.user.id) ||
+      (nextProps.user && user.status !== nextProps.user.status)
     ) {
       return true
     }

@@ -4,8 +4,11 @@ import { withRouter } from 'react-router'
 import { Layout, Menu, Icon, notification, Dropdown, Tag } from 'antd'
 import storeAccessible from '../utils/storeAccessible'
 import { clearAll } from '../actions/common'
-import { ROLE } from '../../modules/user/models'
+import { ROLE, STATUS_CODE } from '../../modules/user/models'
+import userHandlers from '../../modules/user/handlers'
 import { getUserRole } from '../utils/authUtils'
+import { handleError } from '../utils/handleError'
+import { logout } from '../effects'
 const { Header, Content, Sider } = Layout
 const { SubMenu } = Menu
 
@@ -38,6 +41,19 @@ class MenuPage extends React.Component {
 
   setMenus(mode, type) {
     switch (mode) {
+      case STATUS_CODE.NEW:
+        this.MENUS = [
+          {
+            key: 'admin/dashboard',
+            title: (
+              <span>
+                <Icon type='key' />
+                <span>Đổi mật khẩu</span>
+              </span>
+            ),
+          },
+        ]
+        break
       case ROLE.ADMIN:
         this.MENUS = [
           {
@@ -259,21 +275,20 @@ class MenuPage extends React.Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { language, user, mode } = nextProps
-    if (language !== this.props.language) {
-      if (user && user.user_type_id === 3 && user.jobSeekerOfUser) {
-        this.setMenus(mode, user.jobSeekerOfUser.type)
-      } else {
-        this.setMenus(mode)
-      }
-    }
-  }
-
   changePage(e) {
     const { history } = this.props
     const item = this.MENUS.find(data => data.key === e.key)
     history.push(item.redirect)
+  }
+
+  async componentDidMount() {
+    const { getMe } = this.props
+    try {
+      await getMe()
+    } catch (err) {
+      handleError(err, null, notification)
+      logout()
+    }
   }
 
   handleToggle() {
@@ -406,11 +421,11 @@ class MenuPage extends React.Component {
                     </div>
                   </Menu.Item>
                   <Menu.Divider></Menu.Divider>
-                  {authRole === ROLE.STAFF && (
-                    <Menu.Item onClick={() => history.push(`/admin/profile`)}>
-                      <Icon type='user' /> Thông tin cá nhân
-                    </Menu.Item>
-                  )}
+                  {/* {authRole === ROLE.STAFF && ( */}
+                  <Menu.Item onClick={() => history.push(`/admin/profile`)}>
+                    <Icon type='user' /> Thông tin cá nhân
+                  </Menu.Item>
+                  {/* )} */}
                   <Menu.Item onClick={this.handleLogout}>
                     <Icon type='logout' /> Đăng xuất
                   </Menu.Item>
@@ -443,9 +458,15 @@ class MenuPage extends React.Component {
   }
 }
 
-export default connect(state => {
-  return {
-    user: state.user.user,
-    userName: state.user.user ? state.user.user.email : 'N',
-  }
-})(withRouter(MenuPage))
+export default connect(
+  state => {
+    return {
+      user: state.user.user,
+      userName: state.user.user ? state.user.user.email : 'N',
+    }
+  },
+  dispatch => ({
+    dispatch,
+    ...userHandlers(dispatch),
+  }),
+)(withRouter(MenuPage))

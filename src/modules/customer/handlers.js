@@ -1,4 +1,4 @@
-import { fetchAuthLoading } from '../../common/effects'
+import { fetchAuthLoading, fetchLoading } from '../../common/effects'
 import { ENDPOINTS, LIMIT } from './models'
 import { setCustomers } from './actions'
 
@@ -20,7 +20,7 @@ export async function getCustomersAsync(
 }
 
 export const getCustomerAsync = async id => {
-  const result = await fetchAuthLoading({
+  const result = await fetchLoading({
     url: ENDPOINTS.getCustomer(id),
     method: 'GET',
   })

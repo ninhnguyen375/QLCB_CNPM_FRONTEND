@@ -1,6 +1,16 @@
 import React from 'react'
-import { Card, Form, Icon, Input, Button, Checkbox, notification } from 'antd'
+import {
+  Card,
+  Form,
+  Icon,
+  Input,
+  Button,
+  Checkbox,
+  notification,
+  Modal,
+} from 'antd'
 import { Link } from 'react-router-dom'
+import modal from '../../../common/components/widgets/Modal'
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -25,6 +35,29 @@ class LoginForm extends React.Component {
     })
   }
 
+  handleShowForgotPasswordForm = values => {
+    modal.show(
+      <Card>
+        Thông tin sẽ được gửi về {values.email}, vui lòng kiểm tra Email của
+        bạn.
+      </Card>,
+      {
+        title: <b>QUÊN MẬT KHẨU</b>,
+      },
+    )
+  }
+
+  handleClickForgotPassword = () => {
+    const { form } = this.props
+    form.validateFields(['email'], (err, values) => {
+      if (err) return
+      Modal.confirm({
+        content: 'Xác nhận quên mật khẩu',
+        onOk: () => this.handleShowForgotPasswordForm(values),
+      })
+    })
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form
     return (
@@ -45,7 +78,7 @@ class LoginForm extends React.Component {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your email!',
+                  message: 'Vui lòng nhập Email của bạn!',
                   type: 'email',
                 },
               ],
@@ -62,7 +95,7 @@ class LoginForm extends React.Component {
           <Form.Item>
             {getFieldDecorator('password', {
               rules: [
-                { required: true, message: 'Please input your Password!' },
+                { required: true, message: 'Vui lòng nhập mật khẩu của bạn!' },
               ],
             })(
               <Input
@@ -78,9 +111,13 @@ class LoginForm extends React.Component {
             {getFieldDecorator('remember', {
               valuePropName: 'checked',
               initialValue: true,
-            })(<Checkbox>Remember me</Checkbox>)}
-            <div className='link' style={{ float: 'right' }}>
-              Forgot password
+            })(<Checkbox>Ghi nhớ tôi</Checkbox>)}
+            <div
+              onClick={this.handleClickForgotPassword}
+              className='link'
+              style={{ float: 'right' }}
+            >
+              Quên mật khẩu
             </div>
           </Form.Item>
           <Button type='primary' htmlType='submit' style={{ width: '100%' }}>

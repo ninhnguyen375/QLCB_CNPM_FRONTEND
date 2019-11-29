@@ -6,7 +6,7 @@ import Dashboard from '../pages/Dashboard'
 import PageNotFound from '../pages/PageNotFound'
 import ScrollToTop from './hocs/ScrollToTop'
 import SearchFlight from '../modules/frontpage/containers/SearchFlight'
-import { ROLE } from '../modules/user/models'
+import { ROLE, STATUS_CODE } from '../modules/user/models'
 import UserListPage from '../pages/UserListPage'
 import UserDetailPage from '../pages/UserDetailPage'
 import AirportListPage from '../pages/AirportListPage'
@@ -21,6 +21,7 @@ import OrderListPage from '../pages/OrderListPage'
 import OrderDetailPage from '../pages/OrderDetailPage'
 import FlightDetailPage from '../pages/FlightDetailPage'
 import ProfilePage from '../pages/ProfilePage'
+import ChangePasswordPage from '../pages/ChangePasswordPage'
 
 export default class Routes extends Component {
   render() {
@@ -94,6 +95,9 @@ export default class Routes extends Component {
             <Route key='date' path='/admin/date' exact>
               <DateListPage mode={user.user.role} />
             </Route>
+            <Route key='profile' path='/admin/profile' exact>
+              <ProfilePage mode={user.user.role} />
+            </Route>
             <Route key='user' path='/admin/user/:id' exact>
               <UserDetailPage mode={user.user.role} />
             </Route>
@@ -103,6 +107,25 @@ export default class Routes extends Component {
       )
     }
     if (user.user.role === ROLE.STAFF) {
+      if (user.user.status === STATUS_CODE.NEW) {
+        return (
+          <ScrollToTop>
+            <Switch>
+              <Route key='home' path='/' exact component={HomePage} />
+              <Route
+                key='search-flight'
+                path='/search-flight'
+                exact
+                component={SearchFlight}
+              />
+              <Route key='change-password' path='/admin/dashboard' exact>
+                <ChangePasswordPage mode={user.user.status} />
+              </Route>
+              <Route key='null' path='*' component={PageNotFound} />
+            </Switch>
+          </ScrollToTop>
+        )
+      }
       return (
         <ScrollToTop>
           <Switch>

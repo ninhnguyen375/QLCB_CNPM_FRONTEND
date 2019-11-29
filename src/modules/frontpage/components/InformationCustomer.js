@@ -8,6 +8,7 @@ import {
   notification,
   Tag,
   Select,
+  Alert,
 } from 'antd'
 import point from '../../../assets/images/01-point.png'
 import { getValueFromObj } from '../../../common/utils/makeupObject'
@@ -21,6 +22,7 @@ import moment from 'moment'
 import { priceFormat } from '../../../common/utils/stringFormater'
 import { getLuggagesAsync } from '../../luggage/handlers'
 import { getCount } from '../../../common/utils/numberUtils'
+import { getCustomerAsync } from '../../customer/handlers'
 
 class InformationCustomer extends Component {
   state = {
@@ -31,6 +33,9 @@ class InformationCustomer extends Component {
     luggages: [],
     departureLuggage: null,
     returnLuggage: null,
+    customer: {},
+    hasCustomer: false,
+    isFetchingCustomer: false,
   }
 
   getLuggages = async () => {
@@ -379,6 +384,24 @@ class InformationCustomer extends Component {
     return total
   }
 
+  getCustomer = async id => {
+    this.setState({ isFetchingCustomer: true })
+    try {
+      const res = await getCustomerAsync(id)
+      this.setState({
+        customer: res.data,
+        hasCustomer: true,
+        isFetchingCustomer: false,
+      })
+    } catch (err) {
+      this.setState({ hasCustomer: false, isFetchingCustomer: false })
+    }
+  }
+
+  handleBlurInputId = e => {
+    this.getCustomer(e.target.value)
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form
     const {
@@ -386,6 +409,9 @@ class InformationCustomer extends Component {
       returnFlight,
       departureLuggage,
       returnLuggage,
+      customer = {},
+      hasCustomer,
+      isFetchingCustomer,
     } = this.state
     const { searchFlightParams = {} } = this.props
     let {
@@ -501,9 +527,24 @@ class InformationCustomer extends Component {
                       prefix={<Icon type='idcard' />}
                       style={{ width: '100%' }}
                       placeholder='CMND'
+                      onBlur={this.handleBlurInputId}
                     ></Input>,
                   )}
                 </Form.Item>
+                {hasCustomer ? (
+                  <Alert
+                    style={{ padding: '5px 10px 10px 10px' }}
+                    description={
+                      <div>
+                        Có vẻ bạn đã sử dụng dịch vụ của chúng tôi trước đó.{' '}
+                        <br /> Bạn có thể thay đổi thông tin của mình bên dưới.
+                      </div>
+                    }
+                    closable
+                  ></Alert>
+                ) : (
+                  ''
+                )}
                 <Form.Item hasFeedback className='text-left' label='Họ và tên'>
                   {getFieldDecorator('fullName', {
                     rules: [
@@ -512,8 +553,10 @@ class InformationCustomer extends Component {
                         message: 'Họ và tên khách hàng là bắt buộc',
                       },
                     ],
+                    initialValue: hasCustomer ? customer.fullName : '',
                   })(
                     <Input
+                      disabled={isFetchingCustomer}
                       prefix={<Icon type='user' />}
                       style={{ width: '100%' }}
                       placeholder='Họ và tên'
@@ -532,8 +575,10 @@ class InformationCustomer extends Component {
                         message: 'SĐT khách hàng là bắt buộc',
                       },
                     ],
+                    initialValue: hasCustomer ? customer.phone : '',
                   })(
                     <Input
+                      disabled={isFetchingCustomer}
                       prefix={<Icon type='phone' />}
                       style={{ width: '100%' }}
                       placeholder='SĐT'

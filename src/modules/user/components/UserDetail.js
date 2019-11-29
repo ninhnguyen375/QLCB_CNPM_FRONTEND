@@ -14,7 +14,7 @@ import {
   Typography,
 } from 'antd'
 import { STATUS_COLORS, STATUS } from '../models'
-import { getUserAsync, updateUser } from '../handlers'
+import { getUserAsync, updateUser, resetUserPassword } from '../handlers'
 import { handleError } from '../../../common/utils/handleError'
 import { withRouter } from 'react-router-dom'
 
@@ -111,6 +111,15 @@ class UserDetail extends Component {
       isShowHandleEditButtons: false,
     })
   }
+
+  handleResetPassword = async id => {
+    try {
+      await resetUserPassword(id)
+    } catch (err) {
+      handleError(err, null, notification)
+    }
+  }
+
   render() {
     const { user, isEditing } = this.state
     const { getFieldDecorator } = this.props.form
@@ -289,6 +298,22 @@ class UserDetail extends Component {
                     <Tag color={STATUS_COLORS[user.status]}>
                       {STATUS[user.status]}
                     </Tag>
+                  </Descriptions.Item>
+                  <Descriptions.Item
+                    label={
+                      <strong className='link'>
+                        <Icon type='lock' /> Mật khẩu
+                      </strong>
+                    }
+                  >
+                    <Button
+                      type='danger'
+                      ghost
+                      onClick={() => this.handleResetPassword(user.id)}
+                    >
+                      <Icon type='key' />
+                      Reset mật khẩu
+                    </Button>
                   </Descriptions.Item>
                 </Descriptions>
                 {this.state.isShowHandleEditButtons ? (

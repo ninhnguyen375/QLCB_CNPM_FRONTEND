@@ -10,13 +10,13 @@ import {
   Card,
   Select,
   notification,
-  Skeleton,
 } from 'antd'
 import moment from 'moment'
 import removeNullObject from '../../../common/utils/removeObjectNull'
 import { getAirportsAsync } from '../../airport/handlers'
 import { handleError } from '../../../common/utils/handleError'
 import { getTicketCategoriesAsync } from '../../ticketcategory/handlers'
+import { loading } from '../../../common/effects'
 
 const nowDate = new Date()
 const oneToNine = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -109,8 +109,9 @@ class SearchFlightForm extends Component {
   }
 
   componentDidMount() {
-    this.getAirports()
-    this.getTicketCategories()
+    loading(async () => {
+      await Promise.all([this.getAirports(), this.getTicketCategories()])
+    })
   }
 
   renderTicketCategories = (ticketCategories = []) => {
@@ -168,7 +169,7 @@ class SearchFlightForm extends Component {
           </div>
 
           <div>
-            <Form.Item label='Điểm đi'>
+            <Form.Item label='Điểm đi - Gõ để tìm địa điểm'>
               {getFieldDecorator('airportFrom', {
                 rules: [{ required: true, message: 'Vui lòng chọn điểm đi' }],
                 initialValue: searchFlightParams
@@ -192,7 +193,9 @@ class SearchFlightForm extends Component {
                   {Array.isArray(airports)
                     ? airports.map(airport => (
                         <Select.Option value={airport.id} key={airport.id}>
-                          {airport ? airport.location || '' : ''}
+                          <Icon type='environment' />{' '}
+                          {airport ? airport.location || '--' : '--'} - Sân bay{' '}
+                          {airport ? airport.name || '--' : '--'}
                         </Select.Option>
                       ))
                     : ''}
@@ -202,7 +205,7 @@ class SearchFlightForm extends Component {
           </div>
 
           <div>
-            <Form.Item label='Điểm đến'>
+            <Form.Item label='Điểm đến - Gõ để tìm địa điểm'>
               {getFieldDecorator('airportTo', {
                 rules: [{ required: true, message: 'Vui lòng chọn điểm đến' }],
                 initialValue: searchFlightParams
@@ -226,7 +229,9 @@ class SearchFlightForm extends Component {
                   {Array.isArray(airports)
                     ? airports.map(airport => (
                         <Select.Option value={airport.id} key={airport.id}>
-                          {airport ? airport.location || '' : ''}
+                          <Icon type='environment' />{' '}
+                          {airport ? airport.location || '--' : '--'} - Sân bay{' '}
+                          {airport ? airport.name || '--' : '--'}
                         </Select.Option>
                       ))
                     : ''}

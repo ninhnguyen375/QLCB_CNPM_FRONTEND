@@ -17,6 +17,8 @@ import { STATUS_COLORS, STATUS } from '../models'
 import { updateUser } from '../handlers'
 import { handleError } from '../../../common/utils/handleError'
 import { withRouter } from 'react-router-dom'
+import Modal from '../../../common/components/widgets/Modal'
+import ChangePasswordForm from './ChangePasswordForm'
 
 class UserDetail extends Component {
   constructor(props) {
@@ -93,6 +95,17 @@ class UserDetail extends Component {
       isShowHandleEditButtons: false,
     })
   }
+
+  handleShowFormChangePassword = () => {
+    const { getMe } = this.props
+    Modal.show(<ChangePasswordForm getMe={getMe} />, {
+      title: <b>THAY ĐỔI MẬT KHẨU</b>,
+      style: {
+        top: 20,
+      },
+    })
+  }
+
   render() {
     const { isEditing } = this.state
     const { getFieldDecorator } = this.props.form
@@ -272,6 +285,22 @@ class UserDetail extends Component {
                     <Tag color={STATUS_COLORS[user.status]}>
                       {STATUS[user.status]}
                     </Tag>
+                  </Descriptions.Item>
+                  <Descriptions.Item
+                    label={
+                      <strong className='link'>
+                        <Icon type='lock' /> Mật khẩu
+                      </strong>
+                    }
+                  >
+                    <Button
+                      type='danger'
+                      ghost
+                      onClick={this.handleShowFormChangePassword}
+                    >
+                      <Icon type='key' />
+                      Thay đổi mật khẩu
+                    </Button>
                   </Descriptions.Item>
                 </Descriptions>
                 {this.state.isShowHandleEditButtons ? (

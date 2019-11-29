@@ -13,8 +13,17 @@ export async function getUsersAsync(
     params: {
       current,
       pageSize,
+      sortDesc: 'Id',
       ...params,
     },
+  })
+  return res.data
+}
+
+export async function resetUserPassword(id) {
+  const res = await fetchAuthLoading({
+    url: ENDPOINTS.resetUserPassword(id),
+    method: 'PUT',
   })
   return res.data
 }
@@ -23,6 +32,15 @@ export const getUserAsync = async id => {
   const result = await fetchAuthLoading({
     url: ENDPOINTS.getUser(id),
     method: 'GET',
+  })
+  return result.data
+}
+
+export const changeUserPassword = async values => {
+  const result = await fetchAuthLoading({
+    url: ENDPOINTS.changeUserPassword,
+    method: 'PUT',
+    data: values,
   })
   return result.data
 }
@@ -87,30 +105,16 @@ export default (dispatch, props) => ({
     }
   },
   getMe: async () => {
-    try {
-      const result = await loading(async () => {
-        const result = await fetchAuthLoading({
-          url: ENDPOINTS.getMe,
-          method: 'POST',
-        })
-        if (result.data && result.data.success && result.data.user) {
-          dispatch(setUserToken(result.data.token))
-          dispatch(
-            setUserInformation({
-              ...result.data.user,
-            }),
-          )
-        }
-        return result.data
-      })
-      return result
-    } catch (error) {
-      if (error && error.response && error.response.data) {
-        const { message } = error.response.data
-        return { success: false, msg: message }
-      }
-      return { success: false, msg: 'Server error.' }
-    }
+    const result = await fetchAuthLoading({
+      url: ENDPOINTS.getMe,
+      method: 'POST',
+    })
+    dispatch(setUserToken(result.data.token))
+    dispatch(
+      setUserInformation({
+        ...result.data.user,
+      }),
+    )
   },
   blockUser: async id => {
     const result = await fetchAuthLoading({

@@ -13,6 +13,7 @@ export async function getAirportsAsync(
     params: {
       current,
       pageSize,
+      sortAsc: 'Id',
       ...params,
     },
   })

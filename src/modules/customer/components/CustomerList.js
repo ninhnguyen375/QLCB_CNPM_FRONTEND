@@ -53,6 +53,17 @@ export class CustomerList extends Component {
       ),
     },
     {
+      key: 'Id',
+      dataIndex: 'id',
+      title: 'CMND',
+      sorter: true,
+      render: (value, record) => (
+        <div>
+          <Icon type='idcard' /> {value}
+        </div>
+      ),
+    },
+    {
       key: 'BookingCount',
       dataIndex: 'bookingCount',
       title: 'Số lần đặt',
@@ -131,18 +142,26 @@ export class CustomerList extends Component {
             <div className='d-flex flex-wrap'>
               <Input.Search
                 value={search.fullName}
-                style={{ marginRight: 5, width: 250 }}
+                style={{ marginRight: 5, width: 200 }}
                 name='fullName'
                 onSearch={this.handleSearch('fullName')}
-                placeholder='Tìm theo Tên khách hàng'
+                placeholder='Tên khách hàng'
                 onChange={this.hanleChangeSearch}
               ></Input.Search>
               <Input.Search
                 value={search.phone}
-                style={{ marginRight: 5, width: 250 }}
+                style={{ marginRight: 5, width: 200 }}
                 name='phone'
                 onSearch={this.handleSearch('phone')}
-                placeholder='Tìm theo SĐT khách hàng'
+                placeholder='SĐT khách hàng'
+                onChange={this.hanleChangeSearch}
+              ></Input.Search>
+              <Input.Search
+                value={search.id}
+                style={{ marginRight: 5, width: 200 }}
+                name='id'
+                onSearch={this.handleSearch('id')}
+                placeholder='CMND khách hàng'
                 onChange={this.hanleChangeSearch}
               ></Input.Search>
             </div>

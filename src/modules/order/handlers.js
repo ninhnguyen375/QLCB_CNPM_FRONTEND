@@ -13,6 +13,7 @@ export async function getOrdersAsync(
     params: {
       current,
       pageSize,
+      sortDesc: 'CreateAt',
       ...params,
     },
   })

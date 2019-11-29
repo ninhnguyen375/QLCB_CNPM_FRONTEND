@@ -12,6 +12,8 @@ export const ENDPOINTS = {
   unblockUser: id => `${DEFAULT_URL}/users/${id}/unblock`,
   deleteUser: id => `${DEFAULT_URL}/users/${id}`,
   getMe: `${DEFAULT_URL}/auth/me`,
+  changeUserPassword: `${DEFAULT_URL}/auth/changepassword`,
+  resetUserPassword: id => `${DEFAULT_URL}/users/${id}/resetpassword`,
 }
 
 export const LIMIT = 10
@@ -20,7 +22,15 @@ export const emptyString = '---'
 export const STATUS = {
   1: ' ĐANG HOẠT ĐỘNG ',
   2: ' ĐÃ KHÓA ',
-  3: ' ĐÃ XÓA ',
+  // 3: ' ĐÃ XÓA ',
+  4: ' MỚI ',
+}
+
+export const STATUS_CODE = {
+  ACTIVE: 1,
+  BANNED: 2,
+  // DELETED: 3,
+  NEW: 4,
 }
 
 export const ROLE = {
