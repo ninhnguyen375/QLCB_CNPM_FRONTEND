@@ -12,6 +12,7 @@ export class SearchFlightResult extends Component {
     selectedFlightFrom: '',
     selectedFlightTo: '',
     searchFlightResult: {},
+    isSearchingFlights: false,
   }
 
   completeSelect = (values = {}) => {
@@ -40,10 +41,12 @@ export class SearchFlightResult extends Component {
 
   async componentDidMount() {
     const { searchFlightParams } = this.props
+    this.setState({ isSearchingFlights: true })
     try {
       const res = await searchFlightFromDate(searchFlightParams)
-      this.setState({ searchFlightResult: res })
+      this.setState({ searchFlightResult: res, isSearchingFlights: false })
     } catch (err) {
+      this.setState({ isSearchingFlights: false })
       // handleError(err, null, notification)
     }
   }
@@ -90,8 +93,23 @@ export class SearchFlightResult extends Component {
 
   render() {
     const { type } = this.props.searchFlightParams
-    const { searchFlightResult = {} } = this.state
+    const { searchFlightResult = {}, isSearchingFlights } = this.state
     const { departureFlights, returnFlights } = searchFlightResult
+
+    if (isSearchingFlights) {
+      return (
+        <h2 className='tac'>
+          <br />
+          <div>Đang tìm kiếm. Vui lòng đợi trong giây lát.</div>
+          <Lottie
+            options={{
+              animationData: require('../../../assets/animations/8135-error-screen.json'),
+            }}
+            width='30%'
+          />
+        </h2>
+      )
+    }
 
     if (!Array.isArray(departureFlights) || departureFlights.length === 0) {
       return (

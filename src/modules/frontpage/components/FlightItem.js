@@ -9,6 +9,9 @@ import {
 import moment from 'moment'
 import { getValueFromObj } from '../../../common/utils/makeupObject'
 import { priceFormat } from '../../../common/utils/stringFormater'
+import { getUserRole } from '../../../common/utils/authUtils'
+import { ROLE } from '../../user/models'
+import { Link } from 'react-router-dom'
 
 export class FlightItem extends Component {
   state = {
@@ -39,6 +42,7 @@ export class FlightItem extends Component {
     const { id, onSelectFlight, isSelected, flight = {} } = this.props
     const { departureDate, ticketCategoriesInForm = [] } = this.props
     const { flightTicketCategories = [] } = flight
+    const role = getUserRole()
 
     return (
       <div style={{ width: '100%', marginBottom: 10 }}>
@@ -68,13 +72,25 @@ export class FlightItem extends Component {
                   {flight.airline ? flight.airline.name : 'No Airline Name'}
                 </a>
                 <br />
-                <Tag
-                  title='Mã Hãng Hàng Không'
-                  style={{ marginTop: 5 }}
-                  color='blue'
-                >
-                  {flight.airline ? flight.airline.id : 'No Airline Id'}
-                </Tag>
+                {role === ROLE.ADMIN || role === ROLE.STAFF ? (
+                  <Link to={`/admin/flight/${flight.id}`}>
+                    <Tag
+                      title='Mã Chuyến bay'
+                      style={{ marginTop: 5 }}
+                      color='blue'
+                    >
+                      {flight.id ? flight.id : 'No Flight Id'}
+                    </Tag>
+                  </Link>
+                ) : (
+                  <Tag
+                    title='Mã Chuyến bay'
+                    style={{ marginTop: 5 }}
+                    color='blue'
+                  >
+                    {flight.id ? flight.id : 'No Flight Id'}
+                  </Tag>
+                )}
               </div>
             </div>
             <div>

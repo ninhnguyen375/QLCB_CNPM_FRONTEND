@@ -3,7 +3,7 @@ import * as actions from '../actions/common'
 
 const defaultState = {
   language: 'en',
-  timeout: 30000,
+  // timeout: 30000,
   roles: [],
   locations: [],
 }
